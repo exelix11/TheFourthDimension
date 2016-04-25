@@ -28,6 +28,7 @@ namespace The4Dimension
             render.MouseMove += render_MouseMove;
             render.MouseLeftButtonDown += render_MouseLeftButtonDown;
             render.MouseLeftButtonUp += render_MouseLeftButtonUp;
+            render.KeyDown += render_KeyDown;
         }
 
         Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
@@ -294,7 +295,7 @@ namespace The4Dimension
         }
         #endregion
 
-        #region ListBoxEvents
+        #region ObjectsEvents
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             ObjectsListBox.Items.Clear();
@@ -323,6 +324,7 @@ namespace The4Dimension
 
         private void render_LeftClick(object sender, MouseButtonEventArgs e)
         {
+            if ((ModifierKeys & Keys.Shift) != 0 || RenderIsDragging) return;
             object[] indexes = render.GetOBJ(sender, e); //indexes[0] string, [1] int
             if (indexes[0] is int) return; //this means indexes[0] = -1
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
@@ -331,24 +333,54 @@ namespace The4Dimension
 
         bool RenderIsDragging = false;
         object[] DraggingArgs = null;
+
+        private void render_KeyDown(object sender, System.Windows.Input.KeyEventArgs e) //Render hotkeys
+        {
+            if (comboBox1.Text == "AllRailInfos" || ObjectsListBox.SelectedIndex == -1) return;
+            if (e.Key == Key.Space) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+            else if (e.Key == Key.OemPlus) { if (BtnAddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
+            else if (e.Key == Key.D) button2_Click(null, null); //Duplicate
+            else if (e.Key == Key.Delete) button3_Click(null, null); //Delete obj
+            else if (e.Key == Key.R) //Round selected object position to a multiple of 100
+            {
+                if (RenderIsDragging) return;
+                string type = comboBox1.Text;
+                int id = ObjectsListBox.SelectedIndex;
+                ((Node)AllInfos[type].Objs[id].Prop["pos_x"]).StringValue = (Math.Round(Single.Parse(((Node)AllInfos[type].Objs[id].Prop["pos_x"]).StringValue) / 100d, 0) * 100).ToString();
+                ((Node)AllInfos[type].Objs[id].Prop["pos_y"]).StringValue = (Math.Round(Single.Parse(((Node)AllInfos[type].Objs[id].Prop["pos_y"]).StringValue) / 100d, 0) * 100).ToString();
+                ((Node)AllInfos[type].Objs[id].Prop["pos_z"]).StringValue = (Math.Round(Single.Parse(((Node)AllInfos[type].Objs[id].Prop["pos_z"]).StringValue) / 100d, 0) * 100).ToString();
+                UpdateOBJPos(id, ref AllInfos[type].Objs, type);
+                propertyGrid1.Refresh();
+            }
+        }
+
         private void render_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (ModifierKeys != Keys.Shift || !RenderIsDragging) { RenderIsDragging = false; return; }
-            var res = render.Drag(DraggingArgs, e);
-            DraggingArgs[2] = res;
+            if (!RenderIsDragging | (ModifierKeys & Keys.Shift) == 0) { RenderIsDragging = false; return;}
+            Vector3D NewPos = render.Drag(DraggingArgs, e, ((ModifierKeys & Keys.Alt) != 0) ? true : false);
+            if (NewPos == null) return;
+            Debug.Print("Pos: " + NewPos.X.ToString() + " " + NewPos.Z.ToString() + " " + (-NewPos.Y).ToString());
+            ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue = NewPos.X.ToString();
+            ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue = NewPos.Z.ToString();
+            ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue = (-NewPos.Y).ToString();
+            UpdateOBJPos((int)DraggingArgs[1], ref AllInfos[(string)DraggingArgs[0]].Objs, (string)DraggingArgs[0]);
+            DraggingArgs[2] = NewPos;
         }
 
         private void render_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             RenderIsDragging = false;
             DraggingArgs = null;
+            propertyGrid1.Refresh();
         }
 
         private void render_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (ModifierKeys != Keys.Shift) return;
+            if ((ModifierKeys & Keys.Shift) == 0 || RenderIsDragging) return;
             RenderIsDragging = true;
             DraggingArgs = render.GetOBJ(sender, e);
+            comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
+            ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
         }
 
         #region Hiding layers
@@ -383,7 +415,7 @@ namespace The4Dimension
             if (comboBox1.Text == "AreaObjInfo")
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
-                render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 if (AllInfos[comboBox1.Text].IsHidden)
                 {
                     if (AreaObjOldSelection != -1) render.ChangeTransform(comboBox1.Text, AreaObjOldSelection, render.Positions[comboBox1.Text][AreaObjOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
@@ -395,7 +427,7 @@ namespace The4Dimension
             else if (comboBox1.Text == "CameraAreaInfo")
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
-                render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 if (AllInfos[comboBox1.Text].IsHidden)
                 {
                     if (CameraAreaOldSelection != -1) render.ChangeTransform(comboBox1.Text, CameraAreaOldSelection, render.Positions[comboBox1.Text][CameraAreaOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
@@ -408,7 +440,7 @@ namespace The4Dimension
             else
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
-                render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
             }
         }
         #endregion
@@ -898,6 +930,19 @@ namespace The4Dimension
         {
             FrmCredits c = new FrmCredits();
             c.ShowDialog();
+        }
+
+        private void hotkeysListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Hotkeys list:\r\n" +
+                "In the 3D view:\r\n" +
+                " Shift + drag : move object\r\n" +
+                " Shift + Alt + drag : move object snapping every 100 units\r\n"+
+                " Space : focus the camera on the selected object\r\n" +
+                " D : Duplicate selected object\r\n" +
+                " + : ADD a new object\r\n"+
+                " Del : DELete selected object\r\n" +
+                " R : Round the selected object position to a multiple of 100 (like shift + alt + drag, but without dragging)");
         }
     }
 
