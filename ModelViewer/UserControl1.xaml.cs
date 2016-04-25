@@ -74,19 +74,30 @@ namespace ModelViewer
         }
 
         public void CameraToObj(string Type, int index)
-        {
+        {            
             Vector3D pos = Positions[Type][index];
             ModelViewer.Camera.LookAt(new Point3D(pos.X, pos.Y, pos.Z), 1000);
         }
 
-        public Vector3D Drag(object[] DragArgs, System.Windows.Input.MouseEventArgs e)
+        public Vector3D Drag(object[] DragArgs, System.Windows.Input.MouseEventArgs e, bool round100)
         {
             Point p = e.GetPosition(ModelViewer);
             Vector3D v = (Vector3D)DragArgs[2];
-            var pos = ModelViewer.Viewport.UnProject(p, new Point3D(v.X,v.Y,v.Z), ModelViewer.Camera.LookDirection);
+            Point3D? pos = ModelViewer.Viewport.UnProject(p, new Point3D(v.X,v.Y,v.Z), ModelViewer.Camera.LookDirection);
             if (pos.HasValue)
             {
-                ChangeTransform((string)DragArgs[0], (int)DragArgs[1], pos.Value.ToVector3D(), new Vector3D(1, 1, 1), 0, 0, 0);
+                Vector3D vec = pos.Value.ToVector3D();
+                if (round100)
+                {
+                    vec.X = Math.Round(vec.X / 100d, 0) * 100;
+                    vec.Y = Math.Round(vec.Y / 100d, 0) * 100;
+                    vec.Z = Math.Round(vec.Z / 100d, 0) * 100;
+                    return vec;
+                }
+                vec.X = Math.Round(vec.X, 3, MidpointRounding.AwayFromZero);
+                vec.Y = Math.Round(vec.Y, 3, MidpointRounding.AwayFromZero);
+                vec.Z = Math.Round(vec.Z, 3, MidpointRounding.AwayFromZero);
+                return vec;
             }
             return pos.Value.ToVector3D();
         }
