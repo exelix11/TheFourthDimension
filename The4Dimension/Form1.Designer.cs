@@ -30,12 +30,13 @@
         {
             this.components = new System.ComponentModel.Container();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.pasteValueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClipBoardMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ClipBoardMenu_Paste = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.copyPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyRotationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.copyScaleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClipBoardMenu_CopyPos = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClipBoardMenu_CopyRot = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClipBoardMenu_CopyScale = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClipBoardMenu_CopyArgs = new System.Windows.Forms.ToolStripMenuItem();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.button1 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -56,6 +57,8 @@
             this.bymlConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bymlXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xmlBymlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ObjectsListBox = new System.Windows.Forms.ListBox();
@@ -67,9 +70,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1.SuspendLayout();
+            this.ClipBoardMenu.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ModImpZ_Rot)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ModImpY_Rot)).BeginInit();
@@ -92,56 +93,65 @@
             this.propertyGrid1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.propertyGrid1.ContextMenuStrip = this.contextMenuStrip1;
+            this.propertyGrid1.ContextMenuStrip = this.ClipBoardMenu;
             this.propertyGrid1.Location = new System.Drawing.Point(4, 3);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.Size = new System.Drawing.Size(230, 228);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridChange);
             // 
-            // contextMenuStrip1
+            // ClipBoardMenu
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.pasteValueToolStripMenuItem,
+            this.ClipBoardMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ClipBoardMenu_Paste,
             this.toolStripSeparator1,
-            this.copyPositionToolStripMenuItem,
-            this.copyRotationToolStripMenuItem,
-            this.copyScaleToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(149, 98);
+            this.ClipBoardMenu_CopyPos,
+            this.ClipBoardMenu_CopyRot,
+            this.ClipBoardMenu_CopyScale,
+            this.ClipBoardMenu_CopyArgs});
+            this.ClipBoardMenu.Name = "contextMenuStrip1";
+            this.ClipBoardMenu.Size = new System.Drawing.Size(153, 142);
             // 
-            // pasteValueToolStripMenuItem
+            // ClipBoardMenu_Paste
             // 
-            this.pasteValueToolStripMenuItem.Name = "pasteValueToolStripMenuItem";
-            this.pasteValueToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.pasteValueToolStripMenuItem.Text = "Paste value";
-            this.pasteValueToolStripMenuItem.Click += new System.EventHandler(this.pasteValueToolStripMenuItem_Click);
+            this.ClipBoardMenu_Paste.DoubleClickEnabled = true;
+            this.ClipBoardMenu_Paste.Name = "ClipBoardMenu_Paste";
+            this.ClipBoardMenu_Paste.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_Paste.Text = "Paste value";
+            this.ClipBoardMenu_Paste.DoubleClick += new System.EventHandler(this.pasteValueToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
             // 
-            // copyPositionToolStripMenuItem
+            // ClipBoardMenu_CopyPos
             // 
-            this.copyPositionToolStripMenuItem.Name = "copyPositionToolStripMenuItem";
-            this.copyPositionToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.copyPositionToolStripMenuItem.Text = "Copy position";
-            this.copyPositionToolStripMenuItem.Click += new System.EventHandler(this.copyPositionToolStripMenuItem_Click);
+            this.ClipBoardMenu_CopyPos.Name = "ClipBoardMenu_CopyPos";
+            this.ClipBoardMenu_CopyPos.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyPos.Text = "Copy position";
+            this.ClipBoardMenu_CopyPos.Click += new System.EventHandler(this.copyPositionToolStripMenuItem_Click);
             // 
-            // copyRotationToolStripMenuItem
+            // ClipBoardMenu_CopyRot
             // 
-            this.copyRotationToolStripMenuItem.Name = "copyRotationToolStripMenuItem";
-            this.copyRotationToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.copyRotationToolStripMenuItem.Text = "Copy rotation";
-            this.copyRotationToolStripMenuItem.Click += new System.EventHandler(this.copyRotationToolStripMenuItem_Click);
+            this.ClipBoardMenu_CopyRot.Name = "ClipBoardMenu_CopyRot";
+            this.ClipBoardMenu_CopyRot.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyRot.Text = "Copy rotation";
+            this.ClipBoardMenu_CopyRot.Click += new System.EventHandler(this.copyRotationToolStripMenuItem_Click);
             // 
-            // copyScaleToolStripMenuItem
+            // ClipBoardMenu_CopyScale
             // 
-            this.copyScaleToolStripMenuItem.Name = "copyScaleToolStripMenuItem";
-            this.copyScaleToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
-            this.copyScaleToolStripMenuItem.Text = "Copy scale";
-            this.copyScaleToolStripMenuItem.Click += new System.EventHandler(this.copyScaleToolStripMenuItem_Click);
+            this.ClipBoardMenu_CopyScale.Name = "ClipBoardMenu_CopyScale";
+            this.ClipBoardMenu_CopyScale.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyScale.Text = "Copy scale";
+            this.ClipBoardMenu_CopyScale.Click += new System.EventHandler(this.copyScaleToolStripMenuItem_Click);
+            // 
+            // ClipBoardMenu_CopyArgs
+            // 
+            this.ClipBoardMenu_CopyArgs.Name = "ClipBoardMenu_CopyArgs";
+            this.ClipBoardMenu_CopyArgs.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyArgs.Text = "Copy args";
+            this.ClipBoardMenu_CopyArgs.Click += new System.EventHandler(this.ClipBoardMenu_CopyArgs_Click);
             // 
             // elementHost1
             // 
@@ -379,20 +389,20 @@
             this.saveAsBymlToolStripMenuItem,
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save";
             // 
             // saveAsBymlToolStripMenuItem
             // 
             this.saveAsBymlToolStripMenuItem.Name = "saveAsBymlToolStripMenuItem";
-            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsBymlToolStripMenuItem.Text = "Save as Byml";
             this.saveAsBymlToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
             // 
             // saveAsXmlToolStripMenuItem
             // 
             this.saveAsXmlToolStripMenuItem.Name = "saveAsXmlToolStripMenuItem";
-            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsXmlToolStripMenuItem.Text = "Save as Xml";
             this.saveAsXmlToolStripMenuItem.Click += new System.EventHandler(this.saveAsXmlToolStripMenuItem_Click);
             // 
@@ -418,6 +428,21 @@
             this.xmlBymlToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
             this.xmlBymlToolStripMenuItem.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.hotkeysListToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // hotkeysListToolStripMenuItem
+            // 
+            this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
+            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
+            this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -559,21 +584,6 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // helpToolStripMenuItem
-            // 
-            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hotkeysListToolStripMenuItem});
-            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
-            this.helpToolStripMenuItem.Text = "Help";
-            // 
-            // hotkeysListToolStripMenuItem
-            // 
-            this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
-            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
-            this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -587,7 +597,7 @@
             this.Name = "Form1";
             this.Text = "The Fourth Dimension - by Exelix11";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.ClipBoardMenu.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ModImpZ_Rot)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ModImpY_Rot)).EndInit();
@@ -639,12 +649,12 @@
         private System.Windows.Forms.ToolStripMenuItem xmlBymlToolStripMenuItem;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem pasteValueToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip ClipBoardMenu;
+        private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_Paste;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem copyPositionToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyRotationToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem copyScaleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyPos;
+        private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyRot;
+        private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyScale;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ListBox ObjectsListBox;
@@ -652,6 +662,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hotkeysListToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyArgs;
     }
 }
 

@@ -94,10 +94,13 @@ namespace ModelViewer
                     vec.Z = Math.Round(vec.Z / 100d, 0) * 100;
                     return vec;
                 }
-                vec.X = Math.Round(vec.X, 3, MidpointRounding.AwayFromZero);
-                vec.Y = Math.Round(vec.Y, 3, MidpointRounding.AwayFromZero);
-                vec.Z = Math.Round(vec.Z, 3, MidpointRounding.AwayFromZero);
-                return vec;
+                else
+                {
+                    vec.X = Math.Round(vec.X, 3, MidpointRounding.AwayFromZero);
+                    vec.Y = Math.Round(vec.Y, 3, MidpointRounding.AwayFromZero);
+                    vec.Z = Math.Round(vec.Z, 3, MidpointRounding.AwayFromZero);
+                    return vec;
+                }
             }
             return pos.Value.ToVector3D();
         }

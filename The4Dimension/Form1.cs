@@ -20,7 +20,8 @@ namespace The4Dimension
     public partial class Form1 : Form
     {
         UserControl1 render = new UserControl1();
-        public Form1()
+        string LoadedFile = "";
+        public Form1(string FileLoad = "")
         {
             InitializeComponent();
             elementHost1.Child = render;
@@ -29,6 +30,11 @@ namespace The4Dimension
             render.MouseLeftButtonDown += render_MouseLeftButtonDown;
             render.MouseLeftButtonUp += render_MouseLeftButtonUp;
             render.KeyDown += render_KeyDown;
+            render.KeyUp += render_KeyUP;
+            if (FileLoad != "")
+            {
+                LoadedFile = FileLoad;
+            }
         }
 
         Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
@@ -36,7 +42,7 @@ namespace The4Dimension
         Dictionary<string, int> higestID = new Dictionary<string, int>();
         Dictionary<string, string> ModelResolver = new Dictionary<string, string>(); //Converts names like BlockBrickCoins to BlockBrick.obj
         Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
-        Single[] clipboard = new Single[4] {-1,-1,-1,-1}; //clipboard[0] = -1 if clipboard is not set, 0 for position, 1 for rotation, 2 for scale. clipboard[1,2,3] are X,Y,Z
+        List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -54,33 +60,42 @@ namespace The4Dimension
             groupBox1.Visible = Debugger.IsAttached;
             LoadModelResolver();
             LoadCreatorClassNameTable();
-            OpenFileDialog opn = new OpenFileDialog();
-            opn.Title = "Open a level file";
-            opn.Filter = "Level files(.xml,.byml,.szs)|*.*";
-            if (opn.ShowDialog() == DialogResult.OK)
+            if (LoadedFile == "")
             {
-                string file = System.IO.File.ReadAllText(opn.FileName);
-                if (file.StartsWith("<?xml version=\"1.0\"")) LoadFile(file);
-                else if (file.StartsWith("YB")) LoadFile(BymlConverter.GetXml(opn.FileName));
-                else if (file.StartsWith("Yaz0"))
+                OpenFileDialog opn = new OpenFileDialog();
+                opn.Title = "Open a level file";
+                opn.Filter = "Level files(.xml,.byml,.szs)|*.*";
+                if (opn.ShowDialog() == DialogResult.OK)
                 {
-                    CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
-                    NDS.NitroSystem.FND.NARC f = new NDS.NitroSystem.FND.NARC(y.Decompress(System.IO.File.ReadAllBytes(opn.FileName)));
-                    foreach (LibEveryFileExplorer.Files.SimpleFileSystem.SFSFile fil in f.ToFileSystem().Files)
-                    {
-                        if (fil.FileName == "StageData.byml")
-                        {
-                            LoadFile(BymlConverter.GetXml(fil.Data));
-                            return;
-                        }
-                    }
-                    MessageBox.Show("StageData.byml not found in the file !");
+                    LoadFile(opn.FileName);
                 }
-                else MessageBox.Show("File not supported !");
+                else saveAsToolStripMenuItem.Enabled = false;
             }
+            else LoadFile(LoadedFile);
         }
 
         #region FileLoading
+        void LoadFile(string FilePath) //Checks the file type and then loads the file
+        {
+            if (Path.GetExtension(FilePath) == ".xml") OpenFile(File.ReadAllText(FilePath));
+            else if (Path.GetExtension(FilePath) == ".byml") OpenFile(BymlConverter.GetXml(FilePath));
+            else if (Path.GetExtension(FilePath) == ".szs")
+            {
+                CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
+                NDS.NitroSystem.FND.NARC f = new NDS.NitroSystem.FND.NARC(y.Decompress(System.IO.File.ReadAllBytes(FilePath)));
+                foreach (LibEveryFileExplorer.Files.SimpleFileSystem.SFSFile fil in f.ToFileSystem().Files)
+                {
+                    if (fil.FileName == "StageData.byml")
+                    {
+                        OpenFile(BymlConverter.GetXml(fil.Data));
+                        return;
+                    }
+                }
+                MessageBox.Show("StageData.byml not found in the file !");
+            }
+            else MessageBox.Show("File not supported !");
+        }
+
         void LoadModelResolver()
         {
             string[] Text = File.ReadAllLines(@"models\ModelResolver.inf");
@@ -121,7 +136,7 @@ namespace The4Dimension
             }
         }
 
-        void LoadFile(string XmlText)
+        void OpenFile(string XmlText)
         {
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(XmlText);
@@ -149,8 +164,8 @@ namespace The4Dimension
                else if (k == "CameraAreaInfo") LoadModels(AllInfos[k].Objs, k, "models\\UnkGreen.obj");
                else LoadModels(AllInfos[k].Objs, k);
             }
-            HideLayer("AreaObjInfo");
-            HideLayer("CameraAreaInfo");
+            if (AllInfos.ContainsKey("AreaObjInfo")) HideLayer("AreaObjInfo");
+            if (AllInfos.ContainsKey("CameraAreaInfo")) HideLayer("CameraAreaInfo");
             checkBox1.Checked = true;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
             comboBox1.Text = comboBox1.Items[0].ToString();
@@ -324,7 +339,7 @@ namespace The4Dimension
 
         private void render_LeftClick(object sender, MouseButtonEventArgs e)
         {
-            if ((ModifierKeys & Keys.Shift) != 0 || RenderIsDragging) return;
+            if ((ModifierKeys & Keys.Control) == Keys.Control || RenderIsDragging) return;
             object[] indexes = render.GetOBJ(sender, e); //indexes[0] string, [1] int
             if (indexes[0] is int) return; //this means indexes[0] = -1
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
@@ -354,12 +369,22 @@ namespace The4Dimension
             }
         }
 
+
+        private void render_KeyUP(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                RenderIsDragging = false;
+                DraggingArgs = null;
+                propertyGrid1.Refresh();
+            }
+        }
+
         private void render_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (!RenderIsDragging | (ModifierKeys & Keys.Shift) == 0) { RenderIsDragging = false; return;}
-            Vector3D NewPos = render.Drag(DraggingArgs, e, ((ModifierKeys & Keys.Alt) != 0) ? true : false);
+            if (Mouse.LeftButton != MouseButtonState.Pressed  || (ModifierKeys & Keys.Control) != Keys.Control || !RenderIsDragging) { RenderIsDragging = false; return;}
+            Vector3D NewPos = render.Drag(DraggingArgs, e, ((ModifierKeys & Keys.Alt) == Keys.Alt) ? true : false);
             if (NewPos == null) return;
-            Debug.Print("Pos: " + NewPos.X.ToString() + " " + NewPos.Z.ToString() + " " + (-NewPos.Y).ToString());
             ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue = NewPos.X.ToString();
             ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue = NewPos.Z.ToString();
             ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue = (-NewPos.Y).ToString();
@@ -376,7 +401,7 @@ namespace The4Dimension
 
         private void render_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if ((ModifierKeys & Keys.Shift) == 0 || RenderIsDragging) return;
+            if ((ModifierKeys & Keys.Control) != Keys.Control || RenderIsDragging) return;
             RenderIsDragging = true;
             DraggingArgs = render.GetOBJ(sender, e);
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
@@ -588,7 +613,8 @@ namespace The4Dimension
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            PasteValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text );
+            PasteValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, clipboard[clipboard.Count-1]);
+            ClipBoardMenu.Close();
         }
 
         private void copyPositionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -612,41 +638,90 @@ namespace The4Dimension
             CopyValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, "scale_");
         }
 
-        void CopyValue(int index, ref List<LevelObj> lev, string value)
+        private void ClipBoardMenu_CopyArgs_Click(object sender, EventArgs e)
         {
-            if (value == "pos_") clipboard[0] = 0;
-            else if (value == "dir_") clipboard[0] = 1;
-            else if (value == "scale_") clipboard[0] = 2;
-            if (lev[index].Prop.ContainsKey(value + "x") && lev[index].Prop.ContainsKey(value + "y") && lev[index].Prop.ContainsKey(value + "z"))
-            {
-                clipboard[1] = Single.Parse(((Node)lev[index].Prop[value + "x"]).StringValue);
-                clipboard[2] = Single.Parse(((Node)lev[index].Prop[value + "y"]).StringValue);
-                clipboard[3] = Single.Parse(((Node)lev[index].Prop[value + "z"]).StringValue);
-            }
-            else MessageBox.Show("You can't copy this value from this object");
+            if (comboBox1.Text == "AllRailInfos") return;
+            if (ObjectsListBox.SelectedIndex < 0) return;
+            CopyValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, "Arg");
         }
 
-        void PasteValue(int index, ref List<LevelObj> lev, string type)
+        void CopyValue(int index, ref List<LevelObj> lev, string value)
         {
-            if (clipboard[0] == 0)
+            ClipBoardItem cl = new ClipBoardItem();
+            if (value == "pos_" || value == "dir_" || value == "scale_")
             {
-                if (lev[index].Prop.ContainsKey("pos_x")) ((Node)lev[index].Prop["pos_x"]).StringValue = clipboard[1].ToString();
-                if (lev[index].Prop.ContainsKey("pos_y")) ((Node)lev[index].Prop["pos_y"]).StringValue = clipboard[2].ToString();
-                if (lev[index].Prop.ContainsKey("pos_z")) ((Node)lev[index].Prop["pos_z"]).StringValue = clipboard[3].ToString();
+                if (value == "pos_") cl.Type = ClipBoardItem.ClipboardType.Position;
+                else if (value == "dir_") cl.Type = ClipBoardItem.ClipboardType.Rotation;
+                else cl.Type = ClipBoardItem.ClipboardType.Scale;
+                if (lev[index].Prop.ContainsKey(value + "x") && lev[index].Prop.ContainsKey(value + "y") && lev[index].Prop.ContainsKey(value + "z"))
+                {
+                    cl.X = Single.Parse(((Node)lev[index].Prop[value + "x"]).StringValue);
+                    cl.Y = Single.Parse(((Node)lev[index].Prop[value + "y"]).StringValue);
+                    cl.Z = Single.Parse(((Node)lev[index].Prop[value + "z"]).StringValue);
+                }
+                else MessageBox.Show("You can't copy this value from this object");
             }
-            else if (clipboard[0] == 1)
+            else if (value == "Arg")
             {
-                if (lev[index].Prop.ContainsKey("dir_x")) ((Node)lev[index].Prop["dir_x"]).StringValue = clipboard[1].ToString();
-                if (lev[index].Prop.ContainsKey("dir_y")) ((Node)lev[index].Prop["dir_y"]).StringValue = clipboard[2].ToString();
-                if (lev[index].Prop.ContainsKey("dir_z")) ((Node)lev[index].Prop["dir_z"]).StringValue = clipboard[3].ToString();
+                cl.Type = ClipBoardItem.ClipboardType.IntArray;
+                if (lev[index].Prop.ContainsKey("Arg"))
+                {
+                    cl.Args = (int[])((int[])lev[index].Prop["Arg"]).Clone(); //This looks strange but (int[])lev[index].Prop["Arg"] doesn't work
+                }
+                else MessageBox.Show("You can't copy this value from this object");
             }
-            else if (clipboard[0] == 2)
+            clipboard.Add(cl);
+            if (clipboard.Count > 5) clipboard.RemoveAt(0);
+            ClipBoardMenu_Paste.DropDownItems.Clear();
+            List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
+            for (int i = 0; i <clipboard.Count;i++)
             {
-                if (lev[index].Prop.ContainsKey("scale_x")) ((Node)lev[index].Prop["scale_x"]).StringValue = clipboard[1].ToString();
-                if (lev[index].Prop.ContainsKey("scale_y")) ((Node)lev[index].Prop["scale_y"]).StringValue = clipboard[2].ToString();
-                if (lev[index].Prop.ContainsKey("scale_z")) ((Node)lev[index].Prop["scale_z"]).StringValue = clipboard[3].ToString();
+                ToolStripMenuItem btn = new ToolStripMenuItem();
+                btn.Name = "ClipboardN" + i.ToString();
+                btn.Text = clipboard[i].ToString();
+                btn.Click += QuickClipboardItem_Click;
+                Items.Add(btn);
             }
-            UpdateOBJPos(index, ref lev, type);
+            Items.Reverse();
+            ClipBoardMenu_Paste.DropDownItems.AddRange(Items.ToArray());
+        }
+
+        private void QuickClipboardItem_Click(object sender, EventArgs e)
+        {
+            if (comboBox1.Text == "AllRailInfos") return;
+            if (ObjectsListBox.SelectedIndex < 0) return;
+            string SenderName = ((ToolStripMenuItem)sender).Name;
+            int index = int.Parse(SenderName.Substring("ClipboardN".Length));
+            PasteValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, clipboard[index]);
+        }
+
+        void PasteValue(int index, ref List<LevelObj> lev, ClipBoardItem itm)
+        {
+            if (itm.Type == ClipBoardItem.ClipboardType.Position)
+            {
+                if (lev[index].Prop.ContainsKey("pos_x")) ((Node)lev[index].Prop["pos_x"]).StringValue = itm.X.ToString();
+                if (lev[index].Prop.ContainsKey("pos_y")) ((Node)lev[index].Prop["pos_y"]).StringValue = itm.Y.ToString();
+                if (lev[index].Prop.ContainsKey("pos_z")) ((Node)lev[index].Prop["pos_z"]).StringValue = itm.Z.ToString();
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.Rotation)
+            {
+                if (lev[index].Prop.ContainsKey("dir_x")) ((Node)lev[index].Prop["dir_x"]).StringValue = itm.X.ToString();
+                if (lev[index].Prop.ContainsKey("dir_y")) ((Node)lev[index].Prop["dir_y"]).StringValue = itm.Y.ToString();
+                if (lev[index].Prop.ContainsKey("dir_z")) ((Node)lev[index].Prop["dir_z"]).StringValue = itm.Z.ToString();
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.Scale)
+            {
+                if (lev[index].Prop.ContainsKey("scale_x")) ((Node)lev[index].Prop["scale_x"]).StringValue = itm.X.ToString();
+                if (lev[index].Prop.ContainsKey("scale_y")) ((Node)lev[index].Prop["scale_y"]).StringValue = itm.Y.ToString();
+                if (lev[index].Prop.ContainsKey("scale_z")) ((Node)lev[index].Prop["scale_z"]).StringValue = itm.Z.ToString();
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.IntArray)
+            {
+                if (lev[index].Prop.ContainsKey("Arg")) lev[index].Prop["Arg"] = itm.Args;
+                else lev[index].Prop.Add("Arg", itm.Args);
+            }
+            propertyGrid1.Refresh();
+            UpdateOBJPos(index, ref lev, comboBox1.Text);
         }
         #endregion
 
@@ -936,17 +1011,52 @@ namespace The4Dimension
         {
             MessageBox.Show("Hotkeys list:\r\n" +
                 "In the 3D view:\r\n" +
-                " Shift + drag : move object\r\n" +
-                " Shift + Alt + drag : move object snapping every 100 units\r\n"+
+                " Ctrl + drag : move object\r\n" +
+                " Ctrl + Alt + drag : move object snapping every 100 units\r\n"+
                 " Space : focus the camera on the selected object\r\n" +
                 " D : Duplicate selected object\r\n" +
                 " + : ADD a new object\r\n"+
                 " Del : DELete selected object\r\n" +
-                " R : Round the selected object position to a multiple of 100 (like shift + alt + drag, but without dragging)");
+                " R : Round the selected object position to a multiple of 100 (like Ctrl + alt + drag, but without dragging)");
         }
     }
 
     #region Other
+    class ClipBoardItem
+    {
+        public enum ClipboardType
+        {
+            NotSet = 0,
+            Position = 1,
+            Rotation = 2,
+            Scale = 3,
+            IntArray = 4
+        }
+
+        public Single X = 0;
+        public Single Y = 0;
+        public Single Z = 0;
+        public int[] Args = null;
+        public ClipboardType Type = 0;
+
+        public override string ToString()
+        {
+            switch (Type)
+            {
+                case ClipboardType.Position:
+                    return String.Format("Position - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
+                case ClipboardType.Rotation:
+                    return String.Format("Rotation - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
+                case ClipboardType.Scale:
+                    return String.Format("Scale - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
+                case ClipboardType.IntArray:
+                    return "Args[]";
+                default:
+                    return "Not set";
+            }
+        }
+    }
+
     class AllInfoSection
     {
         public bool IsHidden = false;
