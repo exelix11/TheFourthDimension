@@ -25,13 +25,14 @@ namespace The4Dimension
 
         private void ModelDumper_Load(object sender, EventArgs e)
         {
-            FolderBrowserDialog fld = new FolderBrowserDialog();
+             FolderBrowserDialog fld = new FolderBrowserDialog();
             if (fld.ShowDialog() != DialogResult.OK) this.Close();
             ObjDataPath = fld.SelectedPath;
             Directory.CreateDirectory("models");
             File.WriteAllBytes(@"models\baseModels.zip", Properties.Resources.BaseModels);
             ZipFile.ExtractToDirectory(@"models\baseModels.zip", @"models");
             File.Delete(@"models\baseModels.zip");
+            Directory.CreateDirectory(@"models\Tex");
             progressBar1.Maximum = Directory.GetFiles(ObjDataPath).Length;
             backgroundWorker1.RunWorkerAsync();
         }
