@@ -41,7 +41,7 @@ namespace The4Dimension
 
         private void pasteValueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteValue(clipboard[clipboard.Count - 1]);
+            PasteValue(Form1.clipboard[Form1.clipboard.Count - 1]);
             ClipBoardMenu.Close();
         }
 
@@ -90,15 +90,15 @@ namespace The4Dimension
                 }
                 else MessageBox.Show("You can't copy this value from this object");
             }
-            clipboard.Add(cl);
-            if (clipboard.Count > 5) clipboard.RemoveAt(0);
+            Form1.clipboard.Add(cl);
+            if (Form1.clipboard.Count > 5) Form1.clipboard.RemoveAt(0);
             ClipBoardMenu_Paste.DropDownItems.Clear();
             List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
-            for (int i = 0; i < clipboard.Count; i++)
+            for (int i = 0; i < Form1.clipboard.Count; i++)
             {
                 ToolStripMenuItem btn = new ToolStripMenuItem();
                 btn.Name = "ClipboardN" + i.ToString();
-                btn.Text = clipboard[i].ToString();
+                btn.Text = Form1.clipboard[i].ToString();
                 btn.Click += QuickClipboardItem_Click;
                 Items.Add(btn);
             }
@@ -110,7 +110,7 @@ namespace The4Dimension
         {
             string SenderName = ((ToolStripMenuItem)sender).Name;
             int index = int.Parse(SenderName.Substring("ClipboardN".Length));
-            PasteValue(clipboard[index]);
+            PasteValue(Form1.clipboard[index]);
         }
 
         void PasteValue(ClipBoardItem itm)
@@ -139,6 +139,23 @@ namespace The4Dimension
                 else Value.Prop.Add("Arg", itm.Args);
             }
             propertyGrid1.Refresh();
+        }
+
+        private void ClipBoardMenu_opening(object sender, CancelEventArgs e)
+        {
+
+            ClipBoardMenu_Paste.DropDownItems.Clear();
+            List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
+            for (int i = 0; i < Form1.clipboard.Count; i++)
+            {
+                ToolStripMenuItem btn = new ToolStripMenuItem();
+                btn.Name = "ClipboardN" + i.ToString();
+                btn.Text = Form1.clipboard[i].ToString();
+                btn.Click += QuickClipboardItem_Click;
+                Items.Add(btn);
+            }
+            Items.Reverse();
+            ClipBoardMenu_Paste.DropDownItems.AddRange(Items.ToArray());
         }
     }
 }

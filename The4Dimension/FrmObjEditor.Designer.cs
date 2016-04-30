@@ -80,7 +80,8 @@
             this.ClipBoardMenu_CopyScale,
             this.ClipBoardMenu_CopyArgs});
             this.ClipBoardMenu.Name = "contextMenuStrip1";
-            this.ClipBoardMenu.Size = new System.Drawing.Size(149, 120);
+            this.ClipBoardMenu.Size = new System.Drawing.Size(153, 142);
+            this.ClipBoardMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ClipBoardMenu_opening);
             // 
             // ClipBoardMenu_Paste
             // 

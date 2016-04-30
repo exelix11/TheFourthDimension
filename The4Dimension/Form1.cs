@@ -42,7 +42,7 @@ namespace The4Dimension
         Dictionary<string, int> higestID = new Dictionary<string, int>();
         Dictionary<string, string> ModelResolver = new Dictionary<string, string>(); //Converts names like BlockBrickCoins to BlockBrick.obj
         Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
-        List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
+        public static List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -121,7 +121,7 @@ namespace The4Dimension
             string ConvertedCCN = BymlConverter.GetXml(File.ReadAllBytes(@"CreatorClassNameTable.byml"));
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(ConvertedCCN);
-            XmlNode n = xml.SelectSingleNode("/C0");
+            XmlNode n = xml.SelectSingleNode("/Root/C0");
             foreach (XmlNode C1Block in n.ChildNodes)
             {
                 string ClassName = "";
@@ -140,14 +140,14 @@ namespace The4Dimension
         {
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(XmlText);
-            XmlNode n = xml.SelectSingleNode("/C1/C1");
+            XmlNode n = xml.SelectSingleNode("/Root/C1/C1");
             if (n.Attributes["Name"].Value == "AllInfos") ProcessAllInfos(n.ChildNodes); else throw new Exception("Not The AllInfos node !");
-            n = xml.SelectNodes("/C1/C1")[1];
+            n = xml.SelectNodes("/Root/C1/C1")[1];
             if (n.Attributes["Name"].Value == "AllRailInfos") ProcessRailInfos(n.ChildNodes); else throw new Exception("Not The AllRailInfos node !");
             comboBox1.Items.AddRange(AllInfos.Keys.ToArray());
             comboBox1.Items.Add("AllRailInfos");
             /*xml.Load(System.IO.Path.GetDirectoryName(file) + "\\PreLoadFileList1.xml");
-            n = xml.SelectSingleNode("/C1");
+            n = xml.SelectSingleNode("/Root/C1");
             foreach (XmlNode subnode in n.ChildNodes)
             {
                 if (subnode.ChildNodes.Count == 2 && subnode.ChildNodes[1].Attributes["StringValue"].Value == "Archive")
@@ -674,7 +674,24 @@ namespace The4Dimension
             if (clipboard.Count > 5) clipboard.RemoveAt(0);
             ClipBoardMenu_Paste.DropDownItems.Clear();
             List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
-            for (int i = 0; i <clipboard.Count;i++)
+            for (int i = 0; i < clipboard.Count; i++)
+            {
+                ToolStripMenuItem btn = new ToolStripMenuItem();
+                btn.Name = "ClipboardN" + i.ToString();
+                btn.Text = clipboard[i].ToString();
+                btn.Click += QuickClipboardItem_Click;
+                Items.Add(btn);
+            }
+            Items.Reverse();
+            ClipBoardMenu_Paste.DropDownItems.AddRange(Items.ToArray());
+        }
+
+
+        private void ClipBoardMenu_Opening(object sender, CancelEventArgs e)
+        {
+            ClipBoardMenu_Paste.DropDownItems.Clear();
+            List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
+            for (int i = 0; i < clipboard.Count; i++)
             {
                 ToolStripMenuItem btn = new ToolStripMenuItem();
                 btn.Name = "ClipboardN" + i.ToString();
@@ -755,7 +772,11 @@ namespace The4Dimension
             xr = new XmlTextWriter(str);
             xr.Formatting = System.Xml.Formatting.Indented;
             xr.WriteStartDocument();
-            xr.WriteStartElement("C1"); //Root
+            xr.WriteStartElement("Root");
+            xr.WriteStartElement("isBigEndian");
+            xr.WriteAttributeString("Value", "False");
+            xr.WriteEndElement();
+            xr.WriteStartElement("C1"); //Byml Root
             xr.WriteStartElement("C1");
             xr.WriteAttributeString("Name", "AllInfos");
             foreach (string k in AllInfos.Keys) WriteOBJInfoSection(xr, k, AllInfos[k].Objs);
@@ -778,6 +799,7 @@ namespace The4Dimension
             xr.WriteStartElement("C0");
             xr.WriteAttributeString("Name", "LayerInfos");
             WriteLayerInfos(xr);
+            xr.WriteEndElement();
             xr.WriteEndElement();
             xr.WriteEndElement();
             xr.Close();
@@ -1011,18 +1033,18 @@ namespace The4Dimension
         {
             MessageBox.Show("Hotkeys list:\r\n" +
                 "In the 3D view:\r\n" +
-                " Ctrl + drag : move object\r\n" +
-                " Ctrl + Alt + drag : move object snapping every 100 units\r\n"+
-                " Space : focus the camera on the selected object\r\n" +
+                " Ctrl + drag : Move object\r\n" +
+                " Ctrl + Alt + drag : Move object snapping every 100 units\r\n"+
+                " Space : Focus the camera on the selected object\r\n" +
                 " D : Duplicate selected object\r\n" +
-                " + : ADD a new object\r\n"+
-                " Del : DELete selected object\r\n" +
+                " + : Add a new object\r\n"+
+                " Del : Delete selected object\r\n" +
                 " R : Round the selected object position to a multiple of 100 (like Ctrl + alt + drag, but without dragging)");
         }
     }
 
     #region Other
-    class ClipBoardItem
+    public class ClipBoardItem
     {
         public enum ClipboardType
         {

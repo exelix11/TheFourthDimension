@@ -19,14 +19,14 @@ namespace The4Dimension
         {
             BymlConverter app = new BymlConverter();
             app.LoadedFile = new BymlFile(Data);            
-            return app.exportToXml(app.LoadedFile.RootNode);
+            return app.exportToXml(app.LoadedFile);
         }
 
         public static byte[] GetByml(string XmlText)
         {
             BymlConverter app = new BymlConverter();
             app.LoadedFile = app.ImportFromXml(XmlText);
-            return app.LoadedFile.MakeFile();
+            return app.LoadedFile.MakeFile(app.LoadedFile.header.BigEndian);
         }
 
         public static string GetXml(string Path)
@@ -40,15 +40,21 @@ namespace The4Dimension
         }
 
         #region exportXML        
-        string exportToXml(GenericNode RootNode)
+        string exportToXml(BymlFile File)
         {
             CustomStringWriter str = new CustomStringWriter(Encoding.Default);
             XmlTextWriter xr;
             xr = new XmlTextWriter(str);
             xr.Formatting = System.Xml.Formatting.Indented;
             xr.WriteStartDocument();
+            xr.WriteStartElement("Root");
+            xr.WriteStartElement("isBigEndian");
+            xr.WriteAttributeString("Value", File.header.BigEndian.ToString());
+            xr.WriteEndElement();
+            GenericNode RootNode = File.RootNode;
             xr.WriteStartElement(RootNode.NodeType == (byte)0xC1 ? "C1" : "C0");
             saveNode(RootNode.SubNodes.ToArray(), xr);
+            xr.WriteEndElement();
             xr.WriteEndElement();
             xr.Close();
             return str.ToString();
@@ -109,8 +115,12 @@ namespace The4Dimension
             BymlFile ret = new BymlFile();
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(file);
-            ret.RootNode.NodeType = xml.LastChild.Name == "C1" ? (byte)0xC1 : (byte)0xC0;
-            ret.RootNode.SubNodes.AddRange(XmlToNode(xml.LastChild.ChildNodes));
+            XmlNode n = xml.SelectSingleNode("/Root/isBigEndian");
+            ret.header = new Header();
+            ret.header.BigEndian = Convert.ToBoolean(n.Attributes["Value"].Value);
+            n = xml.SelectSingleNode("/Root");
+            ret.RootNode.NodeType = n.LastChild.Name == "C1" ? (byte)0xC1 : (byte)0xC0;
+            ret.RootNode.SubNodes.AddRange(XmlToNode(n.LastChild.ChildNodes));
             ProcessStrings(ref ret, ret.RootNode);
             List<string> tmp = new List<string>();
 

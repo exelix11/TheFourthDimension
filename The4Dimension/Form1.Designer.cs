@@ -110,46 +110,47 @@
             this.ClipBoardMenu_CopyScale,
             this.ClipBoardMenu_CopyArgs});
             this.ClipBoardMenu.Name = "contextMenuStrip1";
-            this.ClipBoardMenu.Size = new System.Drawing.Size(153, 142);
+            this.ClipBoardMenu.Size = new System.Drawing.Size(149, 120);
+            this.ClipBoardMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ClipBoardMenu_Opening);
             // 
             // ClipBoardMenu_Paste
             // 
             this.ClipBoardMenu_Paste.DoubleClickEnabled = true;
             this.ClipBoardMenu_Paste.Name = "ClipBoardMenu_Paste";
-            this.ClipBoardMenu_Paste.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_Paste.Size = new System.Drawing.Size(148, 22);
             this.ClipBoardMenu_Paste.Text = "Paste value";
             this.ClipBoardMenu_Paste.DoubleClick += new System.EventHandler(this.pasteValueToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(145, 6);
             // 
             // ClipBoardMenu_CopyPos
             // 
             this.ClipBoardMenu_CopyPos.Name = "ClipBoardMenu_CopyPos";
-            this.ClipBoardMenu_CopyPos.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyPos.Size = new System.Drawing.Size(148, 22);
             this.ClipBoardMenu_CopyPos.Text = "Copy position";
             this.ClipBoardMenu_CopyPos.Click += new System.EventHandler(this.copyPositionToolStripMenuItem_Click);
             // 
             // ClipBoardMenu_CopyRot
             // 
             this.ClipBoardMenu_CopyRot.Name = "ClipBoardMenu_CopyRot";
-            this.ClipBoardMenu_CopyRot.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyRot.Size = new System.Drawing.Size(148, 22);
             this.ClipBoardMenu_CopyRot.Text = "Copy rotation";
             this.ClipBoardMenu_CopyRot.Click += new System.EventHandler(this.copyRotationToolStripMenuItem_Click);
             // 
             // ClipBoardMenu_CopyScale
             // 
             this.ClipBoardMenu_CopyScale.Name = "ClipBoardMenu_CopyScale";
-            this.ClipBoardMenu_CopyScale.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyScale.Size = new System.Drawing.Size(148, 22);
             this.ClipBoardMenu_CopyScale.Text = "Copy scale";
             this.ClipBoardMenu_CopyScale.Click += new System.EventHandler(this.copyScaleToolStripMenuItem_Click);
             // 
             // ClipBoardMenu_CopyArgs
             // 
             this.ClipBoardMenu_CopyArgs.Name = "ClipBoardMenu_CopyArgs";
-            this.ClipBoardMenu_CopyArgs.Size = new System.Drawing.Size(152, 22);
+            this.ClipBoardMenu_CopyArgs.Size = new System.Drawing.Size(148, 22);
             this.ClipBoardMenu_CopyArgs.Text = "Copy args";
             this.ClipBoardMenu_CopyArgs.Click += new System.EventHandler(this.ClipBoardMenu_CopyArgs_Click);
             // 
@@ -389,20 +390,20 @@
             this.saveAsBymlToolStripMenuItem,
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.saveAsToolStripMenuItem.Text = "Save";
             // 
             // saveAsBymlToolStripMenuItem
             // 
             this.saveAsBymlToolStripMenuItem.Name = "saveAsBymlToolStripMenuItem";
-            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveAsBymlToolStripMenuItem.Text = "Save as Byml";
             this.saveAsBymlToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
             // 
             // saveAsXmlToolStripMenuItem
             // 
             this.saveAsXmlToolStripMenuItem.Name = "saveAsXmlToolStripMenuItem";
-            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveAsXmlToolStripMenuItem.Text = "Save as Xml";
             this.saveAsXmlToolStripMenuItem.Click += new System.EventHandler(this.saveAsXmlToolStripMenuItem_Click);
             // 
@@ -418,14 +419,14 @@
             // bymlXmlToolStripMenuItem
             // 
             this.bymlXmlToolStripMenuItem.Name = "bymlXmlToolStripMenuItem";
-            this.bymlXmlToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.bymlXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.bymlXmlToolStripMenuItem.Text = "Byml -> Xml";
             this.bymlXmlToolStripMenuItem.Click += new System.EventHandler(this.bymlXmlToolStripMenuItem_Click);
             // 
             // xmlBymlToolStripMenuItem
             // 
             this.xmlBymlToolStripMenuItem.Name = "xmlBymlToolStripMenuItem";
-            this.xmlBymlToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+            this.xmlBymlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.xmlBymlToolStripMenuItem.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
             // 

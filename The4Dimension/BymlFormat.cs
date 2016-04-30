@@ -14,13 +14,16 @@ namespace BymlFormat
         public StringTable NodeNames;
         public StringTable StringRes;
         public GenericNode RootNode;
+        bool BigEndian = false; //Big endian: Wii U, Little Endian: 3DS
 
         public BymlFile(byte[] data)
         {
             header = new Header(data);
-            if (header.NodeNamesOffset != 0) NodeNames = new StringTable(header.NodeNamesOffset, data); else NodeNames = new StringTable(true);
-            if (header.StringResOffset != 0) StringRes = new StringTable(header.StringResOffset, data); else StringRes = new StringTable(true);
-            BinaryReader bin = new BinaryReader(new MemoryStream(data));
+            BigEndian = header.BigEndian;
+            if (header.NodeNamesOffset != 0) NodeNames = new StringTable(header.NodeNamesOffset, data,BigEndian); else NodeNames = new StringTable(true);
+            if (header.StringResOffset != 0) StringRes = new StringTable(header.StringResOffset, data,BigEndian); else StringRes = new StringTable(true);
+            BinaryReader bin;
+            if (!BigEndian) bin = new BinaryReader(new MemoryStream(data)); else bin = new BigEndianReader(new MemoryStream(data));
             bin.BaseStream.Position = header.RootOffset;
             byte rootNodeType = bin.ReadByte();
             bin.BaseStream.Position--;
@@ -42,12 +45,14 @@ namespace BymlFormat
             RootNode = new DictionaryNode();
         }
 
-        public byte[] MakeFile()
+        public byte[] MakeFile(bool BigEndian = false)
         {
             MemoryStream mem = new MemoryStream();
-            BinaryWriter bin = new BinaryWriter(mem);
+            BinaryWriter bin;
+            if (!BigEndian) bin = new BinaryWriter(mem); else bin = new BigEndianWriter(mem);
             //Header
-            bin.Write(new byte[] { 0x59, 0x42, 0x01, 0x00 });
+            bin.Write(new byte[] { 0x59, 0x42});
+            if (!BigEndian) bin.Write(new byte[] { 0x01, 0x00 }); else bin.Write(new byte[] { 0x02, 0x00 });
             if (NodeNames != null) bin.Write((UInt32)0x10); else bin.Write((UInt32)0x00); //Offset for names table
             bin.Write((UInt32)0x00); //Temp offset for string resources
             bin.Write((UInt32)0x00); //Temp offset for the root node
@@ -179,7 +184,7 @@ namespace BymlFormat
                 for (int i = 0; i < tbl.Strings.Count; i++)
                 {
                     UInt32 StrOffset = (UInt32)bin.BaseStream.Position;
-                    bin.Write(Encoding.Default.GetBytes(tbl.Strings[i]));
+                    if (bin is BigEndianWriter) ((BigEndianWriter)bin).DirectWrite(Encoding.Default.GetBytes(tbl.Strings[i])); else bin.Write(Encoding.Default.GetBytes(tbl.Strings[i]));
                     bin.Write((byte)0x00);
                     UInt32 OldOffset = (UInt32)bin.BaseStream.Position;
                     bin.BaseStream.Position = BaseOffList + i * 4;
@@ -199,12 +204,19 @@ namespace BymlFormat
         public UInt32 NodeNamesOffset;
         public UInt32 StringResOffset;
         public UInt32 RootOffset;
+        public bool BigEndian = false;
 
         public Header(byte[] data)
         {
-            if (data[0] != 0x59 | data[1] != 0x42) throw new Exception("Wrong magic number");
-            if (data[2] != 0x01 | data[3] != 0) throw new Exception("Wrong file version");
-            BinaryReader bin = new BinaryReader(new MemoryStream(data));
+            if (data[0] == 0x59 && data[1] == 0x42) BigEndian = false;
+            else if (data[0] == 0x42 && data[1] == 0x59) BigEndian = true;
+            else throw new Exception("Wrong magic number");
+            if (BigEndian)
+            {
+                if (data[3] != 0x02 | data[2] != 0) Debug.Print("Wrong version, there may be errors on loading");
+            } else if (data[2] != 0x01 | data[3] != 0) Debug.Print("Wrong version, there may be errors on loading");
+            BinaryReader bin;
+            if (!BigEndian) bin = new BinaryReader(new MemoryStream(data)); else bin = new BigEndianReader(new MemoryStream(data));
             bin.BaseStream.Position = 4;
             NodeNamesOffset = bin.ReadUInt32();
             StringResOffset = bin.ReadUInt32();
@@ -231,9 +243,10 @@ namespace BymlFormat
             return Enc.GetString(input);
         }
 
-        public StringTable(UInt32 offset, Byte[] data)
+        public StringTable(UInt32 offset, Byte[] data, bool BigEndian)
         {
-            BinaryReader bin = new BinaryReader(new MemoryStream(data));
+            BinaryReader bin;
+            if (!BigEndian) bin = new BinaryReader(new MemoryStream(data)); else bin = new BigEndianReader(new MemoryStream(data));
             bin.BaseStream.Position = offset;
             //Offset = offset;
             if (bin.ReadByte() != 0xC2) throw new Exception("Not a string table");
@@ -326,6 +339,7 @@ namespace BymlFormat
                 StringIndex = BitConverter.ToUInt32(_stringIndex.ToArray(), 0);
                 NodeType = bin.ReadByte();
                 Value = bin.ReadBytes(4);
+                if (Value == null) throw new Exception("WTF");
                 if (NodeType == 0xC1)
                 {
                     long OldPos = bin.BaseStream.Position;
@@ -525,6 +539,166 @@ namespace BymlFormat
         public static string GetHexString(int num)
         {
             return num.ToString("X");
+        }
+    }
+
+    public class BigEndianReader : BinaryReader
+    {
+        private byte[] a16 = new byte[2];
+        private byte[] a32 = new byte[4];
+        private byte[] a64 = new byte[8];
+
+        public BigEndianReader(Stream stream) : base(stream) { }
+
+        public override Int16 ReadInt16()
+        {
+            a16 = base.ReadBytes(2);
+            Array.Reverse(a16);
+            return BitConverter.ToInt16(a16, 0);
+        }
+
+        public override int ReadInt32()
+        {
+            a32 = base.ReadBytes(4);
+            Array.Reverse(a32);
+            return BitConverter.ToInt32(a32, 0);
+        }
+
+        public override Int64 ReadInt64()
+        {
+            a64 = base.ReadBytes(8);
+            Array.Reverse(a64);
+            return BitConverter.ToInt64(a64, 0);
+        }
+
+        public override UInt16 ReadUInt16()
+        {
+            a16 = base.ReadBytes(2);
+            Array.Reverse(a16);
+            return BitConverter.ToUInt16(a16, 0);
+        }
+
+        public override UInt32 ReadUInt32()
+        {
+            a32 = base.ReadBytes(4);
+            Array.Reverse(a32);
+            return BitConverter.ToUInt32(a32, 0);
+        }
+
+        public override Single ReadSingle()
+        {
+            a32 = base.ReadBytes(4);
+            Array.Reverse(a32);
+            return BitConverter.ToSingle(a32, 0);
+        }
+
+        public override UInt64 ReadUInt64()
+        {
+            a64 = base.ReadBytes(8);
+            Array.Reverse(a64);
+            return BitConverter.ToUInt64(a64, 0);
+        }
+
+        public override Double ReadDouble()
+        {
+            a64 = base.ReadBytes(8);
+            Array.Reverse(a64);
+            return BitConverter.ToUInt64(a64, 0);
+        }
+
+        public override byte[] ReadBytes(int count)
+        {
+            return base.ReadBytes(count).Reverse().ToArray();
+        }
+
+        public string ReadStringToNull()
+        {
+            string result = "";
+            char c;
+            for (int i = 0; i < base.BaseStream.Length; i++)
+            {
+                if ((c = (char)base.ReadByte()) == 0)
+                {
+                    break;
+                }
+                result += c.ToString();
+            }
+            return result;
+        }
+    }
+
+    public class BigEndianWriter : BinaryWriter
+    {
+        private byte[] a16 = new byte[2];
+        private byte[] a32 = new byte[4];
+        private byte[] a64 = new byte[8];
+
+        public BigEndianWriter(Stream output) : base(output) { }
+
+        public override void Write(Int16 value)
+        {
+            a16 = BitConverter.GetBytes(value);
+            Array.Reverse(a16);
+            base.Write(a16);
+        }
+
+        public override void Write(Int32 value)
+        {
+            a32 = BitConverter.GetBytes(value);
+            Array.Reverse(a32);
+            base.Write(a32);
+        }
+
+        public override void Write(Int64 value)
+        {
+            a64 = BitConverter.GetBytes(value);
+            Array.Reverse(a64);
+            base.Write(a64);
+        }
+
+        public override void Write(UInt16 value)
+        {
+            a16 = BitConverter.GetBytes(value);
+            Array.Reverse(a16);
+            base.Write(a16);
+        }
+
+        public override void Write(UInt32 value)
+        {
+            a32 = BitConverter.GetBytes(value);
+            Array.Reverse(a32);
+            base.Write(a32);
+        }
+
+        public override void Write(Single value)
+        {
+            a32 = BitConverter.GetBytes(value);
+            Array.Reverse(a32);
+            base.Write(a32);
+        }
+
+        public override void Write(UInt64 value)
+        {
+            a64 = BitConverter.GetBytes(value);
+            Array.Reverse(a64);
+            base.Write(a64);
+        }
+
+        public override void Write(Double value)
+        {
+            a64 = BitConverter.GetBytes(value);
+            Array.Reverse(a64);
+            base.Write(a64);
+        }
+
+        public override void Write(byte[] buffer)
+        {
+            base.Write(buffer.Reverse().ToArray());
+        }
+
+        public void DirectWrite(byte[] buffer)
+        {
+            base.Write(buffer);
         }
     }
 }
