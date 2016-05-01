@@ -10,14 +10,17 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
 using LibEveryFileExplorer.Files.SimpleFileSystem;
+using static Ohana3DS_Rebirth.Ohana.RenderBase;
 using _3DS.NintendoWare.GFX;
 using CommonFiles;
+using System.Diagnostics;
 
 namespace The4Dimension
 {
     public partial class ModelDumper : Form
     {
         string ObjDataPath;
+        bool UseEFE = true;
         public ModelDumper()
         {
             InitializeComponent();
@@ -34,6 +37,10 @@ namespace The4Dimension
             File.Delete(@"models\baseModels.zip");
             Directory.CreateDirectory(@"models\Tex");
             progressBar1.Maximum = Directory.GetFiles(ObjDataPath).Length;
+            if (MessageBox.Show("Do you want to convert the models with Ohana3DS ?\r\n" +
+                "Converting with Ohana3DS will produce better quality models, the older method was kept only for compatibility, if you have problems with Ohana3DS use Every File Explorers(by clicking No)\r\n", "Model conversion",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    UseEFE = false;
             backgroundWorker1.RunWorkerAsync();
         }
 
@@ -57,22 +64,19 @@ namespace The4Dimension
                         {
                             try
                             {
-                                CGFX mod = new CGFX(file.Data);
                                 string Name = Application.StartupPath + @"\models\" + file.FileName.Remove(file.FileName.Length - 6, 6) + ".obj";
-                                OBJ o = mod.Data.Models[0].ToOBJ();
-                                o.MTLPath = Path.GetFileNameWithoutExtension(Name) + ".mtl";
-                                MTL m = mod.Data.Models[0].ToMTL("Tex");
-                                byte[] d = o.Write();
-                                byte[] d2 = m.Write();
-                                File.Create(Name).Close();
-                                File.WriteAllBytes(Name, d);
-                                File.Create(Path.ChangeExtension(Name, "mtl")).Close();
-                                File.WriteAllBytes(Path.ChangeExtension(Name, "mtl"), d2);
-                                Directory.CreateDirectory(Path.GetDirectoryName(Name) + "\\Tex");
-                                foreach (var v in mod.Data.Textures)
+                                if (UseEFE)
                                 {
-                                    if (!(v is ImageTextureCtr)) continue;
-                                    ((ImageTextureCtr)v).GetBitmap().Save(Path.GetDirectoryName(Name) + "\\Tex\\" + v.Name + ".png");
+                                    ConvertEFE(file.Data, Name);
+                                }
+                                else
+                                {
+                                    if (!Path.GetFileNameWithoutExtension(Name).ToLower().StartsWith("demo") && Path.GetFileNameWithoutExtension(Name).ToLower() != "karon")
+                                    {
+                                        OModelGroup mdl = new Ohana3DS_Rebirth.Ohana.Models.CGFX().load(new MemoryStream(file.Data));
+                                        new Ohana3DS_Rebirth.Ohana.Models.GenericFormats.OBJ().export(mdl, Name, 0);
+                                    }
+                                    else if (Path.GetFileNameWithoutExtension(Name).ToLower() == "karon") ConvertEFE(file.Data, Name);
                                 }
                             }
                             catch
@@ -82,6 +86,26 @@ namespace The4Dimension
                         }
                     }
                 }
+            }
+        }
+
+        void ConvertEFE(byte[] Data, string Name)
+        {
+            CGFX mod = new CGFX(Data);
+            OBJ o = mod.Data.Models[0].ToOBJ();
+            o.MTLPath = Path.GetFileNameWithoutExtension(Name) + ".mtl";
+            MTL m = mod.Data.Models[0].ToMTL("Tex");
+            byte[] d = o.Write();
+            byte[] d2 = m.Write();
+            File.Create(Name).Close();
+            File.WriteAllBytes(Name, d);
+            File.Create(Path.ChangeExtension(Name, "mtl")).Close();
+            File.WriteAllBytes(Path.ChangeExtension(Name, "mtl"), d2);
+            Directory.CreateDirectory(Path.GetDirectoryName(Name) + "\\Tex");
+            foreach (var v in mod.Data.Textures)
+            {
+                if (!(v is ImageTextureCtr)) continue;
+                ((ImageTextureCtr)v).GetBitmap().Save(Path.GetDirectoryName(Name) + "\\Tex\\" + v.Name + ".png");
             }
         }
 

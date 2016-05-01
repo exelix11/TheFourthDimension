@@ -65,6 +65,11 @@ namespace The4Dimension
             CopyValue("Arg");
         }
 
+        private void ClipBoardMenu_CopyFull_Click(object sender, EventArgs e)
+        {
+            CopyValue("Full");
+        }
+
         void CopyValue(string value)
         {
             ClipBoardItem cl = new ClipBoardItem();
@@ -89,6 +94,11 @@ namespace The4Dimension
                     cl.Args = (int[])((int[])Value.Prop["Arg"]).Clone(); //This looks strange but (int[])Value.Prop["Arg"] doesn't work
                 }
                 else MessageBox.Show("You can't copy this value from this object");
+            }
+            else if (value == "Full")
+            {
+                cl.Type = ClipBoardItem.ClipboardType.FullObject;
+                cl.Obj = Value.Clone();
             }
             Form1.clipboard.Add(cl);
             if (Form1.clipboard.Count > 5) Form1.clipboard.RemoveAt(0);
@@ -138,12 +148,27 @@ namespace The4Dimension
                 if (Value.Prop.ContainsKey("Arg")) Value.Prop["Arg"] = itm.Args;
                 else Value.Prop.Add("Arg", itm.Args);
             }
+            else if (itm.Type == ClipBoardItem.ClipboardType.Rail)
+            {
+                MessageBox.Show("You can't paste a rail here");
+                return;
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
+            {
+                Node name, id;
+                name = null;
+                id = null;
+                if (Value.Prop.ContainsKey("name")) name = ((Node)Value.Prop["name"]).Clone();
+                if (Value.Prop.ContainsKey("l_id")) id = ((Node)Value.Prop["l_id"]).Clone();
+                Value = itm.Obj.Clone();
+                if (Value.Prop.ContainsKey("name")) Value.Prop["name"] = name;
+                if (Value.Prop.ContainsKey("l_id")) Value.Prop["l_id"] = id;
+            }
             propertyGrid1.Refresh();
         }
 
         private void ClipBoardMenu_opening(object sender, CancelEventArgs e)
         {
-
             ClipBoardMenu_Paste.DropDownItems.Clear();
             List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
             for (int i = 0; i < Form1.clipboard.Count; i++)

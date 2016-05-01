@@ -30,8 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
             this.ClipBoardMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ClipBoardMenu_Paste = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -39,6 +37,9 @@
             this.ClipBoardMenu_CopyRot = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu_CopyScale = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu_CopyArgs = new System.Windows.Forms.ToolStripMenuItem();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button4 = new System.Windows.Forms.Button();
+            this.ClipBoardMenu_CopyFull = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,6 +50,61 @@
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.Size = new System.Drawing.Size(271, 278);
             this.propertyGrid1.TabIndex = 0;
+            // 
+            // ClipBoardMenu
+            // 
+            this.ClipBoardMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ClipBoardMenu_Paste,
+            this.toolStripSeparator1,
+            this.ClipBoardMenu_CopyPos,
+            this.ClipBoardMenu_CopyRot,
+            this.ClipBoardMenu_CopyScale,
+            this.ClipBoardMenu_CopyArgs,
+            this.ClipBoardMenu_CopyFull});
+            this.ClipBoardMenu.Name = "contextMenuStrip1";
+            this.ClipBoardMenu.Size = new System.Drawing.Size(159, 164);
+            this.ClipBoardMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ClipBoardMenu_opening);
+            // 
+            // ClipBoardMenu_Paste
+            // 
+            this.ClipBoardMenu_Paste.DoubleClickEnabled = true;
+            this.ClipBoardMenu_Paste.Name = "ClipBoardMenu_Paste";
+            this.ClipBoardMenu_Paste.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_Paste.Text = "Paste value";
+            this.ClipBoardMenu_Paste.DoubleClick += new System.EventHandler(this.pasteValueToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(155, 6);
+            // 
+            // ClipBoardMenu_CopyPos
+            // 
+            this.ClipBoardMenu_CopyPos.Name = "ClipBoardMenu_CopyPos";
+            this.ClipBoardMenu_CopyPos.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_CopyPos.Text = "Copy position";
+            this.ClipBoardMenu_CopyPos.Click += new System.EventHandler(this.copyPositionToolStripMenuItem_Click);
+            // 
+            // ClipBoardMenu_CopyRot
+            // 
+            this.ClipBoardMenu_CopyRot.Name = "ClipBoardMenu_CopyRot";
+            this.ClipBoardMenu_CopyRot.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_CopyRot.Text = "Copy rotation";
+            this.ClipBoardMenu_CopyRot.Click += new System.EventHandler(this.copyRotationToolStripMenuItem_Click);
+            // 
+            // ClipBoardMenu_CopyScale
+            // 
+            this.ClipBoardMenu_CopyScale.Name = "ClipBoardMenu_CopyScale";
+            this.ClipBoardMenu_CopyScale.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_CopyScale.Text = "Copy scale";
+            this.ClipBoardMenu_CopyScale.Click += new System.EventHandler(this.copyScaleToolStripMenuItem_Click);
+            // 
+            // ClipBoardMenu_CopyArgs
+            // 
+            this.ClipBoardMenu_CopyArgs.Name = "ClipBoardMenu_CopyArgs";
+            this.ClipBoardMenu_CopyArgs.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_CopyArgs.Text = "Copy args";
+            this.ClipBoardMenu_CopyArgs.Click += new System.EventHandler(this.ClipBoardMenu_CopyArgs_Click);
             // 
             // button3
             // 
@@ -70,59 +126,12 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
-            // ClipBoardMenu
+            // ClipBoardMenu_CopyFull
             // 
-            this.ClipBoardMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ClipBoardMenu_Paste,
-            this.toolStripSeparator1,
-            this.ClipBoardMenu_CopyPos,
-            this.ClipBoardMenu_CopyRot,
-            this.ClipBoardMenu_CopyScale,
-            this.ClipBoardMenu_CopyArgs});
-            this.ClipBoardMenu.Name = "contextMenuStrip1";
-            this.ClipBoardMenu.Size = new System.Drawing.Size(153, 142);
-            this.ClipBoardMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ClipBoardMenu_opening);
-            // 
-            // ClipBoardMenu_Paste
-            // 
-            this.ClipBoardMenu_Paste.DoubleClickEnabled = true;
-            this.ClipBoardMenu_Paste.Name = "ClipBoardMenu_Paste";
-            this.ClipBoardMenu_Paste.Size = new System.Drawing.Size(148, 22);
-            this.ClipBoardMenu_Paste.Text = "Paste value";
-            this.ClipBoardMenu_Paste.DoubleClick += new System.EventHandler(this.pasteValueToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // ClipBoardMenu_CopyPos
-            // 
-            this.ClipBoardMenu_CopyPos.Name = "ClipBoardMenu_CopyPos";
-            this.ClipBoardMenu_CopyPos.Size = new System.Drawing.Size(148, 22);
-            this.ClipBoardMenu_CopyPos.Text = "Copy position";
-            this.ClipBoardMenu_CopyPos.Click += new System.EventHandler(this.copyPositionToolStripMenuItem_Click);
-            // 
-            // ClipBoardMenu_CopyRot
-            // 
-            this.ClipBoardMenu_CopyRot.Name = "ClipBoardMenu_CopyRot";
-            this.ClipBoardMenu_CopyRot.Size = new System.Drawing.Size(148, 22);
-            this.ClipBoardMenu_CopyRot.Text = "Copy rotation";
-            this.ClipBoardMenu_CopyRot.Click += new System.EventHandler(this.copyRotationToolStripMenuItem_Click);
-            // 
-            // ClipBoardMenu_CopyScale
-            // 
-            this.ClipBoardMenu_CopyScale.Name = "ClipBoardMenu_CopyScale";
-            this.ClipBoardMenu_CopyScale.Size = new System.Drawing.Size(148, 22);
-            this.ClipBoardMenu_CopyScale.Text = "Copy scale";
-            this.ClipBoardMenu_CopyScale.Click += new System.EventHandler(this.copyScaleToolStripMenuItem_Click);
-            // 
-            // ClipBoardMenu_CopyArgs
-            // 
-            this.ClipBoardMenu_CopyArgs.Name = "ClipBoardMenu_CopyArgs";
-            this.ClipBoardMenu_CopyArgs.Size = new System.Drawing.Size(152, 22);
-            this.ClipBoardMenu_CopyArgs.Text = "Copy args";
-            this.ClipBoardMenu_CopyArgs.Click += new System.EventHandler(this.ClipBoardMenu_CopyArgs_Click);
+            this.ClipBoardMenu_CopyFull.Name = "ClipBoardMenu_CopyFull";
+            this.ClipBoardMenu_CopyFull.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_CopyFull.Text = "Copy full object";
+            this.ClipBoardMenu_CopyFull.Click += new System.EventHandler(this.ClipBoardMenu_CopyFull_Click);
             // 
             // FrmObjEditor
             // 
@@ -156,5 +165,6 @@
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyRot;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyScale;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyArgs;
+        private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyFull;
     }
 }
