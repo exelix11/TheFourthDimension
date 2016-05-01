@@ -610,10 +610,10 @@ namespace The4Dimension
         }
 
         private void pasteValueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (comboBox1.Text == "AllRailInfos") return;
+        {            
             if (ObjectsListBox.SelectedIndex < 0) return;
-            PasteValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, clipboard[clipboard.Count-1]);
+            if (comboBox1.Text == "AllRailInfos" && clipboard[clipboard.Count - 1].Type != ClipBoardItem.ClipboardType.Rail) return;
+            PasteValue(ObjectsListBox.SelectedIndex, comboBox1.Text, clipboard[clipboard.Count-1]);
             ClipBoardMenu.Close();
         }
 
@@ -621,31 +621,37 @@ namespace The4Dimension
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, "pos_");            
+            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "pos_");            
         }
 
         private void copyRotationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, "dir_");
+            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "dir_");
         }
 
         private void copyScaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, "scale_");
+            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "scale_");
         }
 
         private void ClipBoardMenu_CopyArgs_Click(object sender, EventArgs e)
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, "Arg");
+            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "Arg");
         }
 
-        void CopyValue(int index, ref List<LevelObj> lev, string value)
+        private void ClipBoardMenu_CopyFull_Click(object sender, EventArgs e)
+        {
+            if (ObjectsListBox.SelectedIndex < 0) return;
+            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "Full");
+        }
+
+        void CopyValue(int index, string type, string value)
         {
             ClipBoardItem cl = new ClipBoardItem();
             if (value == "pos_" || value == "dir_" || value == "scale_")
@@ -653,22 +659,35 @@ namespace The4Dimension
                 if (value == "pos_") cl.Type = ClipBoardItem.ClipboardType.Position;
                 else if (value == "dir_") cl.Type = ClipBoardItem.ClipboardType.Rotation;
                 else cl.Type = ClipBoardItem.ClipboardType.Scale;
-                if (lev[index].Prop.ContainsKey(value + "x") && lev[index].Prop.ContainsKey(value + "y") && lev[index].Prop.ContainsKey(value + "z"))
+                if (AllInfos[type].Objs[index].Prop.ContainsKey(value + "x") && AllInfos[type].Objs[index].Prop.ContainsKey(value + "y") && AllInfos[type].Objs[index].Prop.ContainsKey(value + "z"))
                 {
-                    cl.X = Single.Parse(((Node)lev[index].Prop[value + "x"]).StringValue);
-                    cl.Y = Single.Parse(((Node)lev[index].Prop[value + "y"]).StringValue);
-                    cl.Z = Single.Parse(((Node)lev[index].Prop[value + "z"]).StringValue);
+                    cl.X = Single.Parse(((Node)AllInfos[type].Objs[index].Prop[value + "x"]).StringValue);
+                    cl.Y = Single.Parse(((Node)AllInfos[type].Objs[index].Prop[value + "y"]).StringValue);
+                    cl.Z = Single.Parse(((Node)AllInfos[type].Objs[index].Prop[value + "z"]).StringValue);
                 }
                 else MessageBox.Show("You can't copy this value from this object");
             }
             else if (value == "Arg")
             {
                 cl.Type = ClipBoardItem.ClipboardType.IntArray;
-                if (lev[index].Prop.ContainsKey("Arg"))
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("Arg"))
                 {
-                    cl.Args = (int[])((int[])lev[index].Prop["Arg"]).Clone(); //This looks strange but (int[])lev[index].Prop["Arg"] doesn't work
+                    cl.Args = (int[])((int[])AllInfos[type].Objs[index].Prop["Arg"]).Clone(); //This looks strange but (int[])AllInfos[type].Objs[index].Prop["Arg"] doesn't work
                 }
                 else MessageBox.Show("You can't copy this value from this object");
+            }
+            else if (value == "Full")
+            {
+                if (comboBox1.Text == "AllRailInfos")
+                {
+                    cl.Type = ClipBoardItem.ClipboardType.Rail;
+                    cl.Rail = AllRailInfos[index].Clone();
+                }
+                else
+                {
+                    cl.Type = ClipBoardItem.ClipboardType.FullObject;
+                    cl.Obj = AllInfos[type].Objs[index].Clone();
+                }
             }
             clipboard.Add(cl);
             if (clipboard.Count > 5) clipboard.RemoveAt(0);
@@ -705,40 +724,63 @@ namespace The4Dimension
 
         private void QuickClipboardItem_Click(object sender, EventArgs e)
         {
-            if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
             string SenderName = ((ToolStripMenuItem)sender).Name;
             int index = int.Parse(SenderName.Substring("ClipboardN".Length));
-            PasteValue(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, clipboard[index]);
+            if (comboBox1.Text == "AllRailInfos" && clipboard[index].Type != ClipBoardItem.ClipboardType.Rail) return;
+            PasteValue(ObjectsListBox.SelectedIndex, comboBox1.Text, clipboard[index]);
         }
 
-        void PasteValue(int index, ref List<LevelObj> lev, ClipBoardItem itm)
+        void PasteValue(int index, string type, ClipBoardItem itm)
         {
             if (itm.Type == ClipBoardItem.ClipboardType.Position)
             {
-                if (lev[index].Prop.ContainsKey("pos_x")) ((Node)lev[index].Prop["pos_x"]).StringValue = itm.X.ToString();
-                if (lev[index].Prop.ContainsKey("pos_y")) ((Node)lev[index].Prop["pos_y"]).StringValue = itm.Y.ToString();
-                if (lev[index].Prop.ContainsKey("pos_z")) ((Node)lev[index].Prop["pos_z"]).StringValue = itm.Z.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("pos_x")) ((Node)AllInfos[type].Objs[index].Prop["pos_x"]).StringValue = itm.X.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("pos_y")) ((Node)AllInfos[type].Objs[index].Prop["pos_y"]).StringValue = itm.Y.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("pos_z")) ((Node)AllInfos[type].Objs[index].Prop["pos_z"]).StringValue = itm.Z.ToString();
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.Rotation)
             {
-                if (lev[index].Prop.ContainsKey("dir_x")) ((Node)lev[index].Prop["dir_x"]).StringValue = itm.X.ToString();
-                if (lev[index].Prop.ContainsKey("dir_y")) ((Node)lev[index].Prop["dir_y"]).StringValue = itm.Y.ToString();
-                if (lev[index].Prop.ContainsKey("dir_z")) ((Node)lev[index].Prop["dir_z"]).StringValue = itm.Z.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("dir_x")) ((Node)AllInfos[type].Objs[index].Prop["dir_x"]).StringValue = itm.X.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("dir_y")) ((Node)AllInfos[type].Objs[index].Prop["dir_y"]).StringValue = itm.Y.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("dir_z")) ((Node)AllInfos[type].Objs[index].Prop["dir_z"]).StringValue = itm.Z.ToString();
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.Scale)
             {
-                if (lev[index].Prop.ContainsKey("scale_x")) ((Node)lev[index].Prop["scale_x"]).StringValue = itm.X.ToString();
-                if (lev[index].Prop.ContainsKey("scale_y")) ((Node)lev[index].Prop["scale_y"]).StringValue = itm.Y.ToString();
-                if (lev[index].Prop.ContainsKey("scale_z")) ((Node)lev[index].Prop["scale_z"]).StringValue = itm.Z.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("scale_x")) ((Node)AllInfos[type].Objs[index].Prop["scale_x"]).StringValue = itm.X.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("scale_y")) ((Node)AllInfos[type].Objs[index].Prop["scale_y"]).StringValue = itm.Y.ToString();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("scale_z")) ((Node)AllInfos[type].Objs[index].Prop["scale_z"]).StringValue = itm.Z.ToString();
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.IntArray)
             {
-                if (lev[index].Prop.ContainsKey("Arg")) lev[index].Prop["Arg"] = itm.Args;
-                else lev[index].Prop.Add("Arg", itm.Args);
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("Arg")) AllInfos[type].Objs[index].Prop["Arg"] = itm.Args.Clone();
+                else AllInfos[type].Objs[index].Prop.Add("Arg", itm.Args.Clone());
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.Rail)
+            {
+                int id = AllRailInfos[index].l_id;
+                int no = AllRailInfos[index].no;
+                string name = AllRailInfos[index].Name;
+                AllRailInfos[index] = itm.Rail.Clone();
+                AllRailInfos[index].l_id = id;
+                AllRailInfos[index].no = no;
+                AllRailInfos[index].Name = name;
+                ObjectsListBox_SelectedIndexChanged(null, null);
+                return;
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
+            {
+                Node name, id;
+                name = null;
+                id = null;
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("name")) name = ((Node)AllInfos[type].Objs[index].Prop["name"]).Clone();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("l_id")) id = ((Node)AllInfos[type].Objs[index].Prop["l_id"]).Clone();
+                AllInfos[type].Objs[index] = itm.Obj.Clone();
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("name")) AllInfos[type].Objs[index].Prop["name"] = name;
+                if (AllInfos[type].Objs[index].Prop.ContainsKey("l_id")) AllInfos[type].Objs[index].Prop["l_id"] = id;
             }
             propertyGrid1.Refresh();
-            UpdateOBJPos(index, ref lev, comboBox1.Text);
+            UpdateOBJPos(index, ref AllInfos[type].Objs, comboBox1.Text);
         }
         #endregion
 
@@ -1052,7 +1094,9 @@ namespace The4Dimension
             Position = 1,
             Rotation = 2,
             Scale = 3,
-            IntArray = 4
+            IntArray = 4,
+            FullObject = 5,
+            Rail = 6
         }
 
         public Single X = 0;
@@ -1060,6 +1104,8 @@ namespace The4Dimension
         public Single Z = 0;
         public int[] Args = null;
         public ClipboardType Type = 0;
+        public Rail Rail = null;
+        public LevelObj Obj = null;
 
         public override string ToString()
         {
@@ -1073,6 +1119,10 @@ namespace The4Dimension
                     return String.Format("Scale - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
                 case ClipboardType.IntArray:
                     return "Args[]";
+                case ClipboardType.Rail:
+                    return "Rail - " + Rail.Name;
+                case ClipboardType.FullObject:
+                    return "Object - " + Obj.ToString();
                 default:
                     return "Not set";
             }

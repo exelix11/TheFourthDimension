@@ -23,7 +23,11 @@ namespace The4Dimension
             }
             if (Prop.ContainsKey("name"))
                 return Prop["name"].ToString().Substring("String : ".Length);
-            else return "Unknown name LevelObj";
+            else
+            {
+                if (Prop.ContainsKey("l_id")) return "LevelObj id: " + Prop["l_id"].ToString();
+                else return "LevelObj";
+            }
         }
 
         public LevelObj Clone()

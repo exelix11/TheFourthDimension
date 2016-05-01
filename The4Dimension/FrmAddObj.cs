@@ -17,9 +17,31 @@ namespace The4Dimension
         public FrmAddObj(Dictionary<string,string> CCNT, string text)
         {
             InitializeComponent();
-            comboBox1.Items.AddRange(CCNT.Keys.ToArray());
             LayerName = text;
             if (LayerName == "StartInfo") { comboBox1.Text = "Mario"; comboBox1.Enabled = false; }
+            else if (LayerName == "AreaObjInfo")
+            {
+                foreach (string s in CCNT.Keys.ToArray())
+                {
+                    if (s.ToLower().EndsWith("area") && !s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
+                }
+            }
+            else if (LayerName == "CameraAreaObjInfo")
+            {
+                foreach (string s in CCNT.Keys.ToArray())
+                    if (s.ToLower().EndsWith("area") && s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
+            }
+            else if (LayerName == "ObjInfo")
+            {
+                foreach (string s in CCNT.Keys.ToArray())
+                    if (!s.ToLower().EndsWith("area")) comboBox1.Items.Add(s);
+            }
+            else if (LayerName == "StartEventObjInfo")
+            {
+                foreach (string s in CCNT.Keys.ToArray())
+                    if (s.ToLower().StartsWith("startevent")) comboBox1.Items.Add(s);
+            }
+            else comboBox1.Items.AddRange(CCNT.Keys.ToArray());
             Value = null;
         }
 
@@ -46,6 +68,11 @@ namespace The4Dimension
             obj.Prop.Add("scale_z", new Node("1", "D2"));
             Value = obj;
             this.Close();
+        }
+
+        private void FrmAddObj_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

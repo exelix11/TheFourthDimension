@@ -98,6 +98,7 @@
             this.Name = "FrmAddObj";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmAddObj";
+            this.Load += new System.EventHandler(this.FrmAddObj_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
