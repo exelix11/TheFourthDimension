@@ -51,18 +51,25 @@
     <StartupObject>The4Dimension.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="3DS">
+    <Reference Include="3DS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>EFEDlls\3DS.dll</HintPath>
     </Reference>
-    <Reference Include="CommonCompressors">
+    <Reference Include="CommonCompressors, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>EFEDlls\CommonCompressors.dll</HintPath>
     </Reference>
-    <Reference Include="CommonFiles">
+    <Reference Include="CommonFiles, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>EFEDlls\CommonFiles.dll</HintPath>
     </Reference>
-    <Reference Include="LibEveryFileExplorer">
+    <Reference Include="LibEveryFileExplorer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>EFEDlls\LibEveryFileExplorer.dll</HintPath>
     </Reference>
-    <Reference Include="NDS">
-    </Reference>
-    <Reference Include="Ohana3DS Custom Exporter">
-      <HintPath>..\..\Ohana3DS-Rebirth-master\Ohana3DS Rebirth\bin\x86\Release\Ohana3DS Custom Exporter.dll</HintPath>
+    <Reference Include="NDS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>EFEDlls\NDS.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -123,6 +130,16 @@
     <Compile Include="ModelDumper.Designer.cs">
       <DependentUpon>ModelDumper.cs</DependentUpon>
     </Compile>
+    <Compile Include="Ohana3DS_stuff\CGFX.cs" />
+    <Compile Include="Ohana3DS_stuff\IOUtils.cs" />
+    <Compile Include="Ohana3DS_stuff\MeshUtils.cs" />
+    <Compile Include="Ohana3DS_stuff\OBJ.cs" />
+    <Compile Include="Ohana3DS_stuff\PICACommand.cs" />
+    <Compile Include="Ohana3DS_stuff\PICACommandReader.cs" />
+    <Compile Include="Ohana3DS_stuff\PICACommandWriter.cs" />
+    <Compile Include="Ohana3DS_stuff\RenderBase.cs" />
+    <Compile Include="Ohana3DS_stuff\TextureCodec.cs" />
+    <Compile Include="Ohana3DS_stuff\TextureUtils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">
@@ -184,6 +201,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EFEDlls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

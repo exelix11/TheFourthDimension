@@ -10,10 +10,9 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
 using LibEveryFileExplorer.Files.SimpleFileSystem;
-using static Ohana3DS_Rebirth.Ohana.RenderBase;
 using _3DS.NintendoWare.GFX;
 using CommonFiles;
-using System.Diagnostics;
+using The4Dimension.Ohana;
 
 namespace The4Dimension
 {
@@ -73,8 +72,8 @@ namespace The4Dimension
                                 {
                                     if (!Path.GetFileNameWithoutExtension(Name).ToLower().StartsWith("demo") && Path.GetFileNameWithoutExtension(Name).ToLower() != "karon")
                                     {
-                                        OModelGroup mdl = new Ohana3DS_Rebirth.Ohana.Models.CGFX().load(new MemoryStream(file.Data));
-                                        new Ohana3DS_Rebirth.Ohana.Models.GenericFormats.OBJ().export(mdl, Name, 0);
+                                        RenderBase.OModelGroup mdl = new Ohana.CGFX().load(new MemoryStream(file.Data));
+                                        new Ohana.OBJ().export(mdl, Name, 0);
                                     }
                                     else if (Path.GetFileNameWithoutExtension(Name).ToLower() == "karon") ConvertEFE(file.Data, Name);
                                 }
@@ -91,8 +90,8 @@ namespace The4Dimension
 
         void ConvertEFE(byte[] Data, string Name)
         {
-            CGFX mod = new CGFX(Data);
-            OBJ o = mod.Data.Models[0].ToOBJ();
+            _3DS.NintendoWare.GFX.CGFX mod = new _3DS.NintendoWare.GFX.CGFX(Data);
+            CommonFiles.OBJ o = mod.Data.Models[0].ToOBJ();
             o.MTLPath = Path.GetFileNameWithoutExtension(Name) + ".mtl";
             MTL m = mod.Data.Models[0].ToMTL("Tex");
             byte[] d = o.Write();

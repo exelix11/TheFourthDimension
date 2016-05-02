@@ -91,9 +91,9 @@ namespace The4Dimension
                     return BitConverter.ToSingle(Node.Value, 0).ToString();
                 case (byte)SubNodeValTypes.String:
                     return LoadedFile.StringRes.Strings[(int)BitConverter.ToUInt32(Node.Value, 0)];
-                    Encoding enc = Encoding.GetEncoding(932);
+                    /*Encoding enc = Encoding.GetEncoding(932);
                     byte[] Data = enc.GetBytes(LoadedFile.StringRes.Strings[(int)BitConverter.ToUInt32(Node.Value, 0)]);
-                    return Encoding.Default.GetString(Data);
+                    return Encoding.Default.GetString(Data);*/
                 case (byte)SubNodeValTypes.Empty:
                     return "";
                 default:
