@@ -76,7 +76,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(60, 13);
             this.label4.TabIndex = 9;
-            this.label4.Text = "V. 0.2 Beta";
+            this.label4.Text = "V. 0.3 Beta";
             // 
             // FrmCredits
             // 

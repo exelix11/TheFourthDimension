@@ -63,6 +63,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\CommonFiles.dll</HintPath>
     </Reference>
+    <Reference Include="FastColoredTextBox, Version=2.16.11.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL">
+      <HintPath>..\packages\FCTB.2.16.11.0\lib\FastColoredTextBox.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="LibEveryFileExplorer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\LibEveryFileExplorer.dll</HintPath>
@@ -92,24 +96,30 @@
   <ItemGroup>
     <Compile Include="BymlConverter.cs" />
     <Compile Include="BymlFormat.cs" />
-    <Compile Include="CustomStringWriter.cs" />
+    <Compile Include="CustomClasses.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmAddObj.cs">
+    <Compile Include="FormEditors\FrmAddObj.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmAddObj.Designer.cs">
+    <Compile Include="FormEditors\FrmAddObj.Designer.cs">
       <DependentUpon>FrmAddObj.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmAddValue.cs">
+    <Compile Include="FormEditors\FrmAddValue.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmAddValue.Designer.cs">
+    <Compile Include="FormEditors\FrmAddValue.Designer.cs">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditors\FrmXmlEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmXmlEditor.Designer.cs">
+      <DependentUpon>FrmXmlEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmCredits.cs">
       <SubType>Form</SubType>
@@ -117,10 +127,10 @@
     <Compile Include="FrmCredits.Designer.cs">
       <DependentUpon>FrmCredits.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmObjEditor.cs">
+    <Compile Include="FormEditors\FrmObjEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmObjEditor.Designer.cs">
+    <Compile Include="FormEditors\FrmObjEditor.Designer.cs">
       <DependentUpon>FrmObjEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="LevelObj.cs" />
@@ -145,16 +155,19 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmAddObj.resx">
+    <EmbeddedResource Include="FormEditors\FrmAddObj.resx">
       <DependentUpon>FrmAddObj.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmAddValue.resx">
+    <EmbeddedResource Include="FormEditors\FrmAddValue.resx">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmXmlEditor.resx">
+      <DependentUpon>FrmXmlEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmCredits.resx">
       <DependentUpon>FrmCredits.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmObjEditor.resx">
+    <EmbeddedResource Include="FormEditors\FrmObjEditor.resx">
       <DependentUpon>FrmObjEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModelDumper.resx">
@@ -170,6 +183,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

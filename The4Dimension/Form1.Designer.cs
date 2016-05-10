@@ -58,8 +58,10 @@
             this.bymlConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bymlXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.xmlBymlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.UndoMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.OtherLevelDataMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ObjectsListBox = new System.Windows.Forms.ListBox();
@@ -378,6 +380,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.bymlConverterToolStripMenuItem,
+            this.UndoMenu,
+            this.OtherLevelDataMenu,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -399,20 +403,20 @@
             this.saveAsBymlToolStripMenuItem,
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsToolStripMenuItem.Text = "Save";
             // 
             // saveAsBymlToolStripMenuItem
             // 
             this.saveAsBymlToolStripMenuItem.Name = "saveAsBymlToolStripMenuItem";
-            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
-            this.saveAsBymlToolStripMenuItem.Text = "Save as Byml";
+            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsBymlToolStripMenuItem.Text = "Save as Szs";
             this.saveAsBymlToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
             // 
             // saveAsXmlToolStripMenuItem
             // 
             this.saveAsXmlToolStripMenuItem.Name = "saveAsXmlToolStripMenuItem";
-            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsXmlToolStripMenuItem.Text = "Save as Xml";
             this.saveAsXmlToolStripMenuItem.Click += new System.EventHandler(this.saveAsXmlToolStripMenuItem_Click);
             // 
@@ -439,6 +443,13 @@
             this.xmlBymlToolStripMenuItem.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
             // 
+            // UndoMenu
+            // 
+            this.UndoMenu.Name = "UndoMenu";
+            this.UndoMenu.Size = new System.Drawing.Size(48, 20);
+            this.UndoMenu.Text = "Undo";
+            this.UndoMenu.DropDownOpening += new System.EventHandler(this.Undo_loading);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -450,9 +461,15 @@
             // hotkeysListToolStripMenuItem
             // 
             this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
-            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
             this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
+            // 
+            // OtherLevelDataMenu
+            // 
+            this.OtherLevelDataMenu.Name = "OtherLevelDataMenu";
+            this.OtherLevelDataMenu.Size = new System.Drawing.Size(142, 20);
+            this.OtherLevelDataMenu.Text = "Other level data editing";
             // 
             // splitContainer1
             // 
@@ -505,6 +522,7 @@
             this.ObjectsListBox.Size = new System.Drawing.Size(229, 186);
             this.ObjectsListBox.TabIndex = 8;
             this.ObjectsListBox.SelectedIndexChanged += new System.EventHandler(this.ObjectsListBox_SelectedIndexChanged);
+            this.ObjectsListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Listbox_keyDown);
             // 
             // label1
             // 
@@ -666,14 +684,16 @@
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyRot;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyScale;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ListBox ObjectsListBox;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hotkeysListToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyArgs;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyFull;
+        private System.Windows.Forms.ToolStripMenuItem UndoMenu;
+        public System.Windows.Forms.ComboBox comboBox1;
+        public System.Windows.Forms.ListBox ObjectsListBox;
+        private System.Windows.Forms.ToolStripMenuItem OtherLevelDataMenu;
     }
 }
 

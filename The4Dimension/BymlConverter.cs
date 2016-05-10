@@ -42,7 +42,7 @@ namespace The4Dimension
         #region exportXML        
         string exportToXml(BymlFile File)
         {
-            CustomStringWriter str = new CustomStringWriter(Encoding.Default);
+            CustomStringWriter str = new CustomStringWriter(Encoding.GetEncoding(932));
             XmlTextWriter xr;
             xr = new XmlTextWriter(str);
             xr.Formatting = System.Xml.Formatting.Indented;
@@ -96,6 +96,8 @@ namespace The4Dimension
                     return Encoding.Default.GetString(Data);*/
                 case (byte)SubNodeValTypes.Empty:
                     return "";
+                case (byte)SubNodeValTypes.Boolen:
+                    if (Node.Value[0] == 0x01) return "True"; else return "False";
                 default:
                     string Value = "";
                     for (int ii = 0; ii < Node.Value.Length; ii++)
@@ -179,6 +181,9 @@ namespace The4Dimension
                             break;
                         case "D2":
                             ret.Add(new GenericNode(xNode.Attributes["Name"].Value, xNode.Attributes["StringValue"].Value, 0xD2));
+                            break;
+                        case "D0":
+                            ret.Add(new GenericNode(xNode.Attributes["Name"].Value, xNode.Attributes["StringValue"].Value, 0xD0));
                             break;
                         default:
                             if (xNode.LocalName.Trim().Length == 2)

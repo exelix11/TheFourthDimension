@@ -419,6 +419,7 @@ namespace BymlFormat
         Empty = (byte)0xA1,
         Int = (byte)0xD1,
         Single = (byte)0xD2,
+        Boolen = (byte) 0xD0,
         Other,
     }
 
@@ -468,6 +469,10 @@ namespace BymlFormat
                     NodeType = 0xD2;
                     Single Stmp = Convert.ToSingle(_StringValue);
                     Value = BitConverter.GetBytes(Stmp);
+                    break;
+                case 0xD0:
+                    NodeType = 0xD0;
+                    Value = (_StringValue.Contains("1") || _StringValue.ToLower() == "true") ? new byte[] { 0x01, 0x00, 0x00, 0x00 } : new byte[] { 0x00, 0x00, 0x00, 0x00 };
                     break;
                 default:
                     NodeType = _type;
@@ -528,10 +533,10 @@ namespace BymlFormat
             return Res.ToArray();
         }
 
-        public static void debugBytes(byte[] robe)
+        public static void debugBytes(byte[] Data)
         {
             string Value = "";
-            for (int ii = 0; ii < robe.Length; ii++) Value += " 0x" + GetHexString(robe[ii]);
+            for (int ii = 0; ii < Data.Length; ii++) Value += " 0x" + GetHexString(Data[ii]);
             //Debug.Print(Value);
             return;
         }

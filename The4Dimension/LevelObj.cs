@@ -109,6 +109,12 @@ namespace The4Dimension
     [TypeConverter(typeof(ExpandableObjectConverter))]
     public class Rail : ICloneable
     {
+        public object this[string propertyName]
+        {
+            get { return this.GetType().GetProperty(propertyName).GetValue(this, null); }
+            set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
+        }
+
         List<int> _Args = new List<int>();
         string _LayerName;
         internal List<Point> _points = new List<Point>();
