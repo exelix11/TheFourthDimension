@@ -32,11 +32,11 @@ namespace ModelViewer
             InitializeComponent();
         }
 
-        public void addModel(string path, string Type, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ)
+        public void addModel(string path, string Type, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ, int at = -1)
         {
             if (!Models.ContainsKey(Type)) Models.Add(Type, new List<ModelVisual3D>());
-            Models[Type].Add(new ModelVisual3D());
-            ModelViewer.Children.Add(Models[Type][Models[Type].Count-1]);
+            if (at == -1) Models[Type].Add(new ModelVisual3D()); else Models[Type].Insert(at,new ModelVisual3D());
+            if (at == -1) ModelViewer.Children.Add(Models[Type][Models[Type].Count-1]); else ModelViewer.Children.Insert(at,Models[Type][at]);
             Model3D Model;
             if (!ImportedModels.ContainsKey(path))
             {
@@ -45,7 +45,7 @@ namespace ModelViewer
             }
             else Model = ImportedModels[path];
             Model.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90));
-            Models[Type][Models[Type].Count - 1].Content = Model;
+            Models[Type][at == -1 ? Models[Type].Count - 1: at].Content = Model;
             Transform3DGroup t = new Transform3DGroup();
             t.Children.Add(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1, 0, 0), RotX)));
             t.Children.Add(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 1, 0), RotY)));
@@ -53,8 +53,8 @@ namespace ModelViewer
             t.Children.Add(new ScaleTransform3D(scale));
             t.Children.Add(new TranslateTransform3D(pos));
             if (!Positions.ContainsKey(Type)) Positions.Add(Type, new List<Vector3D>());
-            Positions[Type].Add(pos);
-            Models[Type][Models[Type].Count - 1].Transform = t;
+            if (at == -1) Positions[Type].Add(pos); else Positions[Type].Insert(at, pos);
+            Models[Type][at == -1 ? Models[Type].Count - 1 : at].Transform = t;
         }
 
         public void RemoveModel(string Type, int index)

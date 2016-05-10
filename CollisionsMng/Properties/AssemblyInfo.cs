@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // Le informazioni generali relative a un assembly sono controllate dal seguente 
 // set di attributi. Modificare i valori di questi attributi per modificare le informazioni
 // associate a un assembly.
-[assembly: AssemblyTitle("The4Dimension")]
-[assembly: AssemblyDescription("The first super mario 3d land level editor !")]
+[assembly: AssemblyTitle("CollisionsMng")]
+[assembly: AssemblyDescription("Converts OBJ to 3d land collision format (.kcl and .pa) or convert .kcl to obj")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Exelix11")]
-[assembly: AssemblyProduct("The4Dimension")]
+[assembly: AssemblyProduct("CollisionsMng")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // Se il progetto viene esposto a COM, il GUID seguente verrà utilizzato come ID della libreria dei tipi
-[assembly: Guid("93617ba7-696e-450e-a85b-4a9ac79bbf68")]
+[assembly: Guid("32b900fe-fe1b-4249-9e14-a6e7852f4fac")]
 
 // Le informazioni sulla versione di un assembly sono costituite dai seguenti quattro valori:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // È possibile specificare tutti i valori oppure impostare valori predefiniti per i numeri relativi alla revisione e alla build 
 // usando l'asterisco '*' come illustrato di seguito:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.3.0.0")]
-[assembly: AssemblyFileVersion("0.3.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
