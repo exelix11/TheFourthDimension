@@ -125,6 +125,7 @@ namespace The4Dimension
 
         void PasteValue(ClipBoardItem itm)
         {
+            if (Value == null) Value = new LevelObj();
             if (itm.Type == ClipBoardItem.ClipboardType.Position)
             {
                 if (Value.Prop.ContainsKey("pos_x")) ((Node)Value.Prop["pos_x"]).StringValue = itm.X.ToString();
@@ -155,14 +156,8 @@ namespace The4Dimension
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
             {
-                Node name, id;
-                name = null;
-                id = null;
-                if (Value.Prop.ContainsKey("name")) name = ((Node)Value.Prop["name"]).Clone();
-                if (Value.Prop.ContainsKey("l_id")) id = ((Node)Value.Prop["l_id"]).Clone();
                 Value = itm.Obj.Clone();
-                if (Value.Prop.ContainsKey("name")) Value.Prop["name"] = name;
-                if (Value.Prop.ContainsKey("l_id")) Value.Prop["l_id"] = id;
+                propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(Value.Prop);
             }
             propertyGrid1.Refresh();
         }

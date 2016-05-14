@@ -40,10 +40,7 @@ namespace The4Dimension
             }
         }
 
-
-        NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
-        List<byte[]> SzsFiles = new List<byte[]>();
-        int StageDataIndex = -1;
+        Dictionary<string, byte[]> SzsFiles = new Dictionary<string, byte[]>();
         Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
         List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
@@ -65,7 +62,6 @@ namespace The4Dimension
                 }
                 else Application.Exit();
             }
-            groupBox1.Visible = Debugger.IsAttached;
             LoadModelResolver();
             LoadCreatorClassNameTable();
             if (LoadedFile == "")
@@ -88,13 +84,14 @@ namespace The4Dimension
             if (Directory.Exists("Tmp")) Directory.Delete("Tmp", true);
             Directory.CreateDirectory("Tmp");
             CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
+            NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
             SzsArch = new NDS.NitroSystem.FND.NARC(y.Decompress(File.ReadAllBytes(FilePath)));
-            StageDataIndex = getIndexinSZS("stagedata.byml");
             int index = 0;
-            List<ToolStripMenuItem> OtherFiles = new List<ToolStripMenuItem>();            
+            List<ToolStripMenuItem> OtherFiles = new List<ToolStripMenuItem>();
+            byte[] StageData = null;
             foreach (SFSFile f in SzsArch.ToFileSystem().Files)
             {
-                if (f.FileName.ToLower() == "stagedata.byml") { StageDataIndex = index; SzsFiles.Add(null); }
+                if (f.FileName.ToLower() == "stagedata.byml") StageData = f.Data;
                 else
                 {
                     ToolStripMenuItem btn = new ToolStripMenuItem();
@@ -102,35 +99,23 @@ namespace The4Dimension
                     btn.Text = f.FileName;
                     btn.Click += LoadFileList_click;
                     OtherFiles.Add(btn);
-                    SzsFiles.Add(f.Data);
+                    SzsFiles.Add(f.FileName, f.Data);
                 }
                 index++;
             }
             OtherLevelDataMenu.DropDownItems.AddRange(OtherFiles.ToArray());
-            if (StageDataIndex != -1)
+            if (StageData != null)
             {
-                OpenFile(BymlConverter.GetXml(SzsArch.ToFileSystem().Files[StageDataIndex].Data));
+                OpenFile(BymlConverter.GetXml(StageData));
             } else MessageBox.Show("StageData.byml not found in the file !");
         }
 
         private void LoadFileList_click(object sender, EventArgs e)
         {
-            string SenderName = ((ToolStripMenuItem)sender).Name;
-            int index = int.Parse(SenderName.Substring("LoadFile".Length));
-            FormEditors.FrmXmlEditor frm = new FormEditors.FrmXmlEditor(BymlConverter.GetXml(SzsFiles[index]));
+            string name = ((ToolStripMenuItem)sender).Text;
+            FormEditors.FrmXmlEditor frm = new FormEditors.FrmXmlEditor(BymlConverter.GetXml(SzsFiles[name]));
             frm.ShowDialog();
-            if (frm.XmlRes != null) SzsFiles[index] = BymlConverter.GetByml(frm.XmlRes);
-        }
-
-        int getIndexinSZS(string name)
-        {
-            int index = 0;
-            foreach (SFSFile f in SzsArch.ToFileSystem().Files)
-            {
-                if (f.FileName.ToLower() == name.ToLower()) return index;
-                index++;
-            }
-            return -1;
+            if (frm.XmlRes != null) SzsFiles[name] = BymlConverter.GetByml(frm.XmlRes);
         }
 
         void LoadModelResolver()
@@ -348,6 +333,41 @@ namespace The4Dimension
         #endregion
 
         #region ObjectsEvents
+
+        #region Find
+        private void objectByIdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            f.ShowDialog();
+            if (f.Res == null) return;
+            FindIndex(comboBox1.Text, "l_id", Convert.ToInt32(f.Res));
+        }
+
+        private void objectByCameraIdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            f.ShowDialog();
+            if (f.Res == null) return;
+            FindIndex(comboBox1.Text, "CameraId", Convert.ToInt32(f.Res));
+        }
+
+        private void Switch___FindClick(object sender, EventArgs e)
+        {
+            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            f.ShowDialog();
+            if (f.Res == null) return;
+            FindIndex(comboBox1.Text, ((ToolStripMenuItem)sender).Text, Convert.ToInt32(f.Res));
+        }
+
+        private void objectByViewIdToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            f.ShowDialog();
+            if (f.Res == null) return;
+            FindIndex(comboBox1.Text, "ViewId", Convert.ToInt32(f.Res));
+        }
+        #endregion
+
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             ObjectsListBox.Items.Clear();
@@ -388,7 +408,7 @@ namespace The4Dimension
         Vector3D StartPos;
 
         private void render_KeyDown(object sender, System.Windows.Input.KeyEventArgs e) //Render hotkeys
-        {            
+        {
             if (e.Key == Key.Z)
             {
                 if (Undo.Count > 0) Undo.Pop().Undo();
@@ -466,7 +486,7 @@ namespace The4Dimension
 
         void endDragging()
         {
-            Action<string,int,Vector3D> act;
+            Action<string, int, Vector3D> act;
             act = (string type, int id, Vector3D pos) =>
             {
                 ((Node)AllInfos[type].Objs[id].Prop["pos_x"]).StringValue = pos.X.ToString(); //These values were stored directly
@@ -475,7 +495,7 @@ namespace The4Dimension
                 UpdateOBJPos(id, ref AllInfos[type].Objs, type);
                 propertyGrid1.Refresh();
             };
-            Undo.Push(new UndoAction("Moved object : " + AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].ToString(),(string)DraggingArgs[0], (int)DraggingArgs[1], StartPos,act));
+            Undo.Push(new UndoAction("Moved object : " + AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].ToString(), (string)DraggingArgs[0], (int)DraggingArgs[1], StartPos, act));
         }
 
         private void render_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -489,7 +509,7 @@ namespace The4Dimension
         private void render_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if ((ModifierKeys & Keys.Control) != Keys.Control || RenderIsDragging) return;
-            RenderIsDragging = true;           
+            RenderIsDragging = true;
             DraggingArgs = render.GetOBJ(sender, e);
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
             ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
@@ -535,7 +555,7 @@ namespace The4Dimension
                 {
                     if (AreaObjOldSelection != -1 && AreaObjOldSelection < AllInfos["AreaObjInfo"].Objs.Count) render.ChangeTransform(comboBox1.Text, AreaObjOldSelection, render.Positions[comboBox1.Text][AreaObjOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
                     UpdateOBJPos(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
-                } 
+                }
                 AreaObjOldSelection = ObjectsListBox.SelectedIndex;
                 return;
             }
@@ -547,7 +567,7 @@ namespace The4Dimension
                 {
                     if (CameraAreaOldSelection != -1 && AreaObjOldSelection < AllInfos["CameraAreaInfo"].Objs.Count) render.ChangeTransform(comboBox1.Text, CameraAreaOldSelection, render.Positions[comboBox1.Text][CameraAreaOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
                     UpdateOBJPos(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
-                } 
+                }
                 CameraAreaOldSelection = ObjectsListBox.SelectedIndex;
                 return;
             }
@@ -561,14 +581,6 @@ namespace The4Dimension
         #endregion
 
         #region LevelEditing
-        private void button1_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog opn = new OpenFileDialog();
-            if (opn.ShowDialog() == DialogResult.OK)
-            {
-                render.addModel(opn.FileName, "AreaObjInfo", new Vector3D((Single)ModImpX.Value, (Single)ModImpY.Value, (Single)ModImpZ.Value), new Vector3D((Single)ModImpX_Scale.Value, (Single)ModImpY_Scale.Value, (Single)ModImpZ_Scale.Value), (Single)ModImpX_Rot.Value, (Single)ModImpY_Rot.Value, (Single)ModImpZ_Rot.Value);
-            }
-        } //DebugModelLoader
 
         private void propertyGridChange(object s, PropertyValueChangedEventArgs e)
         {
@@ -646,14 +658,14 @@ namespace The4Dimension
             FrmAddValue v = new FrmAddValue(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex]);
             v.ShowDialog();
             if (v.resName != null && v.resName != "") AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.Add(v.resName, v.result); else return;
-            Action<string,int,object> action;
+            Action<string, int, object> action;
             action = (string type, int at, object propName) =>
-            { 
+            {
                 AllInfos[type].Objs[at].Prop.Remove((string)propName);
                 propertyGrid1.Refresh();
                 propertyGrid1.Update();
             };
-            Undo.Push(new UndoAction("Added property: "+ v.resName,comboBox1.Text, ObjectsListBox.SelectedIndex, v.resName, action));
+            Undo.Push(new UndoAction("Added property: " + v.resName, comboBox1.Text, ObjectsListBox.SelectedIndex, v.resName, action));
             propertyGrid1.Refresh();
         }
 
@@ -664,11 +676,11 @@ namespace The4Dimension
             {
                 Rail tmp = AllRailInfos[ObjectsListBox.SelectedIndex].Clone();
                 Action<string, int, object> action;
-                action = (string type,int at, object rail) =>
+                action = (string type, int at, object rail) =>
                 {
-                    AddRail((Rail)rail,at ,true);
+                    AddRail((Rail)rail, at, true);
                 };
-                Undo.Push(new UndoAction("Removed rail: " + tmp.ToString(),"AllRailInfos", ObjectsListBox.SelectedIndex, tmp, action));
+                Undo.Push(new UndoAction("Removed rail: " + tmp.ToString(), "AllRailInfos", ObjectsListBox.SelectedIndex, tmp, action));
                 AllRailInfos.RemoveAt(ObjectsListBox.SelectedIndex);
                 ObjectsListBox.Items.RemoveAt(ObjectsListBox.SelectedIndex);
             }
@@ -676,11 +688,11 @@ namespace The4Dimension
             {
                 LevelObj tmp = AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Clone();
                 Action<string, int, object> action;
-                action = (string type,int at, object obj) =>
+                action = (string type, int at, object obj) =>
                 {
                     AddObj((LevelObj)tmp, ref ObjectsListBox, ref AllInfos[type].Objs, type, false, at, true);
                 };
-                Undo.Push(new UndoAction("Removed object: " + tmp.ToString(),comboBox1.Text, ObjectsListBox.SelectedIndex, tmp,action));
+                Undo.Push(new UndoAction("Removed object: " + tmp.ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, tmp, action));
                 render.RemoveModel(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 AllInfos[comboBox1.Text].Objs.RemoveAt(ObjectsListBox.SelectedIndex);
                 ObjectsListBox.Items.RemoveAt(ObjectsListBox.SelectedIndex);
@@ -701,8 +713,8 @@ namespace The4Dimension
             }
             else
             {
-                AddObj(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex], ref ObjectsListBox, ref AllInfos[comboBox1.Text].Objs,comboBox1.Text);
-            }            
+                AddObj(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex], ref ObjectsListBox, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
+            }
         }
 
         void AddRail(Rail r, int at = -1, bool IsUndo = false)
@@ -734,23 +746,23 @@ namespace The4Dimension
             if (clone) obj = inobj.Clone(); else obj = inobj;
             if (obj.Prop.ContainsKey("l_id")) obj.Prop["l_id"] = new Node(higestID[name].ToString(), "D1");
             if (at == -1) list.Add(obj); else list.Insert(at, obj);
-            if (at == -1) listbox.Items.Add(obj.ToString()); else listbox.Items.Insert(at,obj.ToString());
+            if (at == -1) listbox.Items.Add(obj.ToString()); else listbox.Items.Insert(at, obj.ToString());
             List<LevelObj> tmp = new List<LevelObj>();
             tmp.Add(obj);
-            if (name == "AreaObjInfo") LoadModels( tmp, name, "models\\UnkYellow.obj",at);
-            else if (name == "CameraAreaInfo") LoadModels( tmp, name, "models\\UnkGreen.obj",at);
-            else LoadModels( tmp, name, "models\\UnkBlue.obj",at);
+            if (name == "AreaObjInfo") LoadModels(tmp, name, "models\\UnkYellow.obj", at);
+            else if (name == "CameraAreaInfo") LoadModels(tmp, name, "models\\UnkGreen.obj", at);
+            else LoadModels(tmp, name, "models\\UnkBlue.obj", at);
             listbox.SetSelected(at == -1 ? ObjectsListBox.Items.Count - 1 : at, true);
             if (!IsUndo)
             {
-                Action<int,string> action;
+                Action<int, string> action;
                 action = (int index, string type) =>
                 {
                     render.RemoveModel(type, index);
                     AllInfos[type].Objs.RemoveAt(index);
                     ObjectsListBox.Items.RemoveAt(index);
                 };
-                Undo.Push(new UndoAction("added object: " + obj.ToString(),comboBox1.Text, ObjectsListBox.Items.Count - 1, action));
+                Undo.Push(new UndoAction("added object: " + obj.ToString(), comboBox1.Text, ObjectsListBox.Items.Count - 1, action));
             }
         }
 
@@ -770,10 +782,10 @@ namespace The4Dimension
         }
 
         private void pasteValueToolStripMenuItem_Click(object sender, EventArgs e)
-        {            
+        {
             if (ObjectsListBox.SelectedIndex < 0) return;
             if (comboBox1.Text == "AllRailInfos" && clipboard[clipboard.Count - 1].Type != ClipBoardItem.ClipboardType.Rail) return;
-            PasteValue(ObjectsListBox.SelectedIndex, comboBox1.Text, clipboard[clipboard.Count-1]);
+            PasteValue(ObjectsListBox.SelectedIndex, comboBox1.Text, clipboard[clipboard.Count - 1]);
             ClipBoardMenu.Close();
         }
 
@@ -781,7 +793,7 @@ namespace The4Dimension
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "pos_");            
+            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "pos_");
         }
 
         private void copyRotationToolStripMenuItem_Click(object sender, EventArgs e)
@@ -907,7 +919,7 @@ namespace The4Dimension
                 }
             };
             object obj = type == "AllRailInfos" ? (object)AllRailInfos[index] : AllInfos[type].Objs[index];
-            Undo.Push(new UndoAction("Pasted value to object " + obj.ToString(), type, index, obj , act));
+            Undo.Push(new UndoAction("Pasted value to object " + obj.ToString(), type, index, obj, act));
             if (itm.Type == ClipBoardItem.ClipboardType.Position)
             {
                 if (AllInfos[type].Objs[index].Prop.ContainsKey("pos_x")) ((Node)AllInfos[type].Objs[index].Prop["pos_x"]).StringValue = itm.X.ToString();
@@ -957,6 +969,48 @@ namespace The4Dimension
             propertyGrid1.Refresh();
             UpdateOBJPos(index, ref AllInfos[type].Objs, comboBox1.Text);
         }
+
+        void FindIndex(string Type, string PropertyName, int Value)
+        {
+            Form ToClose = Application.OpenForms["FrmSearchResults"];
+            if (ToClose != null) ToClose.Close();
+            List<string> HitsNames = new List<string>();
+            List<int> HitsIndexes = new List<int>();
+            if (Type == "AllRailInfos")
+            {
+                if (PropertyName == "l_id")
+                {
+                    for (int i = 0; i < AllRailInfos.Count; i++)
+                    {
+                        if (AllRailInfos[i].l_id == Value) { HitsNames.Add(AllRailInfos[i].ToString()); HitsIndexes.Add(i); }
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 0; i < AllInfos[Type].Objs.Count; i++)
+                {
+                    Debug.Print(AllInfos[Type].Objs[i].Prop.ContainsKey(PropertyName).ToString());
+                    if (AllInfos[Type].Objs[i].Prop.ContainsKey(PropertyName) && AllInfos[Type].Objs[i].Prop[PropertyName] is Node && ((Node)AllInfos[Type].Objs[i].Prop[PropertyName]).NodeType == Node.NodeTypes.Int)
+                    {
+                        if (((Node)AllInfos[Type].Objs[i].Prop[PropertyName]).StringValue == Value.ToString()) { HitsNames.Add(AllInfos[Type].Objs[i].ToString()); HitsIndexes.Add(i); }
+                    }
+                }
+            }
+            if (HitsIndexes.Count == 0) { MessageBox.Show("Not found"); return; }
+            else
+            {
+                FormEditors.FrmSearchResults f = new FormEditors.FrmSearchResults(Type, HitsNames, HitsIndexes,this);
+                f.Text = "Search Results for: " + PropertyName + " = " + Value.ToString() + "  in " + Type;
+                f.Show();
+            }
+        }
+
+        public void SetSelectedObj(string Type, int Index)
+        {
+            comboBox1.SelectedIndex = comboBox1.Items.IndexOf(Type);
+            ObjectsListBox.SelectedIndex = Index;
+        }
         #endregion
 
         #region Save
@@ -967,8 +1021,18 @@ namespace The4Dimension
             if (sav.ShowDialog() == DialogResult.OK)
             {
                 CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
-                SzsArch.ToFileSystem().Files[StageDataIndex].Data = BymlConverter.GetByml(MakeXML());
-                for (int i = 0; i < SzsFiles.Count; i++) if (i != StageDataIndex) SzsArch.ToFileSystem().Files[i].Data = SzsFiles[i];
+                NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
+                SFSDirectory dir = new SFSDirectory("", true);
+                for (int i = 0; i < SzsFiles.Count; i++)
+                {
+                    SFSFile file = new SFSFile(i, SzsFiles.Keys.ToArray()[i], dir);
+                    file.Data = SzsFiles.Values.ToArray()[i];
+                    dir.Files.Add(file);
+                }
+                SFSFile StgData = new SFSFile(SzsFiles.Count, "StageData.byml", dir);
+                StgData.Data = BymlConverter.GetByml(MakeXML());
+                dir.Files.Add(StgData);
+                SzsArch.FromFileSystem(dir);
                 File.WriteAllBytes(sav.FileName, y.Compress(SzsArch.Write()));
                 MessageBox.Show("Done !");
             }
@@ -1302,7 +1366,13 @@ namespace The4Dimension
                 Undo.Pop().Undo();
             }
             UndoMenu.HideDropDown();
-        }        
+        }
+
+        private void gbatempThreadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://gbatemp.net/threads/wip-the-fourth-dimension-a-super-mario-3d-land-level-editor.424001/");
+        }
+
     }
 
     #region Other
