@@ -115,6 +115,18 @@
     <Compile Include="FormEditors\FrmAddValue.Designer.cs">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormEditors\FrmSearchResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmSearchResults.Designer.cs">
+      <DependentUpon>FrmSearchResults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditors\FrmValueInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmValueInput.Designer.cs">
+      <DependentUpon>FrmValueInput.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEditors\FrmXmlEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +172,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmAddValue.resx">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmSearchResults.resx">
+      <DependentUpon>FrmSearchResults.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmValueInput.resx">
+      <DependentUpon>FrmValueInput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmXmlEditor.resx">
       <DependentUpon>FrmXmlEditor.cs</DependentUpon>

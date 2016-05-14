@@ -39,29 +39,30 @@
             this.ClipBoardMenu_CopyArgs = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu_CopyFull = new System.Windows.Forms.ToolStripMenuItem();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.button1 = new System.Windows.Forms.Button();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.ModImpZ_Rot = new System.Windows.Forms.NumericUpDown();
-            this.ModImpY_Rot = new System.Windows.Forms.NumericUpDown();
-            this.ModImpX_Rot = new System.Windows.Forms.NumericUpDown();
-            this.ModImpZ_Scale = new System.Windows.Forms.NumericUpDown();
-            this.ModImpY_Scale = new System.Windows.Forms.NumericUpDown();
-            this.ModImpX_Scale = new System.Windows.Forms.NumericUpDown();
-            this.ModImpZ = new System.Windows.Forms.NumericUpDown();
-            this.ModImpY = new System.Windows.Forms.NumericUpDown();
-            this.ModImpX = new System.Windows.Forms.NumericUpDown();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsBymlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bymlConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bymlXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.xmlBymlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.bymlConverterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.bymlXmlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.xmlBymlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.UndoMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.OtherLevelDataMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectByIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectByCameraIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectBySwitchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchAToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchBToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchAppearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchKillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchDeadOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectByViewIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.OtherLevelDataMenu = new System.Windows.Forms.ToolStripMenuItem();
+            this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ObjectsListBox = new System.Windows.Forms.ListBox();
@@ -74,16 +75,6 @@
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.ClipBoardMenu.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpZ_Rot)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpY_Rot)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpX_Rot)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpZ_Scale)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpY_Scale)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpX_Scale)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpZ)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpX)).BeginInit();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -177,211 +168,13 @@
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(6, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(102, 23);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "LoadModelAt";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.groupBox1.Controls.Add(this.ModImpZ_Rot);
-            this.groupBox1.Controls.Add(this.ModImpY_Rot);
-            this.groupBox1.Controls.Add(this.ModImpX_Rot);
-            this.groupBox1.Controls.Add(this.ModImpZ_Scale);
-            this.groupBox1.Controls.Add(this.ModImpY_Scale);
-            this.groupBox1.Controls.Add(this.ModImpX_Scale);
-            this.groupBox1.Controls.Add(this.ModImpZ);
-            this.groupBox1.Controls.Add(this.ModImpY);
-            this.groupBox1.Controls.Add(this.ModImpX);
-            this.groupBox1.Controls.Add(this.button1);
-            this.groupBox1.Location = new System.Drawing.Point(244, 36);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(314, 69);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "DebugModelLoader";
-            // 
-            // ModImpZ_Rot
-            // 
-            this.ModImpZ_Rot.Location = new System.Drawing.Point(238, 49);
-            this.ModImpZ_Rot.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpZ_Rot.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpZ_Rot.Name = "ModImpZ_Rot";
-            this.ModImpZ_Rot.Size = new System.Drawing.Size(38, 20);
-            this.ModImpZ_Rot.TabIndex = 13;
-            // 
-            // ModImpY_Rot
-            // 
-            this.ModImpY_Rot.Location = new System.Drawing.Point(194, 49);
-            this.ModImpY_Rot.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpY_Rot.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpY_Rot.Name = "ModImpY_Rot";
-            this.ModImpY_Rot.Size = new System.Drawing.Size(38, 20);
-            this.ModImpY_Rot.TabIndex = 12;
-            // 
-            // ModImpX_Rot
-            // 
-            this.ModImpX_Rot.Location = new System.Drawing.Point(150, 49);
-            this.ModImpX_Rot.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpX_Rot.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpX_Rot.Name = "ModImpX_Rot";
-            this.ModImpX_Rot.Size = new System.Drawing.Size(38, 20);
-            this.ModImpX_Rot.TabIndex = 11;
-            // 
-            // ModImpZ_Scale
-            // 
-            this.ModImpZ_Scale.Location = new System.Drawing.Point(94, 49);
-            this.ModImpZ_Scale.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpZ_Scale.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpZ_Scale.Name = "ModImpZ_Scale";
-            this.ModImpZ_Scale.Size = new System.Drawing.Size(38, 20);
-            this.ModImpZ_Scale.TabIndex = 10;
-            this.ModImpZ_Scale.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // ModImpY_Scale
-            // 
-            this.ModImpY_Scale.Location = new System.Drawing.Point(50, 49);
-            this.ModImpY_Scale.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpY_Scale.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpY_Scale.Name = "ModImpY_Scale";
-            this.ModImpY_Scale.Size = new System.Drawing.Size(38, 20);
-            this.ModImpY_Scale.TabIndex = 9;
-            this.ModImpY_Scale.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // ModImpX_Scale
-            // 
-            this.ModImpX_Scale.Location = new System.Drawing.Point(6, 49);
-            this.ModImpX_Scale.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpX_Scale.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpX_Scale.Name = "ModImpX_Scale";
-            this.ModImpX_Scale.Size = new System.Drawing.Size(38, 20);
-            this.ModImpX_Scale.TabIndex = 8;
-            this.ModImpX_Scale.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // ModImpZ
-            // 
-            this.ModImpZ.Location = new System.Drawing.Point(211, 19);
-            this.ModImpZ.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpZ.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpZ.Name = "ModImpZ";
-            this.ModImpZ.Size = new System.Drawing.Size(38, 20);
-            this.ModImpZ.TabIndex = 7;
-            // 
-            // ModImpY
-            // 
-            this.ModImpY.Location = new System.Drawing.Point(167, 19);
-            this.ModImpY.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpY.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpY.Name = "ModImpY";
-            this.ModImpY.Size = new System.Drawing.Size(38, 20);
-            this.ModImpY.TabIndex = 6;
-            // 
-            // ModImpX
-            // 
-            this.ModImpX.Location = new System.Drawing.Point(123, 19);
-            this.ModImpX.Maximum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            0});
-            this.ModImpX.Minimum = new decimal(new int[] {
-            100000,
-            0,
-            0,
-            -2147483648});
-            this.ModImpX.Name = "ModImpX";
-            this.ModImpX.Size = new System.Drawing.Size(38, 20);
-            this.ModImpX.TabIndex = 5;
-            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.bymlConverterToolStripMenuItem,
             this.UndoMenu,
             this.OtherLevelDataMenu,
+            this.findToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -392,7 +185,9 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveAsToolStripMenuItem});
+            this.saveAsToolStripMenuItem,
+            this.toolStripSeparator2,
+            this.bymlConverterToolStripMenuItem1});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -403,45 +198,50 @@
             this.saveAsBymlToolStripMenuItem,
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.saveAsToolStripMenuItem.Text = "Save";
             // 
             // saveAsBymlToolStripMenuItem
             // 
             this.saveAsBymlToolStripMenuItem.Name = "saveAsBymlToolStripMenuItem";
-            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.saveAsBymlToolStripMenuItem.Text = "Save as Szs";
             this.saveAsBymlToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
             // 
             // saveAsXmlToolStripMenuItem
             // 
             this.saveAsXmlToolStripMenuItem.Name = "saveAsXmlToolStripMenuItem";
-            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.saveAsXmlToolStripMenuItem.Text = "Save as Xml";
             this.saveAsXmlToolStripMenuItem.Click += new System.EventHandler(this.saveAsXmlToolStripMenuItem_Click);
             // 
-            // bymlConverterToolStripMenuItem
+            // toolStripSeparator2
             // 
-            this.bymlConverterToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.bymlXmlToolStripMenuItem,
-            this.xmlBymlToolStripMenuItem});
-            this.bymlConverterToolStripMenuItem.Name = "bymlConverterToolStripMenuItem";
-            this.bymlConverterToolStripMenuItem.Size = new System.Drawing.Size(99, 20);
-            this.bymlConverterToolStripMenuItem.Text = "Byml converter";
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(151, 6);
             // 
-            // bymlXmlToolStripMenuItem
+            // bymlConverterToolStripMenuItem1
             // 
-            this.bymlXmlToolStripMenuItem.Name = "bymlXmlToolStripMenuItem";
-            this.bymlXmlToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.bymlXmlToolStripMenuItem.Text = "Byml -> Xml";
-            this.bymlXmlToolStripMenuItem.Click += new System.EventHandler(this.bymlXmlToolStripMenuItem_Click);
+            this.bymlConverterToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.bymlXmlToolStripMenuItem1,
+            this.xmlBymlToolStripMenuItem1});
+            this.bymlConverterToolStripMenuItem1.Name = "bymlConverterToolStripMenuItem1";
+            this.bymlConverterToolStripMenuItem1.Size = new System.Drawing.Size(154, 22);
+            this.bymlConverterToolStripMenuItem1.Text = "Byml converter";
             // 
-            // xmlBymlToolStripMenuItem
+            // bymlXmlToolStripMenuItem1
             // 
-            this.xmlBymlToolStripMenuItem.Name = "xmlBymlToolStripMenuItem";
-            this.xmlBymlToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-            this.xmlBymlToolStripMenuItem.Text = "Xml -> Byml";
-            this.xmlBymlToolStripMenuItem.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
+            this.bymlXmlToolStripMenuItem1.Name = "bymlXmlToolStripMenuItem1";
+            this.bymlXmlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
+            this.bymlXmlToolStripMenuItem1.Text = "Byml -> Xml";
+            this.bymlXmlToolStripMenuItem1.Click += new System.EventHandler(this.bymlXmlToolStripMenuItem_Click);
+            // 
+            // xmlBymlToolStripMenuItem1
+            // 
+            this.xmlBymlToolStripMenuItem1.Name = "xmlBymlToolStripMenuItem1";
+            this.xmlBymlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
+            this.xmlBymlToolStripMenuItem1.Text = "Xml -> Byml";
+            this.xmlBymlToolStripMenuItem1.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
             // 
             // UndoMenu
             // 
@@ -450,10 +250,96 @@
             this.UndoMenu.Text = "Undo";
             this.UndoMenu.DropDownOpening += new System.EventHandler(this.Undo_loading);
             // 
+            // OtherLevelDataMenu
+            // 
+            this.OtherLevelDataMenu.Name = "OtherLevelDataMenu";
+            this.OtherLevelDataMenu.Size = new System.Drawing.Size(70, 20);
+            this.OtherLevelDataMenu.Text = "Level files";
+            // 
+            // findToolStripMenuItem
+            // 
+            this.findToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.objectByIdToolStripMenuItem,
+            this.objectByCameraIdToolStripMenuItem,
+            this.objectBySwitchToolStripMenuItem,
+            this.objectByViewIdToolStripMenuItem});
+            this.findToolStripMenuItem.Name = "findToolStripMenuItem";
+            this.findToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
+            this.findToolStripMenuItem.Text = "Find";
+            // 
+            // objectByIdToolStripMenuItem
+            // 
+            this.objectByIdToolStripMenuItem.Name = "objectByIdToolStripMenuItem";
+            this.objectByIdToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectByIdToolStripMenuItem.Text = "Object by Id";
+            this.objectByIdToolStripMenuItem.Click += new System.EventHandler(this.objectByIdToolStripMenuItem_Click);
+            // 
+            // objectByCameraIdToolStripMenuItem
+            // 
+            this.objectByCameraIdToolStripMenuItem.Name = "objectByCameraIdToolStripMenuItem";
+            this.objectByCameraIdToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectByCameraIdToolStripMenuItem.Text = "Object by CameraId";
+            this.objectByCameraIdToolStripMenuItem.Click += new System.EventHandler(this.objectByCameraIdToolStripMenuItem_Click);
+            // 
+            // objectBySwitchToolStripMenuItem
+            // 
+            this.objectBySwitchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.switchAToolStripMenuItem,
+            this.switchBToolStripMenuItem,
+            this.switchAppearToolStripMenuItem,
+            this.switchKillToolStripMenuItem,
+            this.switchDeadOnToolStripMenuItem});
+            this.objectBySwitchToolStripMenuItem.Name = "objectBySwitchToolStripMenuItem";
+            this.objectBySwitchToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectBySwitchToolStripMenuItem.Text = "Object by switch";
+            // 
+            // switchAToolStripMenuItem
+            // 
+            this.switchAToolStripMenuItem.Name = "switchAToolStripMenuItem";
+            this.switchAToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.switchAToolStripMenuItem.Text = "SwitchA";
+            this.switchAToolStripMenuItem.Click += new System.EventHandler(this.Switch___FindClick);
+            // 
+            // switchBToolStripMenuItem
+            // 
+            this.switchBToolStripMenuItem.Name = "switchBToolStripMenuItem";
+            this.switchBToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.switchBToolStripMenuItem.Text = "SwitchB";
+            this.switchBToolStripMenuItem.Click += new System.EventHandler(this.Switch___FindClick);
+            // 
+            // switchAppearToolStripMenuItem
+            // 
+            this.switchAppearToolStripMenuItem.Name = "switchAppearToolStripMenuItem";
+            this.switchAppearToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.switchAppearToolStripMenuItem.Text = "SwitchAppear";
+            this.switchAppearToolStripMenuItem.Click += new System.EventHandler(this.Switch___FindClick);
+            // 
+            // switchKillToolStripMenuItem
+            // 
+            this.switchKillToolStripMenuItem.Name = "switchKillToolStripMenuItem";
+            this.switchKillToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.switchKillToolStripMenuItem.Text = "SwitchKill";
+            this.switchKillToolStripMenuItem.Click += new System.EventHandler(this.Switch___FindClick);
+            // 
+            // switchDeadOnToolStripMenuItem
+            // 
+            this.switchDeadOnToolStripMenuItem.Name = "switchDeadOnToolStripMenuItem";
+            this.switchDeadOnToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.switchDeadOnToolStripMenuItem.Text = "SwitchDeadOn";
+            this.switchDeadOnToolStripMenuItem.Click += new System.EventHandler(this.Switch___FindClick);
+            // 
+            // objectByViewIdToolStripMenuItem
+            // 
+            this.objectByViewIdToolStripMenuItem.Name = "objectByViewIdToolStripMenuItem";
+            this.objectByViewIdToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectByViewIdToolStripMenuItem.Text = "Object by ViewId";
+            this.objectByViewIdToolStripMenuItem.Click += new System.EventHandler(this.objectByViewIdToolStripMenuItem_Click);
+            // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.hotkeysListToolStripMenuItem});
+            this.hotkeysListToolStripMenuItem,
+            this.gbatempThreadToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -461,15 +347,16 @@
             // hotkeysListToolStripMenuItem
             // 
             this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
-            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
+            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
             this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
             this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
             // 
-            // OtherLevelDataMenu
+            // gbatempThreadToolStripMenuItem
             // 
-            this.OtherLevelDataMenu.Name = "OtherLevelDataMenu";
-            this.OtherLevelDataMenu.Size = new System.Drawing.Size(142, 20);
-            this.OtherLevelDataMenu.Text = "Other level data editing";
+            this.gbatempThreadToolStripMenuItem.Name = "gbatempThreadToolStripMenuItem";
+            this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.gbatempThreadToolStripMenuItem.Text = "Gbatemp thread";
+            this.gbatempThreadToolStripMenuItem.Click += new System.EventHandler(this.gbatempThreadToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -619,23 +506,12 @@
             this.ClientSize = new System.Drawing.Size(832, 568);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.elementHost1);
             this.Controls.Add(this.menuStrip1);
             this.Name = "Form1";
             this.Text = "The Fourth Dimension - by Exelix11";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ClipBoardMenu.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpZ_Rot)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpY_Rot)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpX_Rot)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpZ_Scale)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpY_Scale)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpX_Scale)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpZ)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ModImpX)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -652,17 +528,6 @@
 
         private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.NumericUpDown ModImpZ_Rot;
-        private System.Windows.Forms.NumericUpDown ModImpY_Rot;
-        private System.Windows.Forms.NumericUpDown ModImpX_Rot;
-        private System.Windows.Forms.NumericUpDown ModImpZ_Scale;
-        private System.Windows.Forms.NumericUpDown ModImpY_Scale;
-        private System.Windows.Forms.NumericUpDown ModImpX_Scale;
-        private System.Windows.Forms.NumericUpDown ModImpZ;
-        private System.Windows.Forms.NumericUpDown ModImpY;
-        private System.Windows.Forms.NumericUpDown ModImpX;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
@@ -672,9 +537,6 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button BtnAddObj;
-        private System.Windows.Forms.ToolStripMenuItem bymlConverterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bymlXmlToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem xmlBymlToolStripMenuItem;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ContextMenuStrip ClipBoardMenu;
@@ -694,6 +556,21 @@
         public System.Windows.Forms.ComboBox comboBox1;
         public System.Windows.Forms.ListBox ObjectsListBox;
         private System.Windows.Forms.ToolStripMenuItem OtherLevelDataMenu;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem bymlConverterToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem bymlXmlToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem xmlBymlToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem gbatempThreadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem findToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem objectByIdToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem objectByCameraIdToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem objectBySwitchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem switchAToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem switchBToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem switchAppearToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem switchKillToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem switchDeadOnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem objectByViewIdToolStripMenuItem;
     }
 }
 
