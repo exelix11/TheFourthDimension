@@ -41,8 +41,12 @@
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveAsBymlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAsSZSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveAsBymlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsXmlToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.bymlConverterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,13 +68,16 @@
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.AddTypeBtn = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ObjectsListBox = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.BtnAddObj = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.DelObjBtn = new System.Windows.Forms.Button();
+            this.DeleteMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteEveryObjectInTheListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DuplicateObjBtn = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -80,6 +87,7 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.DeleteMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -185,6 +193,8 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newToolStripMenuItem,
+            this.openToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator2,
             this.bymlConverterToolStripMenuItem1});
@@ -192,26 +202,54 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveAsBymlToolStripMenuItem,
+            this.saveAsSZSToolStripMenuItem,
+            this.toolStripSeparator3,
+            this.saveAsBymlToolStripMenuItem1,
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.saveAsToolStripMenuItem.Text = "Save";
             // 
-            // saveAsBymlToolStripMenuItem
+            // saveAsSZSToolStripMenuItem
             // 
-            this.saveAsBymlToolStripMenuItem.Name = "saveAsBymlToolStripMenuItem";
-            this.saveAsBymlToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
-            this.saveAsBymlToolStripMenuItem.Text = "Save as Szs";
-            this.saveAsBymlToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
+            this.saveAsSZSToolStripMenuItem.Name = "saveAsSZSToolStripMenuItem";
+            this.saveAsSZSToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.saveAsSZSToolStripMenuItem.Text = "Save as Szs";
+            this.saveAsSZSToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(139, 6);
+            // 
+            // saveAsBymlToolStripMenuItem1
+            // 
+            this.saveAsBymlToolStripMenuItem1.Name = "saveAsBymlToolStripMenuItem1";
+            this.saveAsBymlToolStripMenuItem1.Size = new System.Drawing.Size(142, 22);
+            this.saveAsBymlToolStripMenuItem1.Text = "Save as Byml";
+            this.saveAsBymlToolStripMenuItem1.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem1_Click);
             // 
             // saveAsXmlToolStripMenuItem
             // 
             this.saveAsXmlToolStripMenuItem.Name = "saveAsXmlToolStripMenuItem";
-            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
+            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveAsXmlToolStripMenuItem.Text = "Save as Xml";
             this.saveAsXmlToolStripMenuItem.Click += new System.EventHandler(this.saveAsXmlToolStripMenuItem_Click);
             // 
@@ -370,13 +408,14 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.AddTypeBtn);
             this.splitContainer1.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer1.Panel1.Controls.Add(this.ObjectsListBox);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.comboBox1);
             this.splitContainer1.Panel1.Controls.Add(this.BtnAddObj);
-            this.splitContainer1.Panel1.Controls.Add(this.button3);
-            this.splitContainer1.Panel1.Controls.Add(this.button2);
+            this.splitContainer1.Panel1.Controls.Add(this.DelObjBtn);
+            this.splitContainer1.Panel1.Controls.Add(this.DuplicateObjBtn);
             // 
             // splitContainer1.Panel2
             // 
@@ -387,6 +426,16 @@
             this.splitContainer1.Size = new System.Drawing.Size(244, 529);
             this.splitContainer1.SplitterDistance = 264;
             this.splitContainer1.TabIndex = 7;
+            // 
+            // AddTypeBtn
+            // 
+            this.AddTypeBtn.Location = new System.Drawing.Point(215, 3);
+            this.AddTypeBtn.Name = "AddTypeBtn";
+            this.AddTypeBtn.Size = new System.Drawing.Size(23, 21);
+            this.AddTypeBtn.TabIndex = 10;
+            this.AddTypeBtn.Text = "+";
+            this.AddTypeBtn.UseVisualStyleBackColor = true;
+            this.AddTypeBtn.Click += new System.EventHandler(this.button1_Click);
             // 
             // checkBox1
             // 
@@ -428,7 +477,7 @@
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Location = new System.Drawing.Point(73, 3);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(160, 21);
+            this.comboBox1.Size = new System.Drawing.Size(136, 21);
             this.comboBox1.TabIndex = 6;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
@@ -443,27 +492,42 @@
             this.BtnAddObj.UseVisualStyleBackColor = true;
             this.BtnAddObj.Click += new System.EventHandler(this.BtnAddObj_Click);
             // 
-            // button3
+            // DelObjBtn
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button3.Location = new System.Drawing.Point(137, 238);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(96, 23);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Delete Object";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.DelObjBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DelObjBtn.ContextMenuStrip = this.DeleteMenuStrip;
+            this.DelObjBtn.Location = new System.Drawing.Point(137, 238);
+            this.DelObjBtn.Name = "DelObjBtn";
+            this.DelObjBtn.Size = new System.Drawing.Size(96, 23);
+            this.DelObjBtn.TabIndex = 4;
+            this.DelObjBtn.Text = "Delete Object";
+            this.DelObjBtn.UseVisualStyleBackColor = true;
+            this.DelObjBtn.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button2
+            // DeleteMenuStrip
             // 
-            this.button2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button2.Location = new System.Drawing.Point(35, 238);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(96, 23);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "Duplicate Object";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.DeleteMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteEveryObjectInTheListToolStripMenuItem});
+            this.DeleteMenuStrip.Name = "DeleteMenuStrip";
+            this.DeleteMenuStrip.Size = new System.Drawing.Size(226, 26);
+            // 
+            // deleteEveryObjectInTheListToolStripMenuItem
+            // 
+            this.deleteEveryObjectInTheListToolStripMenuItem.Name = "deleteEveryObjectInTheListToolStripMenuItem";
+            this.deleteEveryObjectInTheListToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.deleteEveryObjectInTheListToolStripMenuItem.Text = "Delete every object in the list";
+            this.deleteEveryObjectInTheListToolStripMenuItem.Click += new System.EventHandler(this.deleteEveryObjectInTheListToolStripMenuItem_Click);
+            // 
+            // DuplicateObjBtn
+            // 
+            this.DuplicateObjBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.DuplicateObjBtn.Location = new System.Drawing.Point(35, 238);
+            this.DuplicateObjBtn.Name = "DuplicateObjBtn";
+            this.DuplicateObjBtn.Size = new System.Drawing.Size(96, 23);
+            this.DuplicateObjBtn.TabIndex = 3;
+            this.DuplicateObjBtn.Text = "Duplicate Object";
+            this.DuplicateObjBtn.UseVisualStyleBackColor = true;
+            this.DuplicateObjBtn.Click += new System.EventHandler(this.button2_Click);
             // 
             // button5
             // 
@@ -519,6 +583,7 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.DeleteMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -531,11 +596,11 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem saveAsBymlToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveAsSZSToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsXmlToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button DelObjBtn;
+        private System.Windows.Forms.Button DuplicateObjBtn;
         private System.Windows.Forms.Button BtnAddObj;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
@@ -571,6 +636,13 @@
         private System.Windows.Forms.ToolStripMenuItem switchKillToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem switchDeadOnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem objectByViewIdToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip DeleteMenuStrip;
+        private System.Windows.Forms.ToolStripMenuItem deleteEveryObjectInTheListToolStripMenuItem;
+        private System.Windows.Forms.Button AddTypeBtn;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem saveAsBymlToolStripMenuItem1;
     }
 }
 

@@ -40,7 +40,7 @@ namespace The4Dimension
             }
         }
 
-        Dictionary<string, byte[]> SzsFiles = new Dictionary<string, byte[]>();
+        Dictionary<string, byte[]> SzsFiles = null;
         Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
         List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
@@ -64,50 +64,105 @@ namespace The4Dimension
             }
             LoadModelResolver();
             LoadCreatorClassNameTable();
-            if (LoadedFile == "")
+            if (LoadedFile != "") LoadFile(LoadedFile);
+            else SetUiLock(false,false);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog opn = new OpenFileDialog();
+            opn.Title = "Open a level file";
+            opn.Filter = "Supported formats (.szs, .byml, .xml)|*.szs; *.byml; *.xml|Every file|*.*";
+            if (opn.ShowDialog() == DialogResult.OK)
             {
-                OpenFileDialog opn = new OpenFileDialog();
-                opn.Title = "Open a level file";
-                opn.Filter = "Szs files|*.szs";
-                if (opn.ShowDialog() == DialogResult.OK)
-                {
-                    LoadFile(opn.FileName);
-                }
-                else saveAsToolStripMenuItem.Enabled = false;
+                LoadFile(opn.FileName);
             }
-            else LoadFile(LoadedFile);
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            comboBox1.Items.Add("AllRailInfos");
+            higestID.Add("AllRailInfos", 0);
+            comboBox1.SelectedIndex = 0;
+            SetUiLock(false,true);
+        }
+
+        void SetUiLock(bool SZS,bool Lock)
+        {
+            splitContainer1.Enabled = Lock;
+            elementHost1.Enabled = Lock;
+            saveAsXmlToolStripMenuItem.Enabled = Lock;
+            saveAsBymlToolStripMenuItem1.Enabled = Lock;
+            UndoMenu.Enabled = Lock;
+            findToolStripMenuItem.Enabled = Lock;
+            if (!SZS)
+            {
+                OtherLevelDataMenu.Enabled = false;
+                saveAsSZSToolStripMenuItem.Enabled = false;
+            }
+            else
+            {
+                OtherLevelDataMenu.Enabled = Lock;
+                saveAsSZSToolStripMenuItem.Enabled = Lock;
+            }
+            newToolStripMenuItem.Enabled = !Lock;
+            openToolStripMenuItem.Enabled = !Lock;
         }
 
         #region FileLoading
         void LoadFile(string FilePath) //Checks the file type and then loads the file
         {
-            if (Directory.Exists("Tmp")) Directory.Delete("Tmp", true);
-            Directory.CreateDirectory("Tmp");
-            CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
-            NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
-            SzsArch = new NDS.NitroSystem.FND.NARC(y.Decompress(File.ReadAllBytes(FilePath)));
-            int index = 0;
-            List<ToolStripMenuItem> OtherFiles = new List<ToolStripMenuItem>();
-            byte[] StageData = null;
-            foreach (SFSFile f in SzsArch.ToFileSystem().Files)
+            if (Path.GetExtension(FilePath) == ".xml")
             {
-                if (f.FileName.ToLower() == "stagedata.byml") StageData = f.Data;
+                SetUiLock(false, true);
+                OpenFile(File.ReadAllText(FilePath, Encoding.GetEncoding(932)));
+            }
+            else if (Path.GetExtension(FilePath) == ".byml")
+            {
+                SetUiLock(false, true);
+                OpenFile(BymlConverter.GetXml(FilePath));
+            }
+            else if (Path.GetExtension(FilePath) == ".szs")
+            {
+                SetUiLock(true, true);
+                SzsFiles = new Dictionary<string, byte[]>();
+                CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
+                NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
+                SzsArch = new NDS.NitroSystem.FND.NARC(y.Decompress(File.ReadAllBytes(FilePath)));
+                int index = 0;
+                List<ToolStripMenuItem> OtherFiles = new List<ToolStripMenuItem>();
+                byte[] StageData = null;
+                foreach (SFSFile f in SzsArch.ToFileSystem().Files)
+                {
+                    if (f.FileName.ToLower() == "stagedata.byml") StageData = f.Data;
+                    else
+                    {
+                        ToolStripMenuItem btn = new ToolStripMenuItem();
+                        btn.Name = "LoadFile" + index.ToString();
+                        btn.Text = f.FileName;
+                        btn.Click += LoadFileList_click;
+                        OtherFiles.Add(btn);
+                        SzsFiles.Add(f.FileName, f.Data);
+                    }
+                    index++;
+                }
+                OtherLevelDataMenu.DropDownItems.AddRange(OtherFiles.ToArray());
+                if (StageData != null)
+                {
+                    OpenFile(BymlConverter.GetXml(StageData));
+                }
                 else
                 {
-                    ToolStripMenuItem btn = new ToolStripMenuItem();
-                    btn.Name = "LoadFile" + index.ToString();
-                    btn.Text = f.FileName;
-                    btn.Click += LoadFileList_click;
-                    OtherFiles.Add(btn);
-                    SzsFiles.Add(f.FileName, f.Data);
+                    MessageBox.Show("StageData.byml not found in the file !");
+                    SzsFiles = null;
+                    SetUiLock(false, false);
                 }
-                index++;
             }
-            OtherLevelDataMenu.DropDownItems.AddRange(OtherFiles.ToArray());
-            if (StageData != null)
+            else
             {
-                OpenFile(BymlConverter.GetXml(StageData));
-            } else MessageBox.Show("StageData.byml not found in the file !");
+                MessageBox.Show("File type not supported !");
+                SetUiLock(false, false);
+            }
         }
 
         private void LoadFileList_click(object sender, EventArgs e)
@@ -182,6 +237,7 @@ namespace The4Dimension
             */
             foreach (string k in AllInfos.Keys.ToArray())
             {
+                render.AddKey(k);
                 if (k == "AreaObjInfo") LoadModels(AllInfos[k].Objs, k, "models\\UnkYellow.obj");
                 else if (k == "CameraAreaInfo") LoadModels(AllInfos[k].Objs, k, "models\\UnkGreen.obj");
                 else LoadModels(AllInfos[k].Objs, k);
@@ -337,7 +393,7 @@ namespace The4Dimension
         #region Find
         private void objectByIdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            FormEditors.FrmSearchValInput f = new FormEditors.FrmSearchValInput();
             f.ShowDialog();
             if (f.Res == null) return;
             FindIndex(comboBox1.Text, "l_id", Convert.ToInt32(f.Res));
@@ -345,7 +401,7 @@ namespace The4Dimension
 
         private void objectByCameraIdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            FormEditors.FrmSearchValInput f = new FormEditors.FrmSearchValInput();
             f.ShowDialog();
             if (f.Res == null) return;
             FindIndex(comboBox1.Text, "CameraId", Convert.ToInt32(f.Res));
@@ -353,7 +409,7 @@ namespace The4Dimension
 
         private void Switch___FindClick(object sender, EventArgs e)
         {
-            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            FormEditors.FrmSearchValInput f = new FormEditors.FrmSearchValInput();
             f.ShowDialog();
             if (f.Res == null) return;
             FindIndex(comboBox1.Text, ((ToolStripMenuItem)sender).Text, Convert.ToInt32(f.Res));
@@ -361,7 +417,7 @@ namespace The4Dimension
 
         private void objectByViewIdToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            FormEditors.FrmValueInput f = new FormEditors.FrmValueInput();
+            FormEditors.FrmSearchValInput f = new FormEditors.FrmSearchValInput();
             f.ShowDialog();
             if (f.Res == null) return;
             FindIndex(comboBox1.Text, "ViewId", Convert.ToInt32(f.Res));
@@ -398,7 +454,7 @@ namespace The4Dimension
         {
             if ((ModifierKeys & Keys.Control) == Keys.Control || RenderIsDragging) return;
             object[] indexes = render.GetOBJ(sender, e); //indexes[0] string, [1] int
-            if (indexes[0] is int) return; //this means indexes[0] = -1
+            if (indexes[0] == null) return; //this means indexes[0] = -1
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
             ObjectsListBox.SelectedIndex = (int)indexes[1];
         }
@@ -419,6 +475,7 @@ namespace The4Dimension
             else if (e.Key == Key.OemPlus) { if (BtnAddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
             else if (e.Key == Key.D) button2_Click(null, null); //Duplicate
             else if (e.Key == Key.Delete) button3_Click(null, null); //Delete obj
+            else if (e.Key == Key.F) findToolStripMenuItem.ShowDropDown();
             else if (e.Key == Key.R) //Round selected object position to a multiple of 100
             {
                 if (RenderIsDragging) return;
@@ -445,6 +502,7 @@ namespace The4Dimension
             else if (e.KeyCode == Keys.Oemplus) { if (BtnAddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
             else if (e.KeyCode == Keys.D && e.Control) button2_Click(null, null); //Duplicate
             else if (e.KeyCode == Keys.Delete) button3_Click(null, null); //Delete obj
+            else if (e.KeyCode == Keys.F && e.Control) findToolStripMenuItem.ShowDropDown();
             else if (e.KeyCode == Keys.R && e.Control) //Round selected object position to a multiple of 100
             {
                 if (RenderIsDragging) return;
@@ -486,6 +544,7 @@ namespace The4Dimension
 
         void endDragging()
         {
+            if (DraggingArgs[0] == null || DraggingArgs[1] == null || DraggingArgs[2] == null) return;
             Action<string, int, Vector3D> act;
             act = (string type, int id, Vector3D pos) =>
             {
@@ -511,6 +570,7 @@ namespace The4Dimension
             if ((ModifierKeys & Keys.Control) != Keys.Control || RenderIsDragging) return;
             RenderIsDragging = true;
             DraggingArgs = render.GetOBJ(sender, e);
+            if (DraggingArgs[0] == null) { RenderIsDragging = false; return; }
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
             ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
             StartPos = new Vector3D(float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
@@ -581,6 +641,22 @@ namespace The4Dimension
         #endregion
 
         #region LevelEditing
+
+        private void button1_Click(object sender, EventArgs e) //Addtype
+        {
+            FormEditors.FrmStringInput f = new FormEditors.FrmStringInput();
+            f.ShowDialog();
+            if (f.Result == null) return;
+            else if (f.Result.Trim() == "") return;
+            else if (AllInfos.ContainsKey(f.Result)) MessageBox.Show("This type is already in use");
+            else
+            {
+                comboBox1.Items.Add(f.Result);
+                render.AddKey(f.Result);
+                AllInfos.Add(f.Result, new AllInfoSection());
+                higestID.Add(f.Result, 0);
+            }
+        }
 
         private void propertyGridChange(object s, PropertyValueChangedEventArgs e)
         {
@@ -671,28 +747,39 @@ namespace The4Dimension
 
         private void button3_Click(object sender, EventArgs e) //Remove objects
         {
+            DelSelectedObj();
+        }
+
+        void DelSelectedObj(bool NoUndo = false)
+        {
             if (ObjectsListBox.SelectedIndex == -1) return;
             if (comboBox1.Text == "AllRailInfos")
             {
-                Rail tmp = AllRailInfos[ObjectsListBox.SelectedIndex].Clone();
-                Action<string, int, object> action;
-                action = (string type, int at, object rail) =>
+                if (!NoUndo)
                 {
-                    AddRail((Rail)rail, at, true);
-                };
-                Undo.Push(new UndoAction("Removed rail: " + tmp.ToString(), "AllRailInfos", ObjectsListBox.SelectedIndex, tmp, action));
+                    Rail tmp = AllRailInfos[ObjectsListBox.SelectedIndex].Clone();
+                    Action<string, int, object> action;
+                    action = (string type, int at, object rail) =>
+                    {
+                        AddRail((Rail)rail, at, true);
+                    };
+                    Undo.Push(new UndoAction("Removed rail: " + tmp.ToString(), "AllRailInfos", ObjectsListBox.SelectedIndex, tmp, action));
+                }
                 AllRailInfos.RemoveAt(ObjectsListBox.SelectedIndex);
                 ObjectsListBox.Items.RemoveAt(ObjectsListBox.SelectedIndex);
             }
             else
             {
-                LevelObj tmp = AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Clone();
-                Action<string, int, object> action;
-                action = (string type, int at, object obj) =>
+                if (!NoUndo)
                 {
-                    AddObj((LevelObj)tmp, ref ObjectsListBox, ref AllInfos[type].Objs, type, false, at, true);
-                };
-                Undo.Push(new UndoAction("Removed object: " + tmp.ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, tmp, action));
+                    LevelObj tmp = AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Clone();
+                    Action<string, int, object> action;
+                    action = (string type, int at, object obj) =>
+                    {
+                        AddObj((LevelObj)tmp, ref AllInfos[type].Objs, type, false, at, true);
+                    };
+                    Undo.Push(new UndoAction("Removed object: " + tmp.ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, tmp, action));
+                }
                 render.RemoveModel(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 AllInfos[comboBox1.Text].Objs.RemoveAt(ObjectsListBox.SelectedIndex);
                 ObjectsListBox.Items.RemoveAt(ObjectsListBox.SelectedIndex);
@@ -713,7 +800,7 @@ namespace The4Dimension
             }
             else
             {
-                AddObj(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex], ref ObjectsListBox, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
+                AddObj(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex], ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
             }
         }
 
@@ -739,20 +826,20 @@ namespace The4Dimension
             }
         }
 
-        void AddObj(LevelObj inobj, ref ListBox listbox, ref List<LevelObj> list, string name, bool clone = true, int at = -1, bool IsUndo = false)
+        void AddObj(LevelObj inobj, ref List<LevelObj> list, string name, bool clone = true, int at = -1, bool IsUndo = false)
         {
             higestID[name]++;
             LevelObj obj = new LevelObj();
             if (clone) obj = inobj.Clone(); else obj = inobj;
             if (obj.Prop.ContainsKey("l_id")) obj.Prop["l_id"] = new Node(higestID[name].ToString(), "D1");
             if (at == -1) list.Add(obj); else list.Insert(at, obj);
-            if (at == -1) listbox.Items.Add(obj.ToString()); else listbox.Items.Insert(at, obj.ToString());
+            if (at == -1) ObjectsListBox.Items.Add(obj.ToString()); else ObjectsListBox.Items.Insert(at, obj.ToString());
             List<LevelObj> tmp = new List<LevelObj>();
             tmp.Add(obj);
             if (name == "AreaObjInfo") LoadModels(tmp, name, "models\\UnkYellow.obj", at);
             else if (name == "CameraAreaInfo") LoadModels(tmp, name, "models\\UnkGreen.obj", at);
             else LoadModels(tmp, name, "models\\UnkBlue.obj", at);
-            listbox.SetSelected(at == -1 ? ObjectsListBox.Items.Count - 1 : at, true);
+            ObjectsListBox.SetSelected(at == -1 ? ObjectsListBox.Items.Count - 1 : at, true);
             if (!IsUndo)
             {
                 Action<int, string> action;
@@ -777,7 +864,7 @@ namespace The4Dimension
                 FrmAddObj frm = new FrmAddObj(CreatorClassNameTable, comboBox1.Text);
                 frm.ShowDialog();
                 if (frm.Value == null) return;
-                AddObj(frm.Value, ref ObjectsListBox, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
+                AddObj(frm.Value, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
             }
         }
 
@@ -1049,6 +1136,17 @@ namespace The4Dimension
             }
         }
 
+        private void saveAsBymlToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sav = new SaveFileDialog();
+            sav.Filter = "Byml file|*.byml";
+            if (sav.ShowDialog() == DialogResult.OK)
+            {
+                File.WriteAllBytes(sav.FileName, BymlConverter.GetByml(MakeXML()));
+                MessageBox.Show("Done !");
+            }
+        }
+
         string MakeXML()
         {
             CustomStringWriter str = new CustomStringWriter(Encoding.Default);            
@@ -1291,7 +1389,7 @@ namespace The4Dimension
             sav.Filter = "Xml file|*.xml";
             if (opn.ShowDialog() == DialogResult.OK && sav.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(sav.FileName, BymlConverter.GetXml(File.ReadAllBytes(opn.FileName)));
+                File.WriteAllText(sav.FileName, BymlConverter.GetXml(File.ReadAllBytes(opn.FileName)), Encoding.GetEncoding(932));
             }
         }
 
@@ -1303,7 +1401,7 @@ namespace The4Dimension
             sav.Filter = "Byml File|*.Byml";
             if (opn.ShowDialog() == DialogResult.OK && sav.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sav.FileName, BymlConverter.GetByml(File.ReadAllText(opn.FileName)));
+                File.WriteAllBytes(sav.FileName, BymlConverter.GetByml(File.ReadAllText(opn.FileName, Encoding.GetEncoding(932))));
             }
         }
 
@@ -1321,7 +1419,8 @@ namespace The4Dimension
                 " Ctrl + D : Duplicate selected object\r\n" +
                 " + : Add a new object\r\n" +
                 " Del : Delete selected object\r\n" +
-                " Ctrl + R : Round the selected object position to a multiple of 100 (like Ctrl + alt + drag, but without dragging)" +
+                " Ctrl + R : Round the selected object position to a multiple of 100 (like Ctrl + alt + drag, but without dragging)\r\n" +
+                " Ctrl + F : Open the search menu\r\n" + 
                 "In the 3D view:\r\n" +
                 " Ctrl + drag : Move object\r\n" +
                 " Ctrl + Alt + drag : Move object snapping every 100 units\r\n"+
@@ -1373,6 +1472,31 @@ namespace The4Dimension
             Process.Start("http://gbatemp.net/threads/wip-the-fourth-dimension-a-super-mario-3d-land-level-editor.424001/");
         }
 
+        private void deleteEveryObjectInTheListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Action<string, int, object> action;
+            if (comboBox1.Text == "AllRailInfos")
+            {
+                Rail[] tmp = AllRailInfos.ToArray();
+                action = (string type, int at, object rail) =>
+                {
+                    Rail[] rails = (Rail[])rail;
+                    foreach (Rail r in rails) AddRail(r, -1, true);
+                };
+                Undo.Push(new UndoAction("Removed every rail", "AllRailInfos", -1, tmp, action));
+            }
+            else
+            {
+                LevelObj[] tmp = AllInfos[comboBox1.Text].Objs.ToArray();
+                action = (string type, int at, object data) =>
+                {
+                    LevelObj[] objs = (LevelObj[])data;
+                    foreach (LevelObj o in objs) AddObj(o, ref AllInfos[type].Objs, type, false, -1, true);
+                };
+                Undo.Push(new UndoAction("Removed every object in " + comboBox1.Text, comboBox1.Text, -1, tmp, action));
+            }
+            while (ObjectsListBox.Items.Count != 0) { ObjectsListBox.SelectedIndex = 0; DelSelectedObj(true); }
+        }
     }
 
     #region Other

@@ -32,9 +32,14 @@ namespace ModelViewer
             InitializeComponent();
         }
 
-        public void addModel(string path, string Type, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ, int at = -1)
+        public void AddKey(string Type)
         {
             if (!Models.ContainsKey(Type)) Models.Add(Type, new List<ModelVisual3D>());
+            if (!Positions.ContainsKey(Type)) Positions.Add(Type, new List<Vector3D>());
+        }
+
+        public void addModel(string path, string Type, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ, int at = -1)
+        {           
             if (at == -1) Models[Type].Add(new ModelVisual3D()); else Models[Type].Insert(at,new ModelVisual3D());
             if (at == -1) ModelViewer.Children.Add(Models[Type][Models[Type].Count-1]); else ModelViewer.Children.Insert(at,Models[Type][at]);
             Model3D Model;
@@ -52,7 +57,6 @@ namespace ModelViewer
             t.Children.Add(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(0, 0, 1), RotZ)));
             t.Children.Add(new ScaleTransform3D(scale));
             t.Children.Add(new TranslateTransform3D(pos));
-            if (!Positions.ContainsKey(Type)) Positions.Add(Type, new List<Vector3D>());
             if (at == -1) Positions[Type].Add(pos); else Positions[Type].Insert(at, pos);
             Models[Type][at == -1 ? Models[Type].Count - 1 : at].Transform = t;
         }
@@ -120,7 +124,7 @@ namespace ModelViewer
         public object[] GetOBJ(object sender, MouseButtonEventArgs e)
         {
             Point p = e.GetPosition(ModelViewer);
-            object[] res = new object[3] { -1, -1 , -1};
+            object[] res = new object[3] { null, null, null };
             ModelVisual3D result = GetHitResult(p);
             if (result == null) return res;
             foreach (string k in Models.Keys)
@@ -133,7 +137,7 @@ namespace ModelViewer
                     return res;
                 }
             }
-            return new object[3] { -1, -1 , -1};
+            return new object[3] { null, null, null };
         }
 
         ModelVisual3D GetHitResult(Point location)
