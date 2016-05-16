@@ -1,6 +1,6 @@
 ﻿namespace The4Dimension.FormEditors
 {
-    partial class FrmValueInput
+    partial class FrmSearchValInput
     {
         /// <summary>
         /// Required designer variable.
@@ -80,7 +80,7 @@
             this.numericUpDown1.Size = new System.Drawing.Size(120, 20);
             this.numericUpDown1.TabIndex = 4;
             // 
-            // FrmValueInput
+            // FrmSearchValInput
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -91,7 +91,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Name = "FrmValueInput";
+            this.Name = "FrmSearchValInput";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmValueInput";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();

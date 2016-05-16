@@ -10,24 +10,24 @@ using System.Windows.Forms;
 
 namespace The4Dimension.FormEditors
 {
-    public partial class FrmValueInput : Form
+    public partial class FrmStringInput : Form
     {
-        public object Res = null;
-
-        public FrmValueInput()
+        public string Result = null;
+        public FrmStringInput()
         {
             InitializeComponent();
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Res = numericUpDown1.Value;
+            Result = null;
             this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Res = null;
+            if (comboBox1.Text == "AllRailInfos") { MessageBox.Show("You can't use this name !"); return; }
+            Result = comboBox1.Text;
             this.Close();
         }
     }

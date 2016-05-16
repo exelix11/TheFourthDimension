@@ -55,20 +55,20 @@ namespace The4Dimension
             LevelObj obj = new LevelObj();
             if (LayerName != "StartInfo" && LayerName != "AreaObjInfo")
             {
-                obj.Prop.Add("ViewId", new Node("-1", "D1"));
+                if (LayerName != "CameraAreaInfo") obj.Prop.Add("ViewId", new Node("-1", "D1"));
                 obj.Prop.Add("CameraId", new Node("-1", "D1"));
             }
             if (LayerName != "StartInfo")
             {
                 obj.Prop.Add("l_id", new Node("0", "D1")); 
                 obj.Prop.Add("Arg", new int[1] { -1 });
-                obj.Prop.Add("LayerName", new Node("共通", "A0"));
                 obj.Prop.Add("SwitchA", new Node("-1", "D1"));
                 obj.Prop.Add("SwitchAppear", new Node("-1", "D1"));
                 obj.Prop.Add("SwitchB", new Node("-1", "D1"));
                 obj.Prop.Add("SwitchKill", new Node("-1", "D1"));
                 obj.Prop.Add("SwitchDeadOn", new Node("-1", "D1"));
             } else obj.Prop.Add("MarioNo", new Node("0", "D1"));
+            obj.Prop.Add("LayerName", new Node("共通", "A0"));
             obj.Prop.Add("name", new Node(comboBox1.Text, "A0"));
             obj.Prop.Add("dir_x", new Node("0", "D2"));
             obj.Prop.Add("dir_y", new Node("0", "D2"));

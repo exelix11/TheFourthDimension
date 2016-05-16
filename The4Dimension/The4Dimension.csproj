@@ -121,11 +121,17 @@
     <Compile Include="FormEditors\FrmSearchResults.Designer.cs">
       <DependentUpon>FrmSearchResults.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormEditors\FrmValueInput.cs">
+    <Compile Include="FormEditors\FrmSearchValInput.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormEditors\FrmValueInput.Designer.cs">
-      <DependentUpon>FrmValueInput.cs</DependentUpon>
+    <Compile Include="FormEditors\FrmSearchValInput.Designer.cs">
+      <DependentUpon>FrmSearchValInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditors\FrmStringInput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmStringInput.Designer.cs">
+      <DependentUpon>FrmStringInput.cs</DependentUpon>
     </Compile>
     <Compile Include="FormEditors\FrmXmlEditor.cs">
       <SubType>Form</SubType>
@@ -176,8 +182,11 @@
     <EmbeddedResource Include="FormEditors\FrmSearchResults.resx">
       <DependentUpon>FrmSearchResults.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormEditors\FrmValueInput.resx">
-      <DependentUpon>FrmValueInput.cs</DependentUpon>
+    <EmbeddedResource Include="FormEditors\FrmSearchValInput.resx">
+      <DependentUpon>FrmSearchValInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmStringInput.resx">
+      <DependentUpon>FrmStringInput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmXmlEditor.resx">
       <DependentUpon>FrmXmlEditor.cs</DependentUpon>
