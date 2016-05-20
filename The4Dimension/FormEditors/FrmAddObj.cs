@@ -26,7 +26,7 @@ namespace The4Dimension
                     if (s.ToLower().EndsWith("area") && !s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
                 }
             }
-            else if (LayerName == "CameraAreaObjInfo")
+            else if (LayerName == "CameraAreaInfo")
             {
                 foreach (string s in CCNT.Keys.ToArray())
                     if (s.ToLower().EndsWith("area") && s.ToLower().Contains("camera")) comboBox1.Items.Add(s);

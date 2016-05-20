@@ -107,7 +107,7 @@ namespace MarioKart.MK7 //Thanks Gericom for this
 			}
 		}
 
-        public int CreateFromFile(byte[] Data) //Return mat count to create pa
+        public List<String> CreateFromFile(byte[] Data) //Return mat count to create pa
         {
             OBJ o = new OBJ(Data);
             List<String> matnames = new List<string>();
@@ -161,7 +161,7 @@ namespace MarioKart.MK7 //Thanks Gericom for this
             Planes = planes.ToArray();
             Header = new MK7KCLHeader();
             Octree = KCLOctree.FromTriangles(Triangles.ToArray(), Header, 2048, 128, 128, 50);
-            return matnames.Count;
+            return matnames;
         }
 
 		private int ContainsVector3(Vector3 a, List<Vector3> b)
