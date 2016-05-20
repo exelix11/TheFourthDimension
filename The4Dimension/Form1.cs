@@ -112,17 +112,17 @@ namespace The4Dimension
         #region FileLoading
         void LoadFile(string FilePath) //Checks the file type and then loads the file
         {
-            if (Path.GetExtension(FilePath) == ".xml")
+            if (Path.GetExtension(FilePath).ToLower() == ".xml")
             {
                 SetUiLock(false, true);
                 OpenFile(File.ReadAllText(FilePath, Encoding.GetEncoding(932)));
             }
-            else if (Path.GetExtension(FilePath) == ".byml")
+            else if (Path.GetExtension(FilePath).ToLower() == ".byml")
             {
                 SetUiLock(false, true);
                 OpenFile(BymlConverter.GetXml(FilePath));
             }
-            else if (Path.GetExtension(FilePath) == ".szs")
+            else if (Path.GetExtension(FilePath).ToLower() == ".szs")
             {
                 SetUiLock(true, true);
                 SzsFiles = new Dictionary<string, byte[]>();
@@ -828,6 +828,7 @@ namespace The4Dimension
 
         void AddObj(LevelObj inobj, ref List<LevelObj> list, string name, bool clone = true, int at = -1, bool IsUndo = false)
         {
+            if (!higestID.ContainsKey(name)) higestID.Add(name, 0);
             higestID[name]++;
             LevelObj obj = new LevelObj();
             if (clone) obj = inobj.Clone(); else obj = inobj;
@@ -1161,7 +1162,7 @@ namespace The4Dimension
             xr.WriteStartElement("C1"); //Byml Root
             xr.WriteStartElement("C1");
             xr.WriteAttributeString("Name", "AllInfos");
-            foreach (string k in AllInfos.Keys) WriteOBJInfoSection(xr, k, AllInfos[k].Objs);
+            foreach (string k in AllInfos.Keys) if (AllInfos[k].Objs.Count != 0) WriteOBJInfoSection(xr, k, AllInfos[k].Objs);
             xr.WriteEndElement();
             xr.WriteStartElement("C1");
             xr.WriteAttributeString("Name", "AllRailInfos");
@@ -1195,15 +1196,18 @@ namespace The4Dimension
             Dictionary<string,Dictionary<string,List<LevelObj>>> _AllInfos = new Dictionary<string, Dictionary<string, List<LevelObj>>>();
             foreach (string k in AllInfos.Keys)
             {
-                _AllInfos.Add(k, new Dictionary<string, List<LevelObj>>());
-                ProcessLayerNames(ref AllInfos[k].Objs, _AllInfos[k], ref LayerNames);
+                if (AllInfos[k].Objs.Count != 0)
+                {
+                    _AllInfos.Add(k, new Dictionary<string, List<LevelObj>>());
+                    ProcessLayerNames(ref AllInfos[k].Objs, _AllInfos[k], ref LayerNames);
+                }
             }
             for (int i = 0; i < LayerNames.Count; i++)
             {
                 xr.WriteStartElement("C1");
                 xr.WriteStartElement("C1");
                 xr.WriteAttributeString("Name", "Infos");
-                foreach (string k in AllInfos.Keys)
+                foreach (string k in _AllInfos.Keys)
                 {
                     if (_AllInfos[k].ContainsKey(LayerNames[i])) WriteOBJInfoSection(xr, k, _AllInfos[k][LayerNames[i]]);
                 }

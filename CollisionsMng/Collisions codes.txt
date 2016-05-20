@@ -1,0 +1,28 @@
+Some values i tested while working on the collision importer, some may be wrong
+WallType:
+0/2/3/4/5: normal
+1: can't walljump
+
+GroundType:
+0: normal ?
+1: damage
+2: Lava death
+3: Death
+4/5/6: normal ground
+
+SoundType:
+0/1/2: ground
+3: metal
+4: thin ground 
+5: sand
+6: metal
+7: solid ground
+8: wood
+9: snow
+10: water
+11: water
+12: sand
+13: wet thing ?
+14: solid ground
+15: thin wood
+16: thicker snow
