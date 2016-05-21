@@ -18,7 +18,7 @@ namespace CollisionsMng
             Console.Title = "CollisionsMng";
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine("-----3D Land collision importer by exelix11-----");
-            Console.WriteLine("------------------Version 1.0-------------------");
+            Console.WriteLine("------------------Version 1.1-------------------");
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine("Thanks Gericom for Every File Explorer's KCL importer");
             Console.WriteLine("");
@@ -28,19 +28,13 @@ namespace CollisionsMng
                 string FileName = args[0];
                 if (args.Length == 1)
                 {
-                    MakeKCLandPA(FileName,false);
-                    Console.ForegroundColor = ConsoleColor.White;
-                    return;
-                }
-                else if (args[1].ToLower() == "zero")
-                {
-                    MakeKCLandPA(FileName, true);
-                    Console.ForegroundColor = ConsoleColor.White;
-                    return;
-                }
-                else
-                {
-                    if (args[1].ToLower() == "toobj")
+                    if (Path.GetExtension(FileName).ToLower() == ".obj")
+                    {
+                        MakeKCLandPA(FileName, false);
+                        Console.ForegroundColor = ConsoleColor.White;
+                        return;
+                    }
+                    else if (Path.GetExtension(FileName).ToLower() == ".kcl")
                     {
                         KCL k = new KCL(File.ReadAllBytes(FileName));
                         k.Convert(0, FileName + ".obj");
@@ -48,15 +42,28 @@ namespace CollisionsMng
                         Console.ForegroundColor = ConsoleColor.White;
                         return;
                     }
-                    else if (args[1].ToLower() == "viewdata")
+                    else if (Path.GetExtension(FileName).ToLower() == ".pa")
                     {
                         Console.WriteLine(Pa_format.LoadFile(File.ReadAllBytes(FileName)).ToString());
                         Console.ReadLine();
                         Console.ForegroundColor = ConsoleColor.White;
                         return;
                     }
-                    else { WriteUsage(); Console.ForegroundColor = ConsoleColor.White; return; }
+                    else
+                    {
+                        Console.WriteLine("extension " + Path.GetExtension(FileName).ToLower() + " not supported");
+                        WriteUsage();
+                        Console.ForegroundColor = ConsoleColor.White;
+                        return;
+                    }
                 }
+                else if (args[1].ToLower() == "zero")
+                {
+                    MakeKCLandPA(FileName, true);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    return;
+                }
+                else { WriteUsage(); Console.ForegroundColor = ConsoleColor.White; return; }
             }
             catch (Exception ex)
             {
@@ -84,16 +91,16 @@ namespace CollisionsMng
                     if (zero) pa.entries.Add(0);
                     else
                     {
-                        Console.WriteLine("-Data for material :" + Materials[i]);
-                        Console.Write("|Enter value for Sound_code [0]: ");
+                        Console.WriteLine("-Data for material : " + Materials[i]);
+                        Console.Write(" |Enter value for Sound_code [0]: ");
                         string tmp = Console.ReadLine();
                         uint SoundCode;
                         if (tmp.Trim() == "") SoundCode = 0; else SoundCode = uint.Parse(tmp);
-                        Console.Write("|Enter value for Floor_code [0]: ");
+                        Console.Write(" |Enter value for Floor_code [0]: ");
                         tmp = Console.ReadLine();
                         uint FloorCode;
                         if (tmp.Trim() == "") FloorCode = 0; else FloorCode = uint.Parse(tmp);
-                        Console.Write("|Enter value for Wall_code [0]: ");
+                        Console.Write(" |Enter value for Wall_code [0]: ");
                         tmp = Console.ReadLine();
                         uint WallCode;
                         if (tmp.Trim() == "") WallCode = 0; else WallCode = uint.Parse(tmp);
@@ -135,11 +142,11 @@ namespace CollisionsMng
         {
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine("Usage:");
-            Console.WriteLine("CollisionsMng *File name* [-zero]: ");
+            Console.WriteLine("CollisionsMng *obj file path* [-zero]: ");
             Console.WriteLine("             Converts an obj to Kcl and Pa add -zero parametrer to set every flag to 0");
-            Console.WriteLine("CollisionsMng *File name* ToObj :");
+            Console.WriteLine("CollisionsMng *kcl file path* :");
             Console.WriteLine("             Converts a kcl to obj");
-            Console.WriteLine("CollisionsMng *File name* ViewData :");
+            Console.WriteLine("CollisionsMng *pa file path* :");
             Console.WriteLine("             Displays materials flags from a Pa file");
             Console.WriteLine("Parametrers are not case sensitive");
             Console.WriteLine("------------------------------------------------");
