@@ -22,10 +22,11 @@ namespace The4Dimension.FormEditors
         Style KeyWordStyle = new TextStyle(Brushes.DarkBlue, null, FontStyle.Bold);
         Style C1Style = new TextStyle(Brushes.Silver, null, FontStyle.Bold);
 
-        public FrmXmlEditor(string Xml)
+        public FrmXmlEditor(string Xml, string Name)
         {
             InitializeComponent();
             fastColoredTextBox1.Text = Xml;
+            this.Text = "Xml editor: " + Name;
         }
 
         private void button3_Click(object sender, EventArgs e)

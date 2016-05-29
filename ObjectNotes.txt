@@ -1,0 +1,39 @@
+Note: with not set i mean the value doesn't exists or it's -1
+
+ViewCtrlArea:
+arg[0] = ViewId, set this to the ViewId property of other object to make them visible from this zone
+
+WarpCube:
+GenerateChildren:
+an WarpCubeOutOnly object to set the place where the player will spawn.
+
+PatanBoard (the green platforms):
+add a PatanBoardStarter, set the SwitchA property to a number >0,
+add a PatanBoard and set it's SwitchA to the same number, inside this PatanBoard you can add other PatanBoards that will spawn after that, to make a path you must create a "chain" of PatanBoards (The first contains the second, that contains the third and so on)
+
+LiftRailMove***M:
+Add a rail to the level, then copy it inside this object.
+arg[7]: unknown, sometimes is 0
+
+Dossun (thwomp):
+arg[0] = max y, if not set is 500
+
+FireBar*m:
+arg[0] = how many bars, if not set is 1
+arg[1] = speed, if >0 it goes counterclockwise
+
+HammerBros:
+GenerateChildren:
+an "HammerBrosMovePoint" object for every point it jumps, no args needed
+
+Bubble (lava fireball):
+arg[0] = max y
+
+KoopaFloor6x6M:
+arg[0] = max y
+
+LavaGeyser*M:
+arg[2]= max y
+
+KoopaFirstGear*:
+arg[1] = speed, if > 0 it goes counterclockwise

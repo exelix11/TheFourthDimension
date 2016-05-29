@@ -159,7 +159,7 @@
             this.MinimizeBox = false;
             this.Name = "FrmAddValue";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FrmAddValue";
+            this.Text = "Add value";
             this.Load += new System.EventHandler(this.FrmAddValue_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);

@@ -19,6 +19,7 @@ namespace The4Dimension
             InitializeComponent();
             Value = new LevelObj();
             Value.Prop = Lev;
+            this.Text = "Edit object: " + Value.ToString();
         }
 
         private void FrmObjEditor_Load(object sender, EventArgs e)
@@ -28,6 +29,7 @@ namespace The4Dimension
 
         private void button4_Click(object sender, EventArgs e)
         {
+            if (!Value.Prop.ContainsKey(propertyGrid1.SelectedGridItem.Label)) return;
             Value.Prop.Remove(propertyGrid1.SelectedGridItem.Label);
         }
 
@@ -101,7 +103,7 @@ namespace The4Dimension
                 cl.Obj = Value.Clone();
             }
             Form1.clipboard.Add(cl);
-            if (Form1.clipboard.Count > 5) Form1.clipboard.RemoveAt(0);
+            if (Form1.clipboard.Count > 10) Form1.clipboard.RemoveAt(0);
             ClipBoardMenu_Paste.DropDownItems.Clear();
             List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
             for (int i = 0; i < Form1.clipboard.Count; i++)
@@ -151,8 +153,8 @@ namespace The4Dimension
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.Rail)
             {
-                MessageBox.Show("You can't paste a rail here");
-                return;
+                if (Value.Prop.ContainsKey("Rail")) Value.Prop["Rail"] = itm.Rail.Clone();
+                else Value.Prop.Add("Rail", itm.Rail.Clone());
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
             {

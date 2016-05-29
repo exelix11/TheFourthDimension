@@ -26,3 +26,4 @@ SoundType:
 14: solid ground
 15: thin wood
 16: thicker snow
+19: water with graphical splashes

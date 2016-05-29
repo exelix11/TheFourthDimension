@@ -69,5 +69,29 @@ namespace The4Dimension.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
+        ///&lt;Root&gt;
+        ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;C1&gt;
+        ///    &lt;C0 Name=&quot;CameraParams&quot;&gt;
+        ///      
+        ///    &lt;/C0&gt;
+        ///    &lt;C1 Name=&quot;VisionParam&quot;&gt;
+        ///      &lt;D2 Name=&quot;FarClipDistance&quot; StringValue=&quot;80000&quot; /&gt;
+        ///      &lt;D2 Name=&quot;FovyDegree&quot; StringValue=&quot;45&quot; /&gt;
+        ///      &lt;D2 Name=&quot;NearClipDistacne&quot; StringValue=&quot;100&quot; /&gt;
+        ///      &lt;D2 Name=&quot;StereovisionDepth&quot; StringValue=&quot;0,4&quot; /&gt;
+        ///      &lt;D2 Name=&quot;StereovisionDistance&quot; StringValue=&quot;200&quot; /&gt;
+        ///    &lt;/C1&gt;
+        ///  &lt;/C1&gt;
+        ///&lt;/Root&gt;.
+        /// </summary>
+        internal static string GenericCameraParam {
+            get {
+                return ResourceManager.GetString("GenericCameraParam", resourceCulture);
+            }
+        }
     }
 }

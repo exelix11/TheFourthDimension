@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms.Design;
+using System.Windows.Media.Media3D;
 
 namespace The4Dimension
 {
@@ -115,6 +116,13 @@ namespace The4Dimension
             set { this.GetType().GetProperty(propertyName).SetValue(this, value, null); }
         }
 
+        public Point3D[] GetPointArray()
+        {
+            List<Point3D> points = new List<Point3D>();
+            foreach (Rail.Point p in Points) points.Add(new Point3D(p.X, -p.Z, p.Y));
+            return points.ToArray();
+        }
+
         List<int> _Args = new List<int>();
         string _LayerName;
         internal List<Point> _points = new List<Point>();
@@ -125,12 +133,14 @@ namespace The4Dimension
         int _no;
         string _type;
 
-        public Rail()
+        public Rail(bool Adding = false)
         {
             _LayerName = "共通";
             _closed = "FALSE";
             _name = "empty rail";
             _type = "Bezier";
+            if (Adding) _points.Add(new Point());
+            if (Adding) _points.Add(new Point(1));
         }
 
         public override string ToString()
@@ -171,7 +181,7 @@ namespace The4Dimension
             get { return _l_id; }
         }        
 
-        public List<int> Args
+        public List<int> Arg
         {
             set { _Args = value; }
             get { return _Args; }
@@ -188,7 +198,7 @@ namespace The4Dimension
         {
             
             Rail R = new Rail();
-            foreach (int i in _Args) R.Args.Add(i);
+            foreach (int i in _Args) R._Args.Add(i);
             R.LayerName = (string)_LayerName.Clone();
             foreach (Point p in _points) R._points.Add(p.Clone());
             R._closed = (string)_closed.Clone();
@@ -212,20 +222,26 @@ namespace The4Dimension
             get { return _LayerName; }
         }
 
+        [Editor(typeof(RailPointEditor), typeof(UITypeEditor))]
         public List<Point> Points
         {
             set { _points = value; }
             get { return _points; }
         }
 
-        [TypeConverter(typeof(ExpandableObjectConverter))]
+        // [TypeConverter(typeof(ExpandableObjectConverter))]
         public class Point : ICloneable
         {
             List<int> _Args = new List<int>();
             int _ID;
-            List<Single> _X = new List<Single>();
-            List<Single> _Y = new List<Single>();
-            List<Single> _Z = new List<Single>();
+            public List<Single> _X = new List<Single>();
+            public List<Single> _Y = new List<Single>();
+            public List<Single> _Z = new List<Single>();
+
+            public Point(int id = 0)
+            {
+                _ID = id;
+            }
 
             public override string ToString()
             {
@@ -237,9 +253,9 @@ namespace The4Dimension
                 Point N = new Point();
                 foreach (int i in _Args) N._Args.Add(i);
                 N.ID = _ID;
-                foreach (int s in X) N._X.Add(s);
-                foreach (int s in Y) N._Y.Add(s);
-                foreach (int s in Z) N._Z.Add(s);
+                foreach (int s in _X) N._X.Add(s);
+                foreach (int s in _Y) N._Y.Add(s);
+                foreach (int s in _Z) N._Z.Add(s);
                 return N;
             }
 
@@ -260,23 +276,54 @@ namespace The4Dimension
                 get { return _ID; }
             }
 
-            public List<Single> X
+            public Single X
             {
-                set { _X = value; }
-                get { return _X; }
+                set { _X.Clear(); _X.Add(value); _X.Add(value); _X.Add(value); }
+                get {
+                    if (_X.Count == 0) X = 0;
+                    return _X[0];
+                }
             }
 
-            public List<Single> Y
+            public Single Y
             {
-                set { _Y = value; }
-                get { return _Y; }
+                set { _Y.Clear(); _Y.Add(value); _Y.Add(value); _Y.Add(value); }
+                get {
+                    if (_Y.Count == 0) Y = 0;
+                    return _Y[0];
+                }
             }
 
-            public List<Single> Z
+            public Single Z
             {
-                set { _Z = value; }
-                get { return _Z; }
+                set { _Z.Clear(); _Z.Add(value); _Z.Add(value); _Z.Add(value); }
+                get {
+                    if (_Z.Count == 0) Z = 0;
+                    return _Z[0];
+                }
             }
+        }
+    }
+
+    class RailPointEditor : UITypeEditor
+    {
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+        {
+            return UITypeEditorEditStyle.Modal;
+        }
+        public override object EditValue(ITypeDescriptorContext context, System.IServiceProvider provider, object value)
+        {
+            IWindowsFormsEditorService svc = provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;
+            List<Rail.Point> v = value as List<Rail.Point>;
+            if (svc != null && v != null)
+            {
+                using (FrmRailPointEditor form = new FrmRailPointEditor(v))
+                {
+                    form.ShowDialog();
+                    v = form.Value;
+                }
+            }
+            return v; // can also replace the wrapper object here
         }
     }
 

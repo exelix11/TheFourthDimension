@@ -97,7 +97,7 @@
             this.MaximizeBox = false;
             this.Name = "ModelDumper";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "ModelDumper";
+            this.Text = "Model dumper";
             this.UseWaitCursor = true;
             this.Load += new System.EventHandler(this.ModelDumper_Load);
             this.ResumeLayout(false);
