@@ -52,6 +52,7 @@
             this.bymlConverterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.bymlXmlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.xmlBymlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.creatorClassNameTableszsEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UndoMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.OtherLevelDataMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,10 +65,14 @@
             this.switchKillToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.switchDeadOnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.objectByViewIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectByRailNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.btn_cameraCode = new System.Windows.Forms.Button();
+            this.DeleteMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.deleteEveryObjectInTheListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AddTypeBtn = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ObjectsListBox = new System.Windows.Forms.ListBox();
@@ -75,8 +80,6 @@
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.BtnAddObj = new System.Windows.Forms.Button();
             this.DelObjBtn = new System.Windows.Forms.Button();
-            this.DeleteMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.deleteEveryObjectInTheListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DuplicateObjBtn = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
@@ -98,7 +101,7 @@
             this.propertyGrid1.ContextMenuStrip = this.ClipBoardMenu;
             this.propertyGrid1.Location = new System.Drawing.Point(4, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(230, 228);
+            this.propertyGrid1.Size = new System.Drawing.Size(230, 252);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridChange);
             // 
@@ -197,7 +200,8 @@
             this.openToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator2,
-            this.bymlConverterToolStripMenuItem1});
+            this.bymlConverterToolStripMenuItem1,
+            this.creatorClassNameTableszsEditorToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -205,14 +209,14 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -224,7 +228,7 @@
             this.saveAsBymlToolStripMenuItem1,
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
             this.saveAsToolStripMenuItem.Text = "Save";
             // 
             // saveAsSZSToolStripMenuItem
@@ -256,7 +260,7 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(151, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(249, 6);
             // 
             // bymlConverterToolStripMenuItem1
             // 
@@ -264,7 +268,7 @@
             this.bymlXmlToolStripMenuItem1,
             this.xmlBymlToolStripMenuItem1});
             this.bymlConverterToolStripMenuItem1.Name = "bymlConverterToolStripMenuItem1";
-            this.bymlConverterToolStripMenuItem1.Size = new System.Drawing.Size(154, 22);
+            this.bymlConverterToolStripMenuItem1.Size = new System.Drawing.Size(252, 22);
             this.bymlConverterToolStripMenuItem1.Text = "Byml converter";
             // 
             // bymlXmlToolStripMenuItem1
@@ -280,6 +284,13 @@
             this.xmlBymlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
             this.xmlBymlToolStripMenuItem1.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem1.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
+            // 
+            // creatorClassNameTableszsEditorToolStripMenuItem
+            // 
+            this.creatorClassNameTableszsEditorToolStripMenuItem.Name = "creatorClassNameTableszsEditorToolStripMenuItem";
+            this.creatorClassNameTableszsEditorToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.creatorClassNameTableszsEditorToolStripMenuItem.Text = "CreatorClassNameTable.szs editor";
+            this.creatorClassNameTableszsEditorToolStripMenuItem.Click += new System.EventHandler(this.creatorClassNameTableszsEditorToolStripMenuItem_Click);
             // 
             // UndoMenu
             // 
@@ -300,7 +311,8 @@
             this.objectByIdToolStripMenuItem,
             this.objectByCameraIdToolStripMenuItem,
             this.objectBySwitchToolStripMenuItem,
-            this.objectByViewIdToolStripMenuItem});
+            this.objectByViewIdToolStripMenuItem,
+            this.objectByRailNameToolStripMenuItem});
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
             this.findToolStripMenuItem.Size = new System.Drawing.Size(42, 20);
             this.findToolStripMenuItem.Text = "Find";
@@ -308,14 +320,14 @@
             // objectByIdToolStripMenuItem
             // 
             this.objectByIdToolStripMenuItem.Name = "objectByIdToolStripMenuItem";
-            this.objectByIdToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectByIdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.objectByIdToolStripMenuItem.Text = "Object by Id";
             this.objectByIdToolStripMenuItem.Click += new System.EventHandler(this.objectByIdToolStripMenuItem_Click);
             // 
             // objectByCameraIdToolStripMenuItem
             // 
             this.objectByCameraIdToolStripMenuItem.Name = "objectByCameraIdToolStripMenuItem";
-            this.objectByCameraIdToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectByCameraIdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.objectByCameraIdToolStripMenuItem.Text = "Object by CameraId";
             this.objectByCameraIdToolStripMenuItem.Click += new System.EventHandler(this.objectByCameraIdToolStripMenuItem_Click);
             // 
@@ -328,7 +340,7 @@
             this.switchKillToolStripMenuItem,
             this.switchDeadOnToolStripMenuItem});
             this.objectBySwitchToolStripMenuItem.Name = "objectBySwitchToolStripMenuItem";
-            this.objectBySwitchToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectBySwitchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.objectBySwitchToolStripMenuItem.Text = "Object by switch";
             // 
             // switchAToolStripMenuItem
@@ -369,9 +381,16 @@
             // objectByViewIdToolStripMenuItem
             // 
             this.objectByViewIdToolStripMenuItem.Name = "objectByViewIdToolStripMenuItem";
-            this.objectByViewIdToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
+            this.objectByViewIdToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.objectByViewIdToolStripMenuItem.Text = "Object by ViewId";
             this.objectByViewIdToolStripMenuItem.Click += new System.EventHandler(this.objectByViewIdToolStripMenuItem_Click);
+            // 
+            // objectByRailNameToolStripMenuItem
+            // 
+            this.objectByRailNameToolStripMenuItem.Name = "objectByRailNameToolStripMenuItem";
+            this.objectByRailNameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.objectByRailNameToolStripMenuItem.Text = "Object by Rail name";
+            this.objectByRailNameToolStripMenuItem.Click += new System.EventHandler(this.objectByRailNameToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -408,6 +427,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.btn_cameraCode);
             this.splitContainer1.Panel1.Controls.Add(this.AddTypeBtn);
             this.splitContainer1.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer1.Panel1.Controls.Add(this.ObjectsListBox);
@@ -424,8 +444,35 @@
             this.splitContainer1.Panel2.Controls.Add(this.button4);
             this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
             this.splitContainer1.Size = new System.Drawing.Size(244, 529);
-            this.splitContainer1.SplitterDistance = 264;
+            this.splitContainer1.SplitterDistance = 240;
             this.splitContainer1.TabIndex = 7;
+            // 
+            // btn_cameraCode
+            // 
+            this.btn_cameraCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_cameraCode.ContextMenuStrip = this.DeleteMenuStrip;
+            this.btn_cameraCode.Location = new System.Drawing.Point(103, 186);
+            this.btn_cameraCode.Name = "btn_cameraCode";
+            this.btn_cameraCode.Size = new System.Drawing.Size(135, 26);
+            this.btn_cameraCode.TabIndex = 11;
+            this.btn_cameraCode.Text = "Generate camera code";
+            this.btn_cameraCode.UseVisualStyleBackColor = true;
+            this.btn_cameraCode.Visible = false;
+            this.btn_cameraCode.Click += new System.EventHandler(this.CameraCode_click);
+            // 
+            // DeleteMenuStrip
+            // 
+            this.DeleteMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteEveryObjectInTheListToolStripMenuItem});
+            this.DeleteMenuStrip.Name = "DeleteMenuStrip";
+            this.DeleteMenuStrip.Size = new System.Drawing.Size(226, 26);
+            // 
+            // deleteEveryObjectInTheListToolStripMenuItem
+            // 
+            this.deleteEveryObjectInTheListToolStripMenuItem.Name = "deleteEveryObjectInTheListToolStripMenuItem";
+            this.deleteEveryObjectInTheListToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
+            this.deleteEveryObjectInTheListToolStripMenuItem.Text = "Delete every object in the list";
+            this.deleteEveryObjectInTheListToolStripMenuItem.Click += new System.EventHandler(this.deleteEveryObjectInTheListToolStripMenuItem_Click);
             // 
             // AddTypeBtn
             // 
@@ -435,13 +482,13 @@
             this.AddTypeBtn.TabIndex = 10;
             this.AddTypeBtn.Text = "+";
             this.AddTypeBtn.UseVisualStyleBackColor = true;
-            this.AddTypeBtn.Click += new System.EventHandler(this.button1_Click);
+            this.AddTypeBtn.Click += new System.EventHandler(this.AddType_click);
             // 
             // checkBox1
             // 
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(7, 219);
+            this.checkBox1.Location = new System.Drawing.Point(4, 191);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(92, 17);
             this.checkBox1.TabIndex = 9;
@@ -450,15 +497,17 @@
             // 
             // ObjectsListBox
             // 
-            this.ObjectsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.ObjectsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ObjectsListBox.FormattingEnabled = true;
             this.ObjectsListBox.Location = new System.Drawing.Point(7, 30);
             this.ObjectsListBox.Name = "ObjectsListBox";
-            this.ObjectsListBox.Size = new System.Drawing.Size(229, 186);
+            this.ObjectsListBox.Size = new System.Drawing.Size(229, 160);
             this.ObjectsListBox.TabIndex = 8;
             this.ObjectsListBox.SelectedIndexChanged += new System.EventHandler(this.ObjectsListBox_SelectedIndexChanged);
             this.ObjectsListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Listbox_keyDown);
+            this.ObjectsListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ListBox_MouseUp);
             // 
             // label1
             // 
@@ -484,7 +533,7 @@
             // BtnAddObj
             // 
             this.BtnAddObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.BtnAddObj.Location = new System.Drawing.Point(3, 238);
+            this.BtnAddObj.Location = new System.Drawing.Point(3, 214);
             this.BtnAddObj.Name = "BtnAddObj";
             this.BtnAddObj.Size = new System.Drawing.Size(29, 23);
             this.BtnAddObj.TabIndex = 5;
@@ -496,32 +545,18 @@
             // 
             this.DelObjBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.DelObjBtn.ContextMenuStrip = this.DeleteMenuStrip;
-            this.DelObjBtn.Location = new System.Drawing.Point(137, 238);
+            this.DelObjBtn.Location = new System.Drawing.Point(137, 214);
             this.DelObjBtn.Name = "DelObjBtn";
-            this.DelObjBtn.Size = new System.Drawing.Size(96, 23);
+            this.DelObjBtn.Size = new System.Drawing.Size(101, 23);
             this.DelObjBtn.TabIndex = 4;
             this.DelObjBtn.Text = "Delete Object";
             this.DelObjBtn.UseVisualStyleBackColor = true;
             this.DelObjBtn.Click += new System.EventHandler(this.button3_Click);
             // 
-            // DeleteMenuStrip
-            // 
-            this.DeleteMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteEveryObjectInTheListToolStripMenuItem});
-            this.DeleteMenuStrip.Name = "DeleteMenuStrip";
-            this.DeleteMenuStrip.Size = new System.Drawing.Size(226, 26);
-            // 
-            // deleteEveryObjectInTheListToolStripMenuItem
-            // 
-            this.deleteEveryObjectInTheListToolStripMenuItem.Name = "deleteEveryObjectInTheListToolStripMenuItem";
-            this.deleteEveryObjectInTheListToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.deleteEveryObjectInTheListToolStripMenuItem.Text = "Delete every object in the list";
-            this.deleteEveryObjectInTheListToolStripMenuItem.Click += new System.EventHandler(this.deleteEveryObjectInTheListToolStripMenuItem_Click);
-            // 
             // DuplicateObjBtn
             // 
             this.DuplicateObjBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DuplicateObjBtn.Location = new System.Drawing.Point(35, 238);
+            this.DuplicateObjBtn.Location = new System.Drawing.Point(35, 214);
             this.DuplicateObjBtn.Name = "DuplicateObjBtn";
             this.DuplicateObjBtn.Size = new System.Drawing.Size(96, 23);
             this.DuplicateObjBtn.TabIndex = 3;
@@ -532,7 +567,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(163, 235);
+            this.button5.Location = new System.Drawing.Point(163, 259);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 2;
@@ -543,7 +578,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(3, 235);
+            this.button4.Location = new System.Drawing.Point(3, 259);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 1;
@@ -590,8 +625,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
@@ -643,6 +676,10 @@
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem saveAsBymlToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem objectByRailNameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem creatorClassNameTableszsEditorToolStripMenuItem;
+        public System.Windows.Forms.PropertyGrid propertyGrid1;
+        private System.Windows.Forms.Button btn_cameraCode;
     }
 }
 

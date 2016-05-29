@@ -13,14 +13,18 @@ namespace The4Dimension.FormEditors
     public partial class FrmSearchValInput : Form
     {
         public object Res = null;
+        bool IsString;
 
-        public FrmSearchValInput()
+        public FrmSearchValInput(bool str = false)
         {
             InitializeComponent();
+            IsString = str;
+            if (str) textBox1.Visible = true; else numericUpDown1.Visible = true;
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            if (IsString) Res = textBox1.Text.Trim(); else
             Res = numericUpDown1.Value;
             this.Close();
         }

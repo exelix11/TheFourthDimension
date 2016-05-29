@@ -13,6 +13,7 @@ using LibEveryFileExplorer.Files.SimpleFileSystem;
 using _3DS.NintendoWare.GFX;
 using CommonFiles;
 using The4Dimension.Ohana;
+using System.Drawing.Drawing2D;
 
 namespace The4Dimension
 {
@@ -20,6 +21,7 @@ namespace The4Dimension
     {
         string ObjDataPath;
         bool UseEFE = true;
+        string[] TextureToRemoveAlpha = new string[] { "object_nm01_RedBlueTurnBlock00_dif.png" }; 
         public ModelDumper()
         {
             InitializeComponent();
@@ -88,6 +90,19 @@ namespace The4Dimension
             }
         }
 
+        void RemoveTextureAlpha(string path)
+        {
+            Bitmap img = new Bitmap(path);
+            Bitmap Out = new Bitmap(img.Size.Width, img.Size.Height);
+            Graphics g = Graphics.FromImage(Out);
+            g.Clear(Color.White);
+            g.CompositingMode = CompositingMode.SourceOver;
+            g.DrawImage(img, 0, 0);
+            img.Dispose();
+            File.Delete(path);
+            Out.Save(path);
+        }
+
         void ConvertEFE(byte[] Data, string Name)
         {
             _3DS.NintendoWare.GFX.CGFX mod = new _3DS.NintendoWare.GFX.CGFX(Data);
@@ -116,6 +131,10 @@ namespace The4Dimension
 
         private void backgroundWorker_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
+            foreach (string s in TextureToRemoveAlpha)
+            {
+                if (File.Exists(@"models\Tex\" + s)) RemoveTextureAlpha(@"models\Tex\" + s);
+            }
             MessageBox.Show("Done !");
             this.Close();
         }

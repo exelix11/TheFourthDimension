@@ -92,15 +92,31 @@ namespace MarioKart.MK7 //Thanks Gericom for this
 			return result;
 		}
         
-		public bool Convert(int FilterIndex, string Path)
+		public bool convert(int FilterIndex, string Path)
 		{
-			switch (FilterIndex)
-			{
-				case 0:
-					OBJ o = ToOBJ();
+            switch (FilterIndex)
+            {
+                case 0:
+                    OBJ o = ToOBJ();
+                    o.MTLPath = Path + ".mtl";
+                    string Mtl = "";
+                    List<String> matnames = new List<string>();
+                    foreach (var v in o.Faces) if (!matnames.Contains(v.Material)) matnames.Add(v.Material);
+                    foreach (string mat in matnames)
+                    {
+                        int matName = Convert.ToInt32(mat, 16);
+                        while (matName > 0xFF) matName = matName / 2;
+                        Mtl += @"newmtl " + mat + @"
+Ka 0.000000 0.000000 0.000000
+Kd 0.000000 0.000000 " + matName.ToString() + @"
+Ks 0.000000 0.000000 0.000000
+
+";
+                    }
 					byte[] d = o.Write();
 					File.Create(Path).Close();
 					File.WriteAllBytes(Path, d);
+                    File.WriteAllText(Path + ".mtl", Mtl);
 					return true;
 				default:
 					return false;

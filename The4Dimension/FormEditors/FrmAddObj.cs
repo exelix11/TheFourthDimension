@@ -33,6 +33,7 @@ namespace The4Dimension
             }
             else if (LayerName == "ObjInfo")
             {
+                comboBox1.Items.Add("@CameraPositionHelper");
                 foreach (string s in CCNT.Keys.ToArray())
                     if (!s.ToLower().EndsWith("area")) comboBox1.Items.Add(s);
             }

@@ -10,6 +10,10 @@ namespace CollisionsMng
 {
     class Pa_format
     {
+        public static uint[] knownWallTypes = new uint[] {0,1,2,3,4,5 };
+        public static uint[] knownGroundTypes = new uint[] { 0, 1, 2, 3, 4, 5, 6 };
+        public static uint[] knownSoundTypes = new uint[] { 0, 1, 2, 3, 4, 5, 6,7,8,9,10,11,12,13,14,15,16 };
+
         public UInt32 NumFields = 5;
         public UInt32 EntrySize = 4;
         public List<Pa_Field> Fields = new List<Pa_Field>();
@@ -77,6 +81,52 @@ namespace CollisionsMng
                 entryText += "\r\n";
                 Res += entryText;
             }
+            return Res;
+        }
+
+        public string ToString(bool Unknown)
+        {
+            string Res = "";
+            Res += "Pa file:\r\n";
+            Res += "Number of fields: " + NumFields.ToString() + "\r\nFields list:";
+            foreach (Pa_Field f in Fields) Res += f.ToString() + "\r\n";
+            Res += "Number of entries: " + entries.Count.ToString();
+            Res += "\r\nUnknown entries list:\r\n";
+            List<byte> ShiftVals = new List<byte>();
+            List<UInt16> Offsets = new List<ushort>();
+            List<uint> Bitmasks = new List<uint>();
+            int count = 0;
+            foreach (Pa_Field f in Fields)
+            {
+                ShiftVals.Add(f.Shift);
+                Offsets.Add(f.offsetInEntry);
+                Bitmasks.Add(f.Bitmask);
+            }
+            foreach (UInt32 n in entries)
+            {
+                string entryText = " -" + Pa_Field.GetString(BitConverter.GetBytes(n)) + ": ";
+                bool toAdd = false;
+                List<uint> values = new List<uint>();
+                for (int i = 0; i < Fields.Count; i++)
+                {
+                    uint r = n & Bitmasks[i];
+                    uint finalVal = r >> ShiftVals[i];
+                    values.Add(finalVal);
+                    if (i == 0 && !knownSoundTypes.Contains(finalVal)) toAdd = true;                    
+                    else if (i == 1 && !knownGroundTypes.Contains(finalVal)) toAdd = true;
+                    else if (i == 2 && finalVal != 0) toAdd = true;
+                    else if (i == 3 && !knownWallTypes.Contains(finalVal)) toAdd = true;
+                    else if (i == 4 && finalVal != 0) toAdd = true;
+                }
+                if (toAdd)
+                {
+                    foreach(uint v in values) entryText += " " + v.ToString() + " ";
+                    entryText += "\r\n";
+                    Res += entryText;
+                    count++;
+                }
+            }
+            Res += "\r\nUnknown entries count: " + count.ToString();
             return Res;
         }
 

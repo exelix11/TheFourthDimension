@@ -117,26 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="BaseModels" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BaseModels.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="GenericCameraParam" xml:space="preserve">
-    <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
-&lt;Root&gt;
-  &lt;isBigEndian Value="False" /&gt;
-  &lt;C1&gt;
-    &lt;C0 Name="CameraParams"&gt;
-      
-    &lt;/C0&gt;
-    &lt;C1 Name="VisionParam"&gt;
-      &lt;D2 Name="FarClipDistance" StringValue="80000" /&gt;
-      &lt;D2 Name="FovyDegree" StringValue="45" /&gt;
-      &lt;D2 Name="NearClipDistacne" StringValue="100" /&gt;
-      &lt;D2 Name="StereovisionDepth" StringValue="0,4" /&gt;
-      &lt;D2 Name="StereovisionDistance" StringValue="200" /&gt;
-    &lt;/C1&gt;
-  &lt;/C1&gt;
-&lt;/Root&gt;</value>
-  </data>
 </root>

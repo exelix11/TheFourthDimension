@@ -11,7 +11,7 @@ using System.Windows;
 namespace CollisionsMng
 {
     class Program
-    {
+    {        
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Green;
@@ -24,7 +24,7 @@ namespace CollisionsMng
             Console.WriteLine("");
             try
             {
-                if (args.Length == 0 || args.Length > 2) { WriteUsage(); Console.ForegroundColor = ConsoleColor.White; return; }
+                if (args.Length == 0 || args.Length > 3) { WriteUsage(); Console.ForegroundColor = ConsoleColor.White; return; }
                 string FileName = args[0];
                 if (args.Length == 1)
                 {
@@ -37,7 +37,7 @@ namespace CollisionsMng
                     else if (Path.GetExtension(FileName).ToLower() == ".kcl")
                     {
                         KCL k = new KCL(File.ReadAllBytes(FileName));
-                        k.Convert(0, FileName + ".obj");
+                        k.convert(0, FileName + ".obj");
                         Console.WriteLine("DONE !");
                         Console.ForegroundColor = ConsoleColor.White;
                         return;
@@ -60,6 +60,13 @@ namespace CollisionsMng
                 else if (args[1].ToLower() == "zero")
                 {
                     MakeKCLandPA(FileName, true);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    return;
+                }
+                else if (args[1].ToLower() == "unknown")
+                {
+                    Console.WriteLine(Pa_format.LoadFile(File.ReadAllBytes(FileName)).ToString(true));
+                    Console.ReadLine();
                     Console.ForegroundColor = ConsoleColor.White;
                     return;
                 }

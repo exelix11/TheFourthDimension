@@ -103,6 +103,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormEditors\FrmAddCameraSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmAddCameraSettings.Designer.cs">
+      <DependentUpon>FrmAddCameraSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEditors\FrmAddObj.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -114,6 +120,18 @@
     </Compile>
     <Compile Include="FormEditors\FrmAddValue.Designer.cs">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditors\FrmCCNTEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmCCNTEdit.Designer.cs">
+      <DependentUpon>FrmCCNTEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditors\FrmRailPointEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmRailPointEditor.Designer.cs">
+      <DependentUpon>FrmRailPointEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="FormEditors\FrmSearchResults.cs">
       <SubType>Form</SubType>
@@ -173,11 +191,20 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmAddCameraSettings.resx">
+      <DependentUpon>FrmAddCameraSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmAddObj.resx">
       <DependentUpon>FrmAddObj.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmAddValue.resx">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmCCNTEdit.resx">
+      <DependentUpon>FrmCCNTEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmRailPointEditor.resx">
+      <DependentUpon>FrmRailPointEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmSearchResults.resx">
       <DependentUpon>FrmSearchResults.cs</DependentUpon>

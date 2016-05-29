@@ -53,7 +53,7 @@
             this.MinimizeBox = false;
             this.Name = "FrmSearchResults";
             this.ShowIcon = false;
-            this.Text = "FrmSearchResults";
+            this.Text = "Search results";
             this.TopMost = true;
             this.ResumeLayout(false);
 
