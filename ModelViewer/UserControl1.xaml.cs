@@ -17,25 +17,68 @@ using System.Windows.Shapes;
 
 namespace ModelViewer
 {
-    /// <summary>
-    /// Logica di interazione per UserControl1.xaml
-    /// </summary>
     public partial class UserControl1 : UserControl
     {
         Dictionary<string, Model3D> ImportedModels = new Dictionary<string, Model3D>();
         Dictionary<string, List<ModelVisual3D>> Models = new Dictionary<string, List<ModelVisual3D>>();
         public Dictionary<string, List<Vector3D>> Positions = new Dictionary<string, List<Vector3D>>();
         ModelImporter Importer = new ModelImporter();
-        
+        SortingVisual3D ModelViewer = new SortingVisual3D();
+
         public UserControl1()
         {
             InitializeComponent();
+            ModelViewer.SortingFrequency = 1;
+            ModelView.Children.Add(ModelViewer);
         }
 
         public void AddKey(string Type)
         {
             if (!Models.ContainsKey(Type)) Models.Add(Type, new List<ModelVisual3D>());
             if (!Positions.ContainsKey(Type)) Positions.Add(Type, new List<Vector3D>());
+        }
+
+        public void addRail(Point3D[] Points, int Thickness = 5, int at = -1)
+        {
+            string Type = "AllRailInfos";
+            LinesVisual3D l = new LinesVisual3D();
+            if (at == -1) Models[Type].Add(l); else Models[Type].Insert(at, l);
+            if (at == -1) Positions[Type].Add(PointToVec(Points[0])); else Positions[Type].Insert(at, PointToVec(Points[0]));
+            if (at == -1) ModelViewer.Children.Add(Models[Type][Models[Type].Count - 1]); else ModelViewer.Children.Insert(at, Models[Type][at]);
+            if (Points.Length < 2) return;
+            l.Color = Color.FromRgb(254, 0, 0);
+            l.Thickness = Thickness;
+            AddRailpoints(l, Points, Thickness);
+        }
+
+        public void AddRailpoints(LinesVisual3D l, Point3D[] Points, int Thickness)
+        {
+            Point3D oldPoint = Points[1];
+            l.Points.Add(Points[0]);
+            l.Points.Add(Points[1]);
+            for (int i = 2; i < Points.Length; i++)
+            {
+                int chidIndex = l.Children.Count;
+                l.Children.Add(new LinesVisual3D());
+                ((LinesVisual3D)l.Children[chidIndex]).Thickness = Thickness;
+                ((LinesVisual3D)l.Children[chidIndex]).Points.Add(oldPoint);
+                ((LinesVisual3D)l.Children[chidIndex]).Points.Add(Points[i]);
+                oldPoint = Points[i];
+            }
+        }
+
+        public void UpdateRailpos(int id, Point3D[] Points)
+        {
+            RemoveRailPoints(((LinesVisual3D)Models["AllRailInfos"][id]));
+            if (Points.Length < 2) return;
+            AddRailpoints((LinesVisual3D)Models["AllRailInfos"][id], Points, 5);
+            Positions["AllRailInfos"][id] = PointToVec(Points[0]);
+            ModelView.UpdateLayout();
+        }
+
+        Vector3D PointToVec(Point3D input)
+        {
+            return new Vector3D(input.X, input.Y, input.Z);
         }
 
         public void addModel(string path, string Type, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ, int at = -1)
@@ -64,9 +107,19 @@ namespace ModelViewer
         public void RemoveModel(string Type, int index)
         {
             Models[Type][index].Content = null;
+            if (Type == "AllRailInfos")
+            {
+                RemoveRailPoints(((LinesVisual3D)Models[Type][index]));
+            }
             Models[Type].RemoveAt(index);
             Positions[Type].RemoveAt(index);
-            ModelViewer.UpdateLayout();
+            ModelView.UpdateLayout();
+        }
+
+        public void RemoveRailPoints(LinesVisual3D rail)
+        {
+            foreach (LinesVisual3D r in rail.Children) RemoveRailPoints(r);
+            rail.Points.Clear();
         }
 
         public void HideGroup(string Type)
@@ -78,16 +131,22 @@ namespace ModelViewer
         }
 
         public void CameraToObj(string Type, int index)
-        {            
+        {
+            if (Positions[Type].Count <= index) return;
             Vector3D pos = Positions[Type][index];
-            ModelViewer.Camera.LookAt(new Point3D(pos.X, pos.Y, pos.Z), 1000);
+            ModelView.Camera.LookAt(new Point3D(pos.X, pos.Y, pos.Z), 1000);
+        }
+
+        public void SetCameraDirection(int x, int y, int z)
+        {
+            ModelView.Camera.UpDirection = new Vector3D(x, y, z);
         }
 
         public Vector3D Drag(object[] DragArgs, System.Windows.Input.MouseEventArgs e, bool round100)
         {
-            Point p = e.GetPosition(ModelViewer);
+            Point p = e.GetPosition(ModelView);
             Vector3D v = (Vector3D)DragArgs[2];
-            Point3D? pos = ModelViewer.Viewport.UnProject(p, new Point3D(v.X,v.Y,v.Z), ModelViewer.Camera.LookDirection);
+            Point3D? pos = ModelView.Viewport.UnProject(p, new Point3D(v.X,v.Y,v.Z), ModelView.Camera.LookDirection);
             if (pos.HasValue)
             {
                 Vector3D vec = pos.Value.ToVector3D();
@@ -119,11 +178,11 @@ namespace ModelViewer
             t.Children.Add(new TranslateTransform3D(pos));
             Positions[Type][index] = pos;
             Models[Type][index].Transform = t;
-        }
+        }        
 
         public object[] GetOBJ(object sender, MouseButtonEventArgs e)
         {
-            Point p = e.GetPosition(ModelViewer);
+            Point p = e.GetPosition(ModelView);
             object[] res = new object[3] { null, null, null };
             ModelVisual3D result = GetHitResult(p);
             if (result == null) return res;
@@ -142,7 +201,7 @@ namespace ModelViewer
 
         ModelVisual3D GetHitResult(Point location)
         {
-            HitTestResult result = VisualTreeHelper.HitTest(ModelViewer, location);
+            HitTestResult result = VisualTreeHelper.HitTest(ModelView, location);
             if (result != null && result.VisualHit is ModelVisual3D)
             {
                 ModelVisual3D visual = (ModelVisual3D)result.VisualHit;
