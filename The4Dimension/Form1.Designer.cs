@@ -42,6 +42,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFromLevelNameWXXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsSZSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +53,12 @@
             this.bymlConverterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.bymlXmlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.xmlBymlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.creatorClassNameTableszsEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.creatorClassNameTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stagesBgmEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.gameROMFSPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.changeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UndoMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.OtherLevelDataMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -84,6 +90,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -183,6 +190,7 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.otherToolStripMenuItem,
             this.UndoMenu,
             this.OtherLevelDataMenu,
             this.findToolStripMenuItem,
@@ -197,11 +205,11 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
+            this.openFromLevelNameWXXToolStripMenuItem,
             this.openToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator2,
-            this.bymlConverterToolStripMenuItem1,
-            this.creatorClassNameTableszsEditorToolStripMenuItem});
+            this.bymlConverterToolStripMenuItem1});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -209,14 +217,21 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
             this.newToolStripMenuItem.Text = "New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // openFromLevelNameWXXToolStripMenuItem
+            // 
+            this.openFromLevelNameWXXToolStripMenuItem.Name = "openFromLevelNameWXXToolStripMenuItem";
+            this.openFromLevelNameWXXToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.openFromLevelNameWXXToolStripMenuItem.Text = "Open from level name (W X-X)";
+            this.openFromLevelNameWXXToolStripMenuItem.Click += new System.EventHandler(this.openFromLevelNameWXXToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -228,7 +243,7 @@
             this.saveAsBymlToolStripMenuItem1,
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
             this.saveAsToolStripMenuItem.Text = "Save";
             // 
             // saveAsSZSToolStripMenuItem
@@ -260,7 +275,7 @@
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(249, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(233, 6);
             // 
             // bymlConverterToolStripMenuItem1
             // 
@@ -268,7 +283,7 @@
             this.bymlXmlToolStripMenuItem1,
             this.xmlBymlToolStripMenuItem1});
             this.bymlConverterToolStripMenuItem1.Name = "bymlConverterToolStripMenuItem1";
-            this.bymlConverterToolStripMenuItem1.Size = new System.Drawing.Size(252, 22);
+            this.bymlConverterToolStripMenuItem1.Size = new System.Drawing.Size(236, 22);
             this.bymlConverterToolStripMenuItem1.Text = "Byml converter";
             // 
             // bymlXmlToolStripMenuItem1
@@ -285,12 +300,50 @@
             this.xmlBymlToolStripMenuItem1.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem1.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
             // 
-            // creatorClassNameTableszsEditorToolStripMenuItem
+            // otherToolStripMenuItem
             // 
-            this.creatorClassNameTableszsEditorToolStripMenuItem.Name = "creatorClassNameTableszsEditorToolStripMenuItem";
-            this.creatorClassNameTableszsEditorToolStripMenuItem.Size = new System.Drawing.Size(252, 22);
-            this.creatorClassNameTableszsEditorToolStripMenuItem.Text = "CreatorClassNameTable.szs editor";
-            this.creatorClassNameTableszsEditorToolStripMenuItem.Click += new System.EventHandler(this.creatorClassNameTableszsEditorToolStripMenuItem_Click);
+            this.otherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.creatorClassNameTableEditorToolStripMenuItem,
+            this.stagesBgmEditorToolStripMenuItem,
+            this.toolStripSeparator5,
+            this.gameROMFSPathToolStripMenuItem});
+            this.otherToolStripMenuItem.Name = "otherToolStripMenuItem";
+            this.otherToolStripMenuItem.Size = new System.Drawing.Size(101, 20);
+            this.otherToolStripMenuItem.Text = "Other modding";
+            // 
+            // creatorClassNameTableEditorToolStripMenuItem
+            // 
+            this.creatorClassNameTableEditorToolStripMenuItem.Name = "creatorClassNameTableEditorToolStripMenuItem";
+            this.creatorClassNameTableEditorToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.creatorClassNameTableEditorToolStripMenuItem.Text = "CreatorClassNameTable editor";
+            this.creatorClassNameTableEditorToolStripMenuItem.Click += new System.EventHandler(this.creatorClassNameTableEditorToolStripMenuItem_Click);
+            // 
+            // stagesBgmEditorToolStripMenuItem
+            // 
+            this.stagesBgmEditorToolStripMenuItem.Name = "stagesBgmEditorToolStripMenuItem";
+            this.stagesBgmEditorToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.stagesBgmEditorToolStripMenuItem.Text = "Change stages BGM";
+            this.stagesBgmEditorToolStripMenuItem.Click += new System.EventHandler(this.stagesBgmEditorToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(231, 6);
+            // 
+            // gameROMFSPathToolStripMenuItem
+            // 
+            this.gameROMFSPathToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.changeToolStripMenuItem});
+            this.gameROMFSPathToolStripMenuItem.Name = "gameROMFSPathToolStripMenuItem";
+            this.gameROMFSPathToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path:";
+            // 
+            // changeToolStripMenuItem
+            // 
+            this.changeToolStripMenuItem.Name = "changeToolStripMenuItem";
+            this.changeToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.changeToolStripMenuItem.Text = "Change";
+            this.changeToolStripMenuItem.Click += new System.EventHandler(this.changeToolStripMenuItem_Click_1);
             // 
             // UndoMenu
             // 
@@ -427,6 +480,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.checkBox2);
             this.splitContainer1.Panel1.Controls.Add(this.btn_cameraCode);
             this.splitContainer1.Panel1.Controls.Add(this.AddTypeBtn);
             this.splitContainer1.Panel1.Controls.Add(this.checkBox1);
@@ -598,6 +652,21 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
+            // checkBox2
+            // 
+            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(3, 192);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(172, 17);
+            this.checkBox2.TabIndex = 9;
+            this.checkBox2.Text = "Display children objects (in red)";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.Visible = false;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -609,6 +678,9 @@
             this.Controls.Add(this.menuStrip1);
             this.Name = "Form1";
             this.Text = "The Fourth Dimension - by Exelix11";
+            this.Activated += new System.EventHandler(this.From_Activated);
+            this.Deactivate += new System.EventHandler(this.Form_Deactivate);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_closing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ClipBoardMenu.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
@@ -677,9 +749,16 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem saveAsBymlToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem objectByRailNameToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem creatorClassNameTableszsEditorToolStripMenuItem;
         public System.Windows.Forms.PropertyGrid propertyGrid1;
         private System.Windows.Forms.Button btn_cameraCode;
+        private System.Windows.Forms.ToolStripMenuItem openFromLevelNameWXXToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem otherToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem creatorClassNameTableEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem stagesBgmEditorToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
+        private System.Windows.Forms.ToolStripMenuItem gameROMFSPathToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem changeToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBox2;
     }
 }
 

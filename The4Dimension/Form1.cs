@@ -21,10 +21,47 @@ namespace The4Dimension
     public partial class Form1 : Form
     {
         public UserControl1 render = new UserControl1();
+        public Dictionary<string, string> LevelNameNum = new Dictionary<string, string>(); //WX-X, stageName
         string LoadedFile = "";
+
         public Form1(string FileLoad = "")
         {
             InitializeComponent();
+            #region StageList
+            string[] lines = Properties.Resources.AllStageList.Split(Environment.NewLine[0]);
+            int nextIndex = -1;
+            for (int i = 1; i < 3; i++)
+            {
+                for (int y = 1; y < 6; y++)
+                {
+                    LevelNameNum.Add("W " + i.ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                }
+            }
+            for (int i = 3; i < 8; i++)
+            {
+                for (int y = 1; y < 7; y++)
+                {
+                    LevelNameNum.Add("W " + i.ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                }
+            }
+            for (int y = 1; y < 10; y++)
+            {
+                LevelNameNum.Add("W 8-" + y.ToString(), lines[++nextIndex].Trim());
+            }
+            for (int y = 1; y < 6; y++)
+            {
+                LevelNameNum.Add("W S1-" + y.ToString(), lines[++nextIndex].Trim());
+            }
+            for (int i = 10; i < 17; i++)
+            {
+                for (int y = 1; y < 7; y++)
+                {
+                    LevelNameNum.Add("W S" + (i - 8).ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                }
+            }
+            LevelNameNum.Add("W S8-Championship", lines[++nextIndex].Trim());
+            #endregion
+
             KeyPreview = true;
             elementHost1.Child = render;
             render.MouseLeftButtonDown += render_LeftClick;
@@ -33,6 +70,7 @@ namespace The4Dimension
             render.MouseLeftButtonUp += render_MouseLeftButtonUp;
             render.KeyDown += render_KeyDown;
             render.KeyUp += render_KeyUP;
+
             Focus();
             if (FileLoad != "")
             {
@@ -45,10 +83,10 @@ namespace The4Dimension
         public List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
         Dictionary<string, string> ModelResolver = new Dictionary<string, string>(); //Converts names like BlockBrickCoins to BlockBrick.obj
-        Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
+        public Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
         public CustomStack<UndoAction> Undo = new CustomStack<UndoAction>();
         public static List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
-        public Encoding DefEnc = Encoding.GetEncoding("Shift-JIS");
+        public static Encoding DefEnc = Encoding.GetEncoding("Shift-JIS");
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -56,10 +94,11 @@ namespace The4Dimension
             {
                 if (MessageBox.Show("You must convert every model from the game before you can use the editor, convert now ? (you need to have the extracted ROMFS of the game on your pc)", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    MessageBox.Show("Select the ObjectData folder inside the ROMFS");
+                    MessageBox.Show("Select the ROMFS folder (This folder should contain ObjectData, SystemData, StageData, etc...)\r\nKeep this folder in the same path, from there will be loaded some files needed for editing the levels and the bgm data.\r\nThe content of the folder won't be edited");
                     ModelDumper dlg = new ModelDumper();
                     dlg.ShowDialog();
                     if (!Directory.Exists("models")) Application.Exit();
+                    Properties.Settings.Default.Save();
                 }
                 else Application.Exit();
             }
@@ -67,6 +106,7 @@ namespace The4Dimension
             LoadCreatorClassNameTable();
             if (LoadedFile != "") LoadFile(LoadedFile);
             else SetUiLock(false, false);
+            gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path: " + Properties.Settings.Default.GamePath;
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -77,6 +117,28 @@ namespace The4Dimension
             if (opn.ShowDialog() == DialogResult.OK)
             {
                 LoadFile(opn.FileName);
+            }
+        }
+
+        private void openFromLevelNameWXXToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.GamePath.Trim() == "")
+            {
+                MessageBox.Show("To use this function you must set the game ROMFS path");
+                return;
+            }
+            else if (!Directory.Exists(Properties.Settings.Default.GamePath + "\\StageData"))
+            {
+                MessageBox.Show("Folder " + Properties.Settings.Default.GamePath + "\\StageData Not found!\r\nProbably your Romfs dump is incomplete or was modified");
+                return;
+            }
+            FrmLevNameOpen f = new FrmLevNameOpen(LevelNameNum);
+            f.ShowDialog();
+            if (f.res == null) return;
+            else
+            {
+                if (File.Exists(Properties.Settings.Default.GamePath + "\\StageData\\" + LevelNameNum[f.res])) LoadFile(Properties.Settings.Default.GamePath + "\\StageData\\" + LevelNameNum[f.res]);
+                else MessageBox.Show(Properties.Settings.Default.GamePath + "\\StageData\\" + LevelNameNum[f.res] + " Not found!\r\nProbably your Romfs dump is incomplete or was modified");
             }
         }
 
@@ -109,6 +171,7 @@ namespace The4Dimension
             }
             newToolStripMenuItem.Enabled = !Lock;
             openToolStripMenuItem.Enabled = !Lock;
+            openFromLevelNameWXXToolStripMenuItem.Enabled = !Lock;
         }
 
         #region FileLoading
@@ -194,10 +257,18 @@ namespace The4Dimension
             CreatorClassNameTable.Clear();
             if (!File.Exists(@"CreatorClassNameTable.szs"))
             {
-                MessageBox.Show("to add new objects you need CreatorClassNameTable.szs in the same folder as this program, this file is placed inside GameRomFS:SystemData\\CreatorClassNameTable.szs\r\nWithout this file you can only duplicate or delete objects.");
-                BtnAddObj.Enabled = false;
-                creatorClassNameTableszsEditorToolStripMenuItem.Enabled = false;
-                return;
+                if (Properties.Settings.Default.GamePath.Trim() != "" && File.Exists(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs"))
+                {
+                    File.Copy(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs", @"CreatorClassNameTable.szs");
+                }
+                else
+                {
+                    if (Properties.Settings.Default.GamePath.Trim() == "") MessageBox.Show("to add new objects you need CreatorClassNameTable.szs in the same folder as this program, this file is placed inside GameRomFS:SystemData\\CreatorClassNameTable.szs\r\nWithout this file you can only duplicate or delete objects.");
+                    else MessageBox.Show(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs not found.\r\nProbably your Romfs dump is incomplete or was modified.\r\nWithout this file you can only duplicate or delete objects.");
+                    BtnAddObj.Enabled = false;
+                    creatorClassNameTableEditorToolStripMenuItem.Enabled = false;
+                    return;
+                }
             }
             CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
             NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
@@ -290,6 +361,37 @@ namespace The4Dimension
                 RotY = Single.Parse(((Node)Source[i].Prop["dir_y"]).StringValue);
                 RotZ = Single.Parse(((Node)Source[i].Prop["dir_z"]).StringValue);
                 render.addModel(Path, Type, new Vector3D(X, -Z, Y), new Vector3D(ScaleX, ScaleZ, ScaleY), RotX, -RotZ, RotY, at);
+            }
+        }
+
+        public void AddChildrenModels(C0List tmp)
+        {
+            if (tmp.List.Count > 0)
+            {
+                List<string> modelsPaths = new List<string>();
+                List<Vector3D> Pos = new List<Vector3D>();
+                List<Vector3D> Rot = new List<Vector3D>();
+                List<Vector3D> Scale = new List<Vector3D>();
+                foreach (LevelObj o in tmp.List)
+                {
+                    string Path = GetModelname(((Node)o.Prop["name"]).StringValue.ToLower());
+                    if (!System.IO.File.Exists(Path)) Path = "models\\UnkRed.obj";
+                    Single X, Y, Z, ScaleX, ScaleY, ScaleZ, RotX, RotY, RotZ;
+                    X = Single.Parse(((Node)o.Prop["pos_x"]).StringValue);
+                    Y = Single.Parse(((Node)o.Prop["pos_y"]).StringValue);
+                    Z = Single.Parse(((Node)o.Prop["pos_z"]).StringValue);
+                    ScaleX = Single.Parse(((Node)o.Prop["scale_x"]).StringValue);
+                    ScaleY = Single.Parse(((Node)o.Prop["scale_y"]).StringValue);
+                    ScaleZ = Single.Parse(((Node)o.Prop["scale_z"]).StringValue);
+                    RotX = Single.Parse(((Node)o.Prop["dir_x"]).StringValue);
+                    RotY = Single.Parse(((Node)o.Prop["dir_y"]).StringValue);
+                    RotZ = Single.Parse(((Node)o.Prop["dir_z"]).StringValue);
+                    Pos.Add(new Vector3D(X, -Z, Y));
+                    Rot.Add(new Vector3D(RotX, -RotZ, RotY));
+                    Scale.Add(new Vector3D(ScaleX, ScaleZ, ScaleY));
+                    modelsPaths.Add(Path);
+                }
+                render.AddTmpObjects(Pos, Scale, Rot, modelsPaths);
             }
         }
 
@@ -465,6 +567,7 @@ namespace The4Dimension
                 if (comboBox1.Text == "AllRailInfos")
                 {
                     checkBox1.Visible = false;
+                    checkBox2.Visible = false;
                     for (int i = 0; i < AllRailInfos.Count; i++) ObjectsListBox.Items.Add(AllRailInfos[i].ToString());
                 }
                 else propertyGrid1.SelectedObject = null;
@@ -475,9 +578,14 @@ namespace The4Dimension
                 if (comboBox1.Text == "AreaObjInfo" || comboBox1.Text == "CameraAreaInfo")
                 {
                     checkBox1.Visible = true;
+                    checkBox2.Visible = false;
                     if (AllInfos[comboBox1.Text].IsHidden) checkBox1.Checked = true; else checkBox1.Checked = false;
                 }
-                else checkBox1.Visible = false;
+                else
+                {
+                    checkBox1.Visible = false;
+                    checkBox2.Visible = true;
+                }
             }
             for (int i = 0; i < AllInfos[comboBox1.Text].Objs.Count; i++) ObjectsListBox.Items.Add(AllInfos[comboBox1.Text].Objs[i].ToString());
         }
@@ -624,7 +732,6 @@ namespace The4Dimension
             for (int i = 0; i < AllInfos[layerName].Objs.Count; i++) UpdateOBJPos(i, ref AllInfos[layerName].Objs, layerName);
         }
 
-
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             if (!checkBox1.Checked)
@@ -632,6 +739,14 @@ namespace The4Dimension
             else HideLayer(comboBox1.Text);
         }
 
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        {
+            render.CleanTmpObjects();
+            if (checkBox2.Checked && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("GenerateChildren"))
+            {
+                AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
+            }
+        }
         #endregion
 
         int AreaObjOldSelection = -1;
@@ -640,6 +755,7 @@ namespace The4Dimension
         private void ObjectsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             btn_cameraCode.Visible = false;
+            render.CleanTmpObjects();
             if (ObjectsListBox.SelectedIndex < 0) return;
             if (comboBox1.Text == "AreaObjInfo")
             {
@@ -676,6 +792,10 @@ namespace The4Dimension
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
                 if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+                if (checkBox2.Checked && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("GenerateChildren"))
+                {
+                    AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
+                }
             }
         }
 
@@ -796,10 +916,79 @@ namespace The4Dimension
             while (ObjectsListBox.Items.Count != 0) { ObjectsListBox.SelectedIndex = 0; DelSelectedObj(true); }
         }
 
-        private void creatorClassNameTableszsEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        private void Form1_closing(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.Save();
+        }
+
+        private void creatorClassNameTableEditorToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormEditors.FrmCCNTEdit f = new FormEditors.FrmCCNTEdit(CreatorClassNameTable, this);
             f.ShowDialog();
+        }
+
+        private void changeToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fld = new FolderBrowserDialog();
+            if (fld.ShowDialog() != DialogResult.OK) return;
+            Properties.Settings.Default.GamePath = fld.SelectedPath;
+            gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path: " + Properties.Settings.Default.GamePath;
+            if (File.Exists(@"BgmTable.szs"))
+            {
+                var res = MessageBox.Show("There is already a BgmTable.szs file in this program's folder, do you want to replace it with a new one from the game path you just selected ? (Choose no if you edited the BGMs or else you will lose your changes)", "Warning", MessageBoxButtons.YesNo);
+                if (res == DialogResult.Yes)
+                {
+                    if (File.Exists(Properties.Settings.Default.GamePath + "\\SoundData\\BgmTable.szs"))
+                    {
+                        File.Delete(@"BgmTable.szs");
+                        File.Copy(Properties.Settings.Default.GamePath + "\\SoundData\\BgmTable.szs", @"BgmTable.szs");
+                    }
+                    else MessageBox.Show(Properties.Settings.Default.GamePath + "\\SoundData\\BgmTable.szs not found !\r\nThe file wasn't replaced");
+                }
+            }
+            if (File.Exists(@"CreatorClassNameTable.szs"))
+            {
+                var res = MessageBox.Show("There is already a CreatorClassNameTable.szs file in this program's folder, do you want to replace it with a new one from the game path you just selected ? (Choose no if you edited the game objects or else you will lose your changes)", "Warning", MessageBoxButtons.YesNo);
+                if (res == DialogResult.Yes)
+                {
+                    if (File.Exists(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs"))
+                    {
+                        File.Delete(@"CreatorClassNameTable.szs");
+                        File.Copy(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs", @"CreatorClassNameTable.szs");
+                    }
+                    else MessageBox.Show(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs not found !\r\nThe file wasn't replaced");
+                }
+            }
+        }
+
+        private void stagesBgmEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Properties.Settings.Default.GamePath.Trim() == "" && !File.Exists(@"BgmTable.szs"))
+            {
+                MessageBox.Show("You must set the game Romfs path first !");
+                return;
+            }
+            else if (!File.Exists(Properties.Settings.Default.GamePath + "\\SoundData\\BgmTable.szs") && !File.Exists(@"BgmTable.szs"))
+            {
+                MessageBox.Show(Properties.Settings.Default.GamePath + "\\SoundData\\BgmTable.szs not found !\r\nProbably your Romfs dump is incomplete or was modified.");
+                return;
+            }
+            else if (File.Exists(Properties.Settings.Default.GamePath + "\\SoundData\\BgmTable.szs") && !File.Exists(@"BgmTable.szs"))
+            {
+                File.Copy(Properties.Settings.Default.GamePath + "\\SoundData\\BgmTable.szs", @"BgmTable.szs");
+            }
+            BgmEditors.FrmBgmMain f = new BgmEditors.FrmBgmMain(LevelNameNum);
+            f.Show();
+        }
+
+        private void From_Activated(object sender, EventArgs e) //Resume sorting
+        {
+            render.SetSortFrequency(0.6);
+        }
+
+        private void Form_Deactivate(object sender, EventArgs e) //Stop sorting
+        {
+            render.SetSortFrequency(0);
         }
 
         private void ListBox_MouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -832,7 +1021,7 @@ namespace The4Dimension
                 MessageBox.Show("This level doesn't contain the CameraParam file, a generic CameraParam will be generated");
                 string TmpCameraParam = Properties.Resources.GenericCameraParam;
                 SzsFiles.Add("CameraParam.byml", BymlConverter.GetByml(TmpCameraParam));
-                FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(TmpCameraParam,cameraId,this);
+                FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(TmpCameraParam, cameraId, this);
                 f.ShowDialog();
             }
             else
@@ -844,14 +1033,14 @@ namespace The4Dimension
                     if (r == DialogResult.Yes)
                     {
                         string TmpCameraParam = Properties.Resources.GenericCameraParam;
-                        FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(TmpCameraParam, cameraId,this);
+                        FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(TmpCameraParam, cameraId, this);
                         f.ShowDialog();
                     }
                     else return;
                 }
                 else
                 {
-                    FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(CameraParam, cameraId,this);
+                    FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(CameraParam, cameraId, this);
                     f.ShowDialog();
                 }
             }
@@ -926,7 +1115,20 @@ namespace The4Dimension
             Undo.Push(new UndoAction("Changed points of rail: " + AllRailInfos[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, "", OldPoints, act));
         }
 
-        void UpdateOBJPos(int id, ref List<LevelObj> Source, string Type)
+        public void C0ListChanged(C0List OldList)
+        {
+            if (checkBox2.Checked && propertyGrid1.SelectedGridItem.Label == "GenerateChildren") AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
+            Action<string, int, string, object> act;
+            act = (string type, int id, string propName, object value) =>
+            {
+                AllInfos[type].Objs[id].Prop[propName] = value;
+                propertyGrid1.Refresh();
+                if (checkBox2.Checked && propName == "GenerateChildren") AddChildrenModels((C0List)AllInfos[type].Objs[id].Prop["GenerateChildren"]);
+            };
+            Undo.Push(new UndoAction("Changed " + propertyGrid1.SelectedGridItem.Label + "of object: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, propertyGrid1.SelectedGridItem.Label, OldList, act));
+        }
+
+        public void UpdateOBJPos(int id, ref List<LevelObj> Source, string Type)
         {
             Single X, Y, Z, ScaleX, ScaleY, ScaleZ, RotX, RotY, RotZ;
             X = Single.Parse(((Node)Source[id].Prop["pos_x"]).StringValue);
@@ -1113,8 +1315,11 @@ namespace The4Dimension
         }
 
         private void pasteValueToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (ObjectsListBox.SelectedIndex < 0) return;
+        {            
+            if (ObjectsListBox.SelectedIndex < 0)
+            {
+                if (clipboard[clipboard.Count - 1].Type != ClipBoardItem.ClipboardType.FullObject) return;
+            }
             if (comboBox1.Text == "AllRailInfos" && !(clipboard[clipboard.Count - 1].Type == ClipBoardItem.ClipboardType.Rail || clipboard[clipboard.Count - 1].Type == ClipBoardItem.ClipboardType.IntArray)) return;
             PasteValue(ObjectsListBox.SelectedIndex, comboBox1.Text, clipboard[clipboard.Count - 1]);
             ClipBoardMenu.Close();
@@ -1703,277 +1908,5 @@ namespace The4Dimension
         }
 
         #endregion
-
     }
-
-    #region Other
-    public class UndoAction
-    {
-        public string actionName;
-        public string type;
-        public int index;
-        public Action<int,string> Action = null;
-        private Action<string,int, object> ObjAddAction = null;
-        object objToAdd = null;
-        string propName = null;
-        private Action<string, int, string, object> PropAddAction = null;
-        private Action<string, int, Vector3D> MoveAction = null;
-
-        public void Undo()
-        {
-            Form1 form1 = (Form1)Application.OpenForms[0]; //There is always one instance of this form
-            form1.comboBox1.Text = type;
-            if (form1.ObjectsListBox.SelectedIndex == index && PropAddAction == null) form1.ObjectsListBox.SelectedIndex = -1;
-            if (Action != null) Action.Invoke(index, type);
-            else if (ObjAddAction != null) ObjAddAction.Invoke(type, index, objToAdd);
-            else if (PropAddAction != null) PropAddAction.Invoke(type, index, propName, objToAdd);
-            else MoveAction.Invoke(type,index,(Vector3D)objToAdd);
-            if (form1.ObjectsListBox.Items.Count > index) form1.ObjectsListBox.SelectedIndex = index;
-        }
-
-        public override string ToString()
-        {
-            return actionName;
-        }
-
-        public UndoAction(string name,string _type, int _index, Action<int, string> Act)
-        {
-            actionName = name;
-            type = _type;
-            index = _index;
-            Action = Act;
-        }
-
-        public UndoAction(string name, string _type, int _index, Vector3D vec, Action<string,int, Vector3D> Act)
-        {
-            actionName = name;
-            type = _type;
-            index = _index;
-            objToAdd = vec;
-            MoveAction = Act;
-        }
-
-        public UndoAction(string name, string _type, int _index, object rail, Action<string,int, object> action)
-        {
-            actionName = name;
-            type = _type;
-            index = _index;
-            objToAdd = rail;
-            ObjAddAction = action;
-        }
-
-        public UndoAction(string name, string _type, int _index, string label, object prop, Action<string, int, string, object> action)
-        {
-            actionName = name;
-            type = _type;
-            index = _index;
-            objToAdd = prop;
-            propName = label;
-            PropAddAction = action;
-        }
-    }
-
-    public class ClipBoardItem
-    {
-        public enum ClipboardType
-        {
-            NotSet = 0,
-            Position = 1,
-            Rotation = 2,
-            Scale = 3,
-            IntArray = 4,
-            FullObject = 5,
-            Rail = 6
-        }
-
-        public Single X = 0;
-        public Single Y = 0;
-        public Single Z = 0;
-        public int[] Args = null;
-        public ClipboardType Type = 0;
-        public Rail Rail = null;
-        public LevelObj Obj = null;
-
-        public override string ToString()
-        {
-            switch (Type)
-            {
-                case ClipboardType.Position:
-                    return String.Format("Position - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
-                case ClipboardType.Rotation:
-                    return String.Format("Rotation - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
-                case ClipboardType.Scale:
-                    return String.Format("Scale - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
-                case ClipboardType.IntArray:
-                    return "Args[]";
-                case ClipboardType.Rail:
-                    return "Rail - " + Rail.Name;
-                case ClipboardType.FullObject:
-                    return "Object - " + Obj.ToString();
-                default:
-                    return "Not set";
-            }
-        }
-
-        public string ToString(int ObjectAsChildren)
-        {
-            switch (Type)
-            {
-                case ClipboardType.Position:
-                    return String.Format("Position - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
-                case ClipboardType.Rotation:
-                    return String.Format("Rotation - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
-                case ClipboardType.Scale:
-                    return String.Format("Scale - X:{0} Y:{1} Z:{2}", X.ToString(), Y.ToString(), Z.ToString());
-                case ClipboardType.IntArray:
-                    return "Args[]";
-                case ClipboardType.Rail:
-                    return "Rail - " + Rail.Name;
-                case ClipboardType.FullObject:
-                    if (ObjectAsChildren < 0) return "Object - " + Obj.ToString(); else
-                    return "Paste object as children - " + Obj.ToString();
-                default:
-                    return "Not set";
-            }
-        }
-    }
-
-    class AllInfoSection
-    {
-        public bool IsHidden = false;
-        public List<LevelObj> Objs = new List<LevelObj>();
-    }
-
-    class DictionaryPropertyGridAdapter : ICustomTypeDescriptor
-    {
-        IDictionary _dictionary;
-
-        public DictionaryPropertyGridAdapter(IDictionary d)
-        {
-            _dictionary = d;
-        }
-
-        public string GetComponentName()
-        {
-            return TypeDescriptor.GetComponentName(this, true);
-        }
-
-        public EventDescriptor GetDefaultEvent()
-        {
-            return TypeDescriptor.GetDefaultEvent(this, true);
-        }
-
-        public string GetClassName()
-        {
-            return TypeDescriptor.GetClassName(this, true);
-        }
-
-        public EventDescriptorCollection GetEvents(Attribute[] attributes)
-        {
-            return TypeDescriptor.GetEvents(this, attributes, true);
-        }
-
-        EventDescriptorCollection System.ComponentModel.ICustomTypeDescriptor.GetEvents()
-        {
-            return TypeDescriptor.GetEvents(this, true);
-        }
-
-        public TypeConverter GetConverter()
-        {
-            return TypeDescriptor.GetConverter(this, true);
-        }
-
-        public object GetPropertyOwner(PropertyDescriptor pd)
-        {
-            return _dictionary;
-        }
-
-        public AttributeCollection GetAttributes()
-        {
-            return TypeDescriptor.GetAttributes(this, true);
-        }
-
-        public object GetEditor(Type editorBaseType)
-        {
-            return TypeDescriptor.GetEditor(this, editorBaseType, true);
-        }
-
-        public PropertyDescriptor GetDefaultProperty()
-        {
-            return null;
-        }
-
-        PropertyDescriptorCollection
-            System.ComponentModel.ICustomTypeDescriptor.GetProperties()
-        {
-            return ((ICustomTypeDescriptor)this).GetProperties(new Attribute[0]);
-        }
-
-        public PropertyDescriptorCollection GetProperties(Attribute[] attributes)
-        {
-            ArrayList properties = new ArrayList();
-            foreach (DictionaryEntry e in _dictionary)
-            {
-                properties.Add(new DictionaryPropertyDescriptor(_dictionary, e.Key));
-            }
-
-            PropertyDescriptor[] props =
-                (PropertyDescriptor[])properties.ToArray(typeof(PropertyDescriptor));
-
-            return new PropertyDescriptorCollection(props);
-        }
-    }
-
-    class DictionaryPropertyDescriptor : PropertyDescriptor
-    {
-        IDictionary _dictionary;
-        object _key;
-
-        internal DictionaryPropertyDescriptor(IDictionary d, object key)
-            : base(key.ToString(), null)
-        {
-            _dictionary = d;
-            _key = key;
-        }
-
-        public override Type PropertyType
-        {
-            get { return _dictionary[_key].GetType(); }
-        }
-
-        public override void SetValue(object component, object value)
-        {
-            _dictionary[_key] = value;
-        }
-
-        public override object GetValue(object component)
-        {
-            return _dictionary[_key];
-        }
-
-        public override bool IsReadOnly
-        {
-            get { return false; }
-        }
-
-        public override Type ComponentType
-        {
-            get { return null; }
-        }
-
-        public override bool CanResetValue(object component)
-        {
-            return false;
-        }
-
-        public override void ResetValue(object component)
-        {
-        }
-
-        public override bool ShouldSerializeValue(object component)
-        {
-            return false;
-        }
-    }
-    #endregion
 }

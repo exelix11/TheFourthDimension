@@ -94,6 +94,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BgmEditors\FrmBgmMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BgmEditors\FrmBgmMain.Designer.cs">
+      <DependentUpon>FrmBgmMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="BymlConverter.cs" />
     <Compile Include="BymlFormat.cs" />
     <Compile Include="CustomClasses.cs" />
@@ -120,6 +126,12 @@
     </Compile>
     <Compile Include="FormEditors\FrmAddValue.Designer.cs">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditors\FrmC0ListEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmC0ListEdit.Designer.cs">
+      <DependentUpon>FrmC0ListEdit.cs</DependentUpon>
     </Compile>
     <Compile Include="FormEditors\FrmCCNTEdit.cs">
       <SubType>Form</SubType>
@@ -169,6 +181,12 @@
     <Compile Include="FormEditors\FrmObjEditor.Designer.cs">
       <DependentUpon>FrmObjEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmLevNameOpen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmLevNameOpen.Designer.cs">
+      <DependentUpon>FrmLevNameOpen.cs</DependentUpon>
+    </Compile>
     <Compile Include="LevelObj.cs" />
     <Compile Include="ModelDumper.cs">
       <SubType>Form</SubType>
@@ -188,6 +206,9 @@
     <Compile Include="Ohana3DS_stuff\TextureUtils.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BgmEditors\FrmBgmMain.resx">
+      <DependentUpon>FrmBgmMain.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -199,6 +220,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmAddValue.resx">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmC0ListEdit.resx">
+      <DependentUpon>FrmC0ListEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmCCNTEdit.resx">
       <DependentUpon>FrmCCNTEdit.cs</DependentUpon>
@@ -223,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmObjEditor.resx">
       <DependentUpon>FrmObjEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmLevNameOpen.resx">
+      <DependentUpon>FrmLevNameOpen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModelDumper.resx">
       <DependentUpon>ModelDumper.cs</DependentUpon>

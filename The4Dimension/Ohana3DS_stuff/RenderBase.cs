@@ -1461,8 +1461,26 @@ namespace The4Dimension.Ohana
         /// </summary>
         public class OTexture
         {
-            public Bitmap texture;
+            Bitmap tex;
             public string name;
+
+            public Bitmap texture
+            {
+                get { return tex; }
+                set { tex = value; }//tex = RemoveTextureAlpha(value); }
+            }
+
+            Bitmap RemoveTextureAlpha(Bitmap texture)
+            {
+                Bitmap img = texture;
+                Bitmap Out = new Bitmap(img.Size.Width, img.Size.Height);
+                Graphics g = Graphics.FromImage(Out);
+                g.Clear(Color.White);
+                g.CompositingMode = System.Drawing.Drawing2D.CompositingMode.SourceOver;
+                g.DrawImage(img, 0, 0);
+                img.Dispose();
+                return Out;
+            }
 
             /// <summary>
             ///     Creates a new Texture.

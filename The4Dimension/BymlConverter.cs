@@ -29,6 +29,13 @@ namespace The4Dimension
             return app.LoadedFile.MakeFile(app.LoadedFile.header.BigEndian);
         }
 
+        public static byte[] GetBymlFrom(string XmlText)
+        {
+            BymlConverter app = new BymlConverter();
+            app.LoadedFile = app.ImportFromXml(XmlText);
+            return app.LoadedFile.MakeFile(app.LoadedFile.header.BigEndian);
+        }
+
         public static string GetXml(string Path)
         {
             return GetXml(File.ReadAllBytes(Path));
