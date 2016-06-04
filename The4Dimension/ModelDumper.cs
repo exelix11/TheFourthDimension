@@ -14,6 +14,7 @@ using _3DS.NintendoWare.GFX;
 using CommonFiles;
 using The4Dimension.Ohana;
 using System.Drawing.Drawing2D;
+using System.Diagnostics;
 
 namespace The4Dimension
 {
@@ -31,7 +32,8 @@ namespace The4Dimension
         {
              FolderBrowserDialog fld = new FolderBrowserDialog();
             if (fld.ShowDialog() != DialogResult.OK) this.Close();
-            ObjDataPath = fld.SelectedPath;
+            Properties.Settings.Default.GamePath =  fld.SelectedPath;
+            ObjDataPath = fld.SelectedPath + "\\ObjectData";
             Directory.CreateDirectory("models");
             File.WriteAllBytes(@"models\baseModels.zip", Properties.Resources.BaseModels);
             ZipFile.ExtractToDirectory(@"models\baseModels.zip", @"models");

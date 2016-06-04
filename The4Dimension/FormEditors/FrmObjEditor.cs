@@ -158,8 +158,8 @@ namespace The4Dimension
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
             {
-                Value = itm.Obj.Clone();
-                propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(Value.Prop);
+                if (!Value.Prop.ContainsKey("GenerateChildren")) Value.Prop.Add("GenerateChildren", new C0List());
+                ((C0List)Value.Prop["GenerateChildren"]).List.Add(itm.Obj.Clone());
             }
             propertyGrid1.Refresh();
         }

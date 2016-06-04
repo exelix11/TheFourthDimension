@@ -78,8 +78,8 @@ namespace The4Dimension
     }
 
 
-    [TypeConverter(typeof(ExpandableObjectConverter))]
-    class C0List : ICloneable
+    [Editor(typeof(C0ListEditor), typeof(UITypeEditor))]
+    public class C0List : ICloneable
     {
         List<LevelObj> l = new List<LevelObj>();
         public List<LevelObj> List
@@ -103,6 +103,28 @@ namespace The4Dimension
         object ICloneable.Clone()
         {
             return Clone();
+        }
+    }
+
+    class C0ListEditor : UITypeEditor
+    {
+        public override UITypeEditorEditStyle GetEditStyle(ITypeDescriptorContext context)
+        {
+            return UITypeEditorEditStyle.Modal;
+        }
+        public override object EditValue(ITypeDescriptorContext context, System.IServiceProvider provider, object value)
+        {
+            IWindowsFormsEditorService svc = provider.GetService(typeof(IWindowsFormsEditorService)) as IWindowsFormsEditorService;
+            C0List v = value as C0List;
+            if (svc != null && v != null)
+            {
+                using (FormEditors.FrmC0ListEdit form = new FormEditors.FrmC0ListEdit(v))
+                {
+                    form.ShowDialog();
+                    v = form.Value;
+                }
+            }
+            return v;
         }
     }
 

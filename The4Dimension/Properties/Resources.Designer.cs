@@ -61,6 +61,35 @@ namespace The4Dimension.Properties {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a FirstStageMap1.szs
+        ///CaveInkStageMap1.szs
+        ///DownHillStageMap1.szs
+        ///BalanceTruckStageMap1.szs
+        ///KoopaFirstStageMap1.szs
+        ///FieldWalkStageMap1.szs
+        ///CavePatanStageMap1.szs
+        ///DotCoinStageMap1.szs
+        ///JumpFlipGeneratorStageMap1.szs
+        ///BattleShipKillerStageMap1.szs
+        ///DesertRuinStageMap1.szs
+        ///AquariumSwimStageMap1.szs
+        ///SkyChikuwaStageMap1.szs
+        ///MountainRopeStageMap1.szs
+        ///SweetsScrollStageMap1.szs
+        ///FortressSpikeStageMap1.szs
+        ///UpUpLandStageMap1.szs
+        ///CaveClimbStageMap1.szs
+        ///SkyRotateBlockStageMap1.szs
+        ///FlashTeresaStageMap1.szs
+        ///S [stringa troncata]&quot;;.
+        /// </summary>
+        internal static string AllStageList {
+            get {
+                return ResourceManager.GetString("AllStageList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Byte[].
         /// </summary>
         internal static byte[] BaseModels {

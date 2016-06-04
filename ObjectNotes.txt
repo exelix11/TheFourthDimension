@@ -37,3 +37,25 @@ arg[2]= max y
 
 KoopaFirstGear*:
 arg[1] = speed, if > 0 it goes counterclockwise
+
+NoteGenerator:
+- Kind: NoteObj
+          Label: SsNoteObjTest
+
+        - Kind: UnderGround
+          Label: SS_NOTE_OBJ_CHIKA
+
+        - Kind: UnderSea
+          Label: SS_NOTE_OBJ_SEA
+
+        - Kind: MarioWorld
+          Label: SS_NOTE_OBJ_MWORLD
+
+        - Kind: Athletic
+          Label: SS_NOTE_OBJ_M3INTRO
+
+        - Kind: MarioWorldShort
+          Label: SS_NOTE_OBJ_MWORLD2
+
+        - Kind: MusicalScale
+          Label: SsNoteObjTest

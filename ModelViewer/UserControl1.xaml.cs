@@ -28,14 +28,34 @@ namespace ModelViewer
         public UserControl1()
         {
             InitializeComponent();
-            ModelViewer.SortingFrequency = 1;
+            ModelViewer.SortingFrequency = 0.6;
             ModelView.Children.Add(ModelViewer);
+            AddKey("TmpChildrenObjs");
+        }
+
+        public void SetSortFrequency(double t)
+        {
+            ModelViewer.SortingFrequency = t;
         }
 
         public void AddKey(string Type)
         {
             if (!Models.ContainsKey(Type)) Models.Add(Type, new List<ModelVisual3D>());
             if (!Positions.ContainsKey(Type)) Positions.Add(Type, new List<Vector3D>());
+        }
+
+        public void AddTmpObjects(List<Vector3D> positions, List<Vector3D> scale, List<Vector3D> rot, List<string> Paths)
+        {
+            string type = "TmpChildrenObjs";
+            if (Models[type].Count != 0) CleanTmpObjects();
+            for (int i = 0; i < positions.Count; i++) addModel(Paths[i], type, positions[i], scale[i], (float)rot[i].X, (float)rot[i].Y, (float)rot[i].Z);
+        }
+
+        public void CleanTmpObjects()
+        {
+            string type = "TmpChildrenObjs";
+            while (Models[type].Count != 0) RemoveModel(type, 0);
+            ModelView.UpdateLayout();
         }
 
         public void addRail(Point3D[] Points, int Thickness = 5, int at = -1)
@@ -46,7 +66,7 @@ namespace ModelViewer
             if (at == -1) Positions[Type].Add(PointToVec(Points[0])); else Positions[Type].Insert(at, PointToVec(Points[0]));
             if (at == -1) ModelViewer.Children.Add(Models[Type][Models[Type].Count - 1]); else ModelViewer.Children.Insert(at, Models[Type][at]);
             if (Points.Length < 2) return;
-            l.Color = Color.FromRgb(254, 0, 0);
+            l.Color = Color.FromRgb(255, 0, 0);
             l.Thickness = Thickness;
             AddRailpoints(l, Points, Thickness);
         }
@@ -60,6 +80,7 @@ namespace ModelViewer
             {
                 int chidIndex = l.Children.Count;
                 l.Children.Add(new LinesVisual3D());
+                ((LinesVisual3D)l.Children[chidIndex]).Color = Color.FromRgb(255, 255, 255);
                 ((LinesVisual3D)l.Children[chidIndex]).Thickness = Thickness;
                 ((LinesVisual3D)l.Children[chidIndex]).Points.Add(oldPoint);
                 ((LinesVisual3D)l.Children[chidIndex]).Points.Add(Points[i]);
@@ -188,7 +209,7 @@ namespace ModelViewer
             if (result == null) return res;
             foreach (string k in Models.Keys)
             {
-                if (Models[k].Contains(result))
+                if (k != "TmpChildrenObjs" && Models[k].Contains(result))
                 {
                     res[0] = k;
                     res[1] = Models[k].IndexOf(result);
