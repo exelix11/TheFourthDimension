@@ -72,8 +72,10 @@ namespace The4Dimension
         public string actionName;
         public string type;
         public int index;
+        public int[] indexes;
         public Action<int, string> Action = null;
         private Action<string, int, object> ObjAddAction = null;
+        private Action<string, int[], object> ObjMultiAddAction = null;
         object objToAdd = null;
         string propName = null;
         private Action<string, int, string, object> PropAddAction = null;
@@ -87,6 +89,7 @@ namespace The4Dimension
             if (Action != null) Action.Invoke(index, type);
             else if (ObjAddAction != null) ObjAddAction.Invoke(type, index, objToAdd);
             else if (PropAddAction != null) PropAddAction.Invoke(type, index, propName, objToAdd);
+            else if (ObjMultiAddAction != null) ObjMultiAddAction.Invoke(type, indexes, objToAdd);
             else MoveAction.Invoke(type, index, (Vector3D)objToAdd);
             if (form1.ObjectsListBox.Items.Count > index) form1.ObjectsListBox.SelectedIndex = index;
         }
@@ -122,6 +125,15 @@ namespace The4Dimension
             ObjAddAction = action;
         }
 
+        public UndoAction(string name, string _type, int[] _index, object[] rail, Action<string, int[], object> action)
+        {
+            actionName = name;
+            type = _type;
+            indexes = _index;
+            objToAdd = rail;
+            ObjMultiAddAction = action;
+        }
+
         public UndoAction(string name, string _type, int _index, string label, object prop, Action<string, int, string, object> action)
         {
             actionName = name;
@@ -143,7 +155,8 @@ namespace The4Dimension
             Scale = 3,
             IntArray = 4,
             FullObject = 5,
-            Rail = 6
+            Rail = 6,
+            ObjectArray = 7
         }
 
         public Single X = 0;
@@ -152,7 +165,7 @@ namespace The4Dimension
         public int[] Args = null;
         public ClipboardType Type = 0;
         public Rail Rail = null;
-        public LevelObj Obj = null;
+        public LevelObj[] Objs = null;
 
         public override string ToString()
         {
@@ -169,7 +182,9 @@ namespace The4Dimension
                 case ClipboardType.Rail:
                     return "Rail - " + Rail.Name;
                 case ClipboardType.FullObject:
-                    return "Object - " + Obj.ToString();
+                    return "Object - " + Objs[0].ToString();
+                case ClipboardType.ObjectArray:
+                    return "Object[" + Objs.Length.ToString() + "]";
                 default:
                     return "Not set";
             }
@@ -190,9 +205,11 @@ namespace The4Dimension
                 case ClipboardType.Rail:
                     return "Rail - " + Rail.Name;
                 case ClipboardType.FullObject:
-                    if (ObjectAsChildren < 0) return "Object - " + Obj.ToString();
+                    if (ObjectAsChildren < 0) return "Object - " + Objs[0].ToString();
                     else
-                        return "Paste object as children - " + Obj.ToString();
+                        return "Paste object as children - " + Objs[0].ToString();
+                case ClipboardType.ObjectArray:
+                    return "Object[" + Objs.Length.ToString() + "]";
                 default:
                     return "Not set";
             }

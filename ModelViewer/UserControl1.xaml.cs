@@ -33,8 +33,17 @@ namespace ModelViewer
             AddKey("TmpChildrenObjs");
         }
 
-        public void SetSortFrequency(double t)
+        public void Clean()
         {
+            ImportedModels = null;
+            Models = null;
+            Positions = null;
+            Importer = null;
+            ModelView = null;
+        }
+
+        public void SetSortFrequency(double t)
+        {        
             ModelViewer.SortingFrequency = t;
         }
 

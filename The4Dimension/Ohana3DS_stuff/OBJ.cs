@@ -16,7 +16,7 @@ namespace The4Dimension.Ohana
         /// <param name="model">The model to be exported</param>
         /// <param name="fileName">The output file name</param>
         /// <param name="modelIndex">The index of the model that should be exported</param>
-        public  void export(RenderBase.OModelGroup model, string fileName, int modelIndex)
+        public void export(RenderBase.OModelGroup model, string fileName, int modelIndex)
         {
             StringBuilder output = new StringBuilder();
             StringBuilder outputMTL = new StringBuilder();
@@ -53,7 +53,8 @@ namespace The4Dimension.Ohana
                 output.AppendLine(null);
             }
             //MakeMTL
-            List<string> MatNames = new List<string>();
+            List<string> MatNames = new List<string>();           
+
             foreach (RenderBase.OMaterial mat in mdl.material)
             {
                 if (!MatNames.Contains(mat.name0))

@@ -2,8 +2,10 @@
 using MarioKart.MK7;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,14 +13,31 @@ using System.Windows;
 namespace CollisionsMng
 {
     class Program
-    {        
+    {
+        const uint ENABLE_QUICK_EDIT = 0x0040;        
+        const int STD_INPUT_HANDLE = -10;
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr GetStdHandle(int nStdHandle);
+
+        [DllImport("kernel32.dll")]
+        static extern bool GetConsoleMode(IntPtr hConsoleHandle, out uint lpMode);
+
+        [DllImport("kernel32.dll")]
+        static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
+
         static void Main(string[] args)
         {
+            IntPtr consoleHandle = GetStdHandle(STD_INPUT_HANDLE);
+            uint consoleMode;
+            GetConsoleMode(consoleHandle, out consoleMode);
+            consoleMode &= ~ENABLE_QUICK_EDIT;
+            SetConsoleMode(consoleHandle, consoleMode);
+
             Console.ForegroundColor = ConsoleColor.Green;
             Console.Title = "CollisionsMng";
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine("-----3D Land collision importer by exelix11-----");
-            Console.WriteLine("------------------Version 1.1-------------------");
+            Console.WriteLine("------------------Version 1.2-------------------");
             Console.WriteLine("------------------------------------------------");
             Console.WriteLine("Thanks Gericom for Every File Explorer's KCL importer");
             Console.WriteLine("");
@@ -89,7 +108,7 @@ namespace CollisionsMng
                 Console.WriteLine("Creating KCL...");
                 KCL k = new KCL();
                 List<String> Materials = k.CreateFromFile(File.ReadAllBytes(input));
-                Console.WriteLine("Writing KCL...");
+                Console.WriteLine("\r\nWriting KCL...");
                 File.WriteAllBytes(input + ".kcl", k.Write());
                 Console.WriteLine("Creating PA...");
                 Pa_format pa = new Pa_format(true);
