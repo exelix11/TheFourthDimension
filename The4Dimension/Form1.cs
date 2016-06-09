@@ -25,7 +25,7 @@ namespace The4Dimension
         string LoadedFile = "";
 
         public Form1(string FileLoad = "")
-        {
+        {        
             InitializeComponent();
             #region StageList
             string[] lines = Properties.Resources.AllStageList.Split(Environment.NewLine[0]);
@@ -265,7 +265,7 @@ namespace The4Dimension
                 {
                     if (Properties.Settings.Default.GamePath.Trim() == "") MessageBox.Show("to add new objects you need CreatorClassNameTable.szs in the same folder as this program, this file is placed inside GameRomFS:SystemData\\CreatorClassNameTable.szs\r\nWithout this file you can only duplicate or delete objects.");
                     else MessageBox.Show(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs not found.\r\nProbably your Romfs dump is incomplete or was modified.\r\nWithout this file you can only duplicate or delete objects.");
-                    BtnAddObj.Enabled = false;
+                    Btn_AddObj.Enabled = false;
                     creatorClassNameTableEditorToolStripMenuItem.Enabled = false;
                     return;
                 }
@@ -560,6 +560,7 @@ namespace The4Dimension
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            btn_cameraCode.Visible = false;
             ObjectsListBox.Items.Clear();
             propertyGrid1.SelectedObject = null;
             if (!AllInfos.ContainsKey(comboBox1.Text))
@@ -570,11 +571,12 @@ namespace The4Dimension
                     checkBox2.Visible = false;
                     for (int i = 0; i < AllRailInfos.Count; i++) ObjectsListBox.Items.Add(AllRailInfos[i].ToString());
                 }
-                else propertyGrid1.SelectedObject = null;
+                ObjectsListBox.SelectionMode = SelectionMode.One;                
                 return;
             }
             else
             {
+                ObjectsListBox.SelectionMode = SelectionMode.MultiExtended;
                 if (comboBox1.Text == "AreaObjInfo" || comboBox1.Text == "CameraAreaInfo")
                 {
                     checkBox1.Visible = true;
@@ -596,6 +598,7 @@ namespace The4Dimension
             object[] indexes = render.GetOBJ(sender, e); //indexes[0] string, [1] int
             if (indexes[0] == null) return; //this means indexes[0] = -1
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
+            ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = (int)indexes[1];
         }
 
@@ -612,7 +615,7 @@ namespace The4Dimension
             }
             if (comboBox1.Text == "AllRailInfos" || ObjectsListBox.SelectedIndex == -1) return;
             if (e.Key == Key.Space) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
-            else if (e.Key == Key.OemPlus) { if (BtnAddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
+            else if (e.Key == Key.OemPlus) { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
             else if (e.Key == Key.D) button2_Click(null, null); //Duplicate
             else if (e.Key == Key.Delete) button3_Click(null, null); //Delete obj
             else if (e.Key == Key.F) findToolStripMenuItem.ShowDropDown();
@@ -639,7 +642,7 @@ namespace The4Dimension
             }
             if (comboBox1.Text == "AllRailInfos" || ObjectsListBox.SelectedIndex == -1) return;
             if (e.KeyCode == Keys.Space) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
-            else if (e.KeyCode == Keys.Oemplus) { if (BtnAddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
+            else if (e.KeyCode == Keys.Oemplus) { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
             else if (e.KeyCode == Keys.D && e.Control) button2_Click(null, null); //Duplicate
             else if (e.KeyCode == Keys.Delete) button3_Click(null, null); //Delete obj
             else if (e.KeyCode == Keys.F && e.Control) findToolStripMenuItem.ShowDropDown();
@@ -713,6 +716,7 @@ namespace The4Dimension
             if (DraggingArgs[0] == null) { RenderIsDragging = false; return; }
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
             if (comboBox1.Text == "AllRailInfos") { RenderIsDragging = false; DraggingArgs = null; return; }
+            ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
             StartPos = new Vector3D(float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
                float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue),
@@ -757,6 +761,20 @@ namespace The4Dimension
             btn_cameraCode.Visible = false;
             render.CleanTmpObjects();
             if (ObjectsListBox.SelectedIndex < 0) return;
+            if (ObjectsListBox.SelectedItems.Count > 1)
+            {
+                Btn_CopyObjs.Visible = true;
+                Btn_Duplicate.Visible = false;
+                btn_delObj.Text = "Delete objects";
+                propertyGrid1.SelectedObject = null;
+                return;
+            }
+            else
+            {
+                Btn_CopyObjs.Visible = false;
+                Btn_Duplicate.Visible = true;
+                btn_delObj.Text = "Delete object";
+            }
             if (comboBox1.Text == "AreaObjInfo")
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
@@ -913,7 +931,7 @@ namespace The4Dimension
                 };
                 Undo.Push(new UndoAction("Removed every object in " + comboBox1.Text, comboBox1.Text, -1, tmp, action));
             }
-            while (ObjectsListBox.Items.Count != 0) { ObjectsListBox.SelectedIndex = 0; DelSelectedObj(true); }
+            while (ObjectsListBox.Items.Count != 0) { ObjectsListBox.ClearSelected(); ObjectsListBox.SelectedIndex = 0; DelSelectedObj(true); }
         }
 
         private void Form1_closing(object sender, FormClosingEventArgs e)
@@ -995,6 +1013,7 @@ namespace The4Dimension
         {
             if (e.Button == MouseButtons.Right)
             {
+                ObjectsListBox.ClearSelected();
                 ObjectsListBox.SelectedIndex = -1;
                 propertyGrid1.SelectedObject = null;
             }
@@ -1115,8 +1134,9 @@ namespace The4Dimension
             Undo.Push(new UndoAction("Changed points of rail: " + AllRailInfos[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, "", OldPoints, act));
         }
 
-        public void C0ListChanged(C0List OldList)
+        public void C0ListChanged(C0List OldList, int Hash)
         {
+            if (((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).GetHashCode() != Hash) return; //every time a FrmC0ListEdit form is closed triggers this, even for C0Lists inside an object from another C0List
             if (checkBox2.Checked && propertyGrid1.SelectedGridItem.Label == "GenerateChildren") AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
             Action<string, int, string, object> act;
             act = (string type, int id, string propName, object value) =>
@@ -1125,7 +1145,7 @@ namespace The4Dimension
                 propertyGrid1.Refresh();
                 if (checkBox2.Checked && propName == "GenerateChildren") AddChildrenModels((C0List)AllInfos[type].Objs[id].Prop["GenerateChildren"]);
             };
-            Undo.Push(new UndoAction("Changed " + propertyGrid1.SelectedGridItem.Label + "of object: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, propertyGrid1.SelectedGridItem.Label, OldList, act));
+            Undo.Push(new UndoAction("Changed " + propertyGrid1.SelectedGridItem.Label + " of object: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, propertyGrid1.SelectedGridItem.Label, OldList, act));
         }
 
         public void UpdateOBJPos(int id, ref List<LevelObj> Source, string Type)
@@ -1216,24 +1236,31 @@ namespace The4Dimension
             }
             else
             {
+                int[] indexes = GetSelectedIndexes();
                 if (!NoUndo)
                 {
-                    LevelObj tmp = AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Clone();
-                    Action<string, int, object> action;
-                    action = (string type, int at, object obj) =>
+                    List<LevelObj> tmp = new List<LevelObj>();
+                    for (int i = 0; i < indexes.Length; i++) tmp.Add(AllInfos[comboBox1.Text].Objs[indexes[i]].Clone());
+                    Action<string, int[], object> action;
+                    action = (string type, int[] at, object obj) =>
                     {
-                        AddObj((LevelObj)tmp, ref AllInfos[type].Objs, type, false, at, true);
+                        LevelObj[] t = ((LevelObj[])obj).Reverse().ToArray();
+                        int[] index = at.Reverse().ToArray();
+                        for (int i = 0; i < t.Length; i++) AddObj(t[i], ref AllInfos[type].Objs, type, false, index[i], true);
                     };
-                    Undo.Push(new UndoAction("Removed object: " + tmp.ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, tmp, action));
+                    string name = (indexes.Length == 1) ? "Removed object: " + tmp[0].ToString() : "Removed " + indexes.Length.ToString() + " objects";
+                    Undo.Push(new UndoAction(name, comboBox1.Text, indexes, tmp.ToArray(), action));
                 }
-                render.RemoveModel(comboBox1.Text, ObjectsListBox.SelectedIndex);
-                AllInfos[comboBox1.Text].Objs.RemoveAt(ObjectsListBox.SelectedIndex);
-                ObjectsListBox.Items.RemoveAt(ObjectsListBox.SelectedIndex);
+                foreach (int i in indexes)
+                {
+                    render.RemoveModel(comboBox1.Text, i);
+                    AllInfos[comboBox1.Text].Objs.RemoveAt(i);
+                    ObjectsListBox.Items.RemoveAt(i);
+                }
             }
             propertyGrid1.SelectedObject = null;
             propertyGrid1.Refresh();
         }
-
 
         private void button2_Click(object sender, EventArgs e)//Duplicating objects
         {
@@ -1285,6 +1312,7 @@ namespace The4Dimension
             if (name == "AreaObjInfo") LoadModels(tmp, name, "models\\UnkYellow.obj", at);
             else if (name == "CameraAreaInfo") LoadModels(tmp, name, "models\\UnkGreen.obj", at);
             else LoadModels(tmp, name, "models\\UnkBlue.obj", at);
+            ObjectsListBox.ClearSelected();
             ObjectsListBox.SetSelected(at == -1 ? ObjectsListBox.Items.Count - 1 : at, true);
             if (!IsUndo)
             {
@@ -1325,43 +1353,60 @@ namespace The4Dimension
             ClipBoardMenu.Close();
         }
 
+        int[] GetSelectedIndexes()
+        {
+            if (ObjectsListBox.SelectedItems.Count == 0) return new int[] { -1 };
+            int[] res = new int[ObjectsListBox.SelectedItems.Count];
+            for (int i = 0; i < ObjectsListBox.SelectedItems.Count;i ++) res[i] = ObjectsListBox.SelectedIndices[i];
+            return res.Reverse().ToArray(); //From the last to the first
+        }
+
         private void copyPositionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "pos_");
+            CopyValue(GetSelectedIndexes(), comboBox1.Text, "pos_");
         }
 
         private void copyRotationToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "dir_");
+            CopyValue(GetSelectedIndexes(), comboBox1.Text, "dir_");
         }
 
         private void copyScaleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "scale_");
+            CopyValue(GetSelectedIndexes(), comboBox1.Text, "scale_");
         }
 
         private void ClipBoardMenu_CopyArgs_Click(object sender, EventArgs e)
         {
             //if (comboBox1.Text == "AllRailInfos") return;
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "Arg");
+            CopyValue(GetSelectedIndexes(), comboBox1.Text, "Arg");
         }
 
         private void ClipBoardMenu_CopyFull_Click(object sender, EventArgs e)
         {
             if (ObjectsListBox.SelectedIndex < 0) return;
-            CopyValue(ObjectsListBox.SelectedIndex, comboBox1.Text, "Full");
+            int[] indexes = GetSelectedIndexes();
+            if (indexes.Length == 1) CopyValue(indexes, comboBox1.Text, "Full");
+            else CopyValue(indexes, comboBox1.Text, "FullArray");
         }
 
-        void CopyValue(int index, string type, string value)
+        private void Btn_CopyObjs_Click(object sender, EventArgs e)
+        {
+            int[] indexes = GetSelectedIndexes();
+            if (indexes.Length > 1) CopyValue(indexes, comboBox1.Text, "FullArray");
+        }
+
+        void CopyValue(int[] indexes, string type, string value)
         {
             ClipBoardItem cl = new ClipBoardItem();
+            int index = indexes[0];
             if (value == "pos_" || value == "dir_" || value == "scale_")
             {
                 if (value == "pos_") cl.Type = ClipBoardItem.ClipboardType.Position;
@@ -1380,7 +1425,7 @@ namespace The4Dimension
                 if (comboBox1.Text == "AllRailInfos")
                 {
                     cl.Type = ClipBoardItem.ClipboardType.IntArray;
-                    cl.Args = AllRailInfos[index].Arg.ToArray(); 
+                    cl.Args = AllRailInfos[index].Arg.ToArray();
                 }
                 else
                 {
@@ -1402,7 +1447,21 @@ namespace The4Dimension
                 else
                 {
                     cl.Type = ClipBoardItem.ClipboardType.FullObject;
-                    cl.Obj = AllInfos[type].Objs[index].Clone();
+                    cl.Objs = new LevelObj[] { AllInfos[type].Objs[index].Clone() };
+                }
+            }
+            else if (value == "FullArray")
+            {
+                if (comboBox1.Text == "AllRailInfos")
+                {
+                    MessageBox.Show("Multi-Rail copy not implemented");
+                }
+                else
+                {
+                    cl.Type = ClipBoardItem.ClipboardType.ObjectArray;
+                    List<LevelObj> l = new List<LevelObj>();
+                    foreach (int i in indexes) l.Add(AllInfos[type].Objs[i].Clone());
+                    cl.Objs = l.ToArray();
                 }
             }
             clipboard.Add(cl);
@@ -1424,30 +1483,45 @@ namespace The4Dimension
 
         private void ClipBoardMenu_Opening(object sender, CancelEventArgs e)
         {
-            if (comboBox1.Text == "AllRailInfos")
+            if (GetSelectedIndexes().Length > 1)
             {
                 ClipBoardMenu_CopyPos.Enabled = false;
                 ClipBoardMenu_CopyRot.Enabled = false;
                 ClipBoardMenu_CopyScale.Enabled = false;
+                ClipBoardMenu_CopyArgs.Enabled = false;
+                ClipBoardMenu_CopyFull.Text = "Copy objects";
+                ClipBoardMenu_Paste.Enabled = false;
             }
             else
             {
-                ClipBoardMenu_CopyPos.Enabled = true;
-                ClipBoardMenu_CopyRot.Enabled = true;
-                ClipBoardMenu_CopyScale.Enabled = true;
-            }
-            ClipBoardMenu_Paste.DropDownItems.Clear();
-            List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
-            for (int i = 0; i < clipboard.Count; i++)
-            {
-                ToolStripMenuItem btn = new ToolStripMenuItem();
-                btn.Name = "ClipboardN" + i.ToString();
-                btn.Text = clipboard[i].ToString(ObjectsListBox.SelectedIndex);
-                btn.Click += QuickClipboardItem_Click;
-                Items.Add(btn);
-            }
-            Items.Reverse();
-            ClipBoardMenu_Paste.DropDownItems.AddRange(Items.ToArray());
+                ClipBoardMenu_CopyArgs.Enabled = true;
+                ClipBoardMenu_CopyFull.Text = "Copy full object";
+                ClipBoardMenu_Paste.Enabled = true;
+                if (comboBox1.Text == "AllRailInfos")
+                {
+                    ClipBoardMenu_CopyPos.Enabled = false;
+                    ClipBoardMenu_CopyRot.Enabled = false;
+                    ClipBoardMenu_CopyScale.Enabled = false;
+                }
+                else
+                {
+                    ClipBoardMenu_CopyPos.Enabled = true;
+                    ClipBoardMenu_CopyRot.Enabled = true;
+                    ClipBoardMenu_CopyScale.Enabled = true;
+                }
+                ClipBoardMenu_Paste.DropDownItems.Clear();
+                List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
+                for (int i = 0; i < clipboard.Count; i++)
+                {
+                    ToolStripMenuItem btn = new ToolStripMenuItem();
+                    btn.Name = "ClipboardN" + i.ToString();
+                    btn.Text = clipboard[i].ToString(ObjectsListBox.SelectedIndex);
+                    btn.Click += QuickClipboardItem_Click;
+                    Items.Add(btn);
+                }
+                Items.Reverse();
+                ClipBoardMenu_Paste.DropDownItems.AddRange(Items.ToArray());
+            }           
         }
 
         private void QuickClipboardItem_Click(object sender, EventArgs e)
@@ -1535,12 +1609,18 @@ namespace The4Dimension
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
             {
-                if (index < 0) AddObj(itm.Obj ,ref AllInfos[type].Objs, type, true);
+                if (index < 0 || propertyGrid1.SelectedObject == null) AddObj(itm.Objs[0], ref AllInfos[type].Objs, type, true);
                 else
                 {
                     if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
-                    ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(itm.Obj.Clone());
+                    ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(itm.Objs[0].Clone());
                 }
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.ObjectArray)
+            {
+                if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
+                foreach (LevelObj o in itm.Objs) ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(o.Clone());
+
             }
             propertyGrid1.Refresh();
             if (index >= 0) UpdateOBJPos(index, ref AllInfos[type].Objs, comboBox1.Text);
@@ -1613,6 +1693,7 @@ namespace The4Dimension
         public void SetSelectedObj(string Type, int Index)
         {
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf(Type);
+            ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = Index;
         }
         #endregion
@@ -1908,5 +1989,10 @@ namespace The4Dimension
         }
 
         #endregion
+
+        private void modelImporterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormEditors.FrmObjImport().ShowDialog();
+        }
     }
 }

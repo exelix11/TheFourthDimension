@@ -61,6 +61,33 @@ namespace The4Dimension.Properties {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
+        ///&lt;Root&gt;
+        ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;C1&gt;
+        ///    &lt;C1 Name=&quot;Collision&quot;&gt;
+        ///      &lt;A0 Name=&quot;Sensor&quot; StringValue=&quot;Collision&quot; /&gt;
+        ///    &lt;/C1&gt;
+        ///    &lt;C1 Name=&quot;Debug&quot;&gt;
+        ///      &lt;A0 Name=&quot;NodeName&quot; StringValue=&quot;地形&quot; /&gt;
+        ///    &lt;/C1&gt;
+        ///    &lt;C1 Name=&quot;Executor&quot;&gt;
+        ///      &lt;A0 Name=&quot;CategoryName&quot; StringValue=&quot;固定地形&quot; /&gt;
+        ///    &lt;/C1&gt;
+        ///    &lt;C1 Name=&quot;GroupClipping&quot;&gt;
+        ///      &lt;D1 Name=&quot;MaxCount&quot; StringValue=&quot;64&quot; /&gt;
+        ///    &lt;/C1&gt;
+        ///    &lt;FF Name=&quot;Model&quot; StringValue=&quot;00000000&quot; /&gt;
+        ///  &lt;/C1&gt;
+        ///&lt;/Root&gt;.
+        /// </summary>
+        internal static string Actor {
+            get {
+                return ResourceManager.GetString("Actor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a FirstStageMap1.szs
         ///CaveInkStageMap1.szs
         ///DownHillStageMap1.szs
@@ -120,6 +147,24 @@ namespace The4Dimension.Properties {
         internal static string GenericCameraParam {
             get {
                 return ResourceManager.GetString("GenericCameraParam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
+        ///&lt;Root&gt;
+        ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;C0&gt;
+        ///    &lt;C1&gt;
+        ///      &lt;A0 Name=&quot;Name&quot; StringValue=&quot;Collision&quot; /&gt;
+        ///      &lt;A0 Name=&quot;Type&quot; StringValue=&quot;CollisionParts&quot; /&gt;
+        ///    &lt;/C1&gt;
+        ///  &lt;/C0&gt;
+        ///&lt;/Root&gt;.
+        /// </summary>
+        internal static string Sensor {
+            get {
+                return ResourceManager.GetString("Sensor", resourceCulture);
             }
         }
     }

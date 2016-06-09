@@ -100,7 +100,7 @@ namespace The4Dimension
             else if (value == "Full")
             {
                 cl.Type = ClipBoardItem.ClipboardType.FullObject;
-                cl.Obj = Value.Clone();
+                cl.Objs = new LevelObj[] { Value.Clone() };
             }
             Form1.clipboard.Add(cl);
             if (Form1.clipboard.Count > 10) Form1.clipboard.RemoveAt(0);
@@ -159,7 +159,12 @@ namespace The4Dimension
             else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
             {
                 if (!Value.Prop.ContainsKey("GenerateChildren")) Value.Prop.Add("GenerateChildren", new C0List());
-                ((C0List)Value.Prop["GenerateChildren"]).List.Add(itm.Obj.Clone());
+                ((C0List)Value.Prop["GenerateChildren"]).List.Add(itm.Objs[0].Clone());
+            }
+            else if (itm.Type == ClipBoardItem.ClipboardType.ObjectArray)
+            {
+                if (!Value.Prop.ContainsKey("GenerateChildren")) Value.Prop.Add("GenerateChildren", new C0List());                
+                foreach (LevelObj o in itm.Objs) ((C0List)Value.Prop["GenerateChildren"]).List.Add(o.Clone());
             }
             propertyGrid1.Refresh();
         }

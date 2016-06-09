@@ -54,14 +54,17 @@
     <Reference Include="3DS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\3DS.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="CommonCompressors, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\CommonCompressors.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="CommonFiles, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\CommonFiles.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="FastColoredTextBox, Version=2.16.11.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL">
       <HintPath>..\packages\FCTB.2.16.11.0\lib\FastColoredTextBox.dll</HintPath>
@@ -70,10 +73,12 @@
     <Reference Include="LibEveryFileExplorer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\LibEveryFileExplorer.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="NDS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\NDS.dll</HintPath>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -138,6 +143,12 @@
     </Compile>
     <Compile Include="FormEditors\FrmCCNTEdit.Designer.cs">
       <DependentUpon>FrmCCNTEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormEditors\FrmObjImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\FrmObjImport.Designer.cs">
+      <DependentUpon>FrmObjImport.cs</DependentUpon>
     </Compile>
     <Compile Include="FormEditors\FrmRailPointEditor.cs">
       <SubType>Form</SubType>
@@ -226,6 +237,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmCCNTEdit.resx">
       <DependentUpon>FrmCCNTEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\FrmObjImport.resx">
+      <DependentUpon>FrmObjImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmRailPointEditor.resx">
       <DependentUpon>FrmRailPointEditor.cs</DependentUpon>

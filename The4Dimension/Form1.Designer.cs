@@ -76,21 +76,23 @@
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.Btn_CopyObjs = new System.Windows.Forms.Button();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.btn_cameraCode = new System.Windows.Forms.Button();
             this.DeleteMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.deleteEveryObjectInTheListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.AddTypeBtn = new System.Windows.Forms.Button();
+            this.Btn_addType = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ObjectsListBox = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.BtnAddObj = new System.Windows.Forms.Button();
-            this.DelObjBtn = new System.Windows.Forms.Button();
-            this.DuplicateObjBtn = new System.Windows.Forms.Button();
+            this.Btn_AddObj = new System.Windows.Forms.Button();
+            this.btn_delObj = new System.Windows.Forms.Button();
+            this.Btn_Duplicate = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.modelImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -305,6 +307,7 @@
             this.otherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.creatorClassNameTableEditorToolStripMenuItem,
             this.stagesBgmEditorToolStripMenuItem,
+            this.modelImporterToolStripMenuItem,
             this.toolStripSeparator5,
             this.gameROMFSPathToolStripMenuItem});
             this.otherToolStripMenuItem.Name = "otherToolStripMenuItem";
@@ -480,16 +483,17 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.Btn_CopyObjs);
             this.splitContainer1.Panel1.Controls.Add(this.checkBox2);
             this.splitContainer1.Panel1.Controls.Add(this.btn_cameraCode);
-            this.splitContainer1.Panel1.Controls.Add(this.AddTypeBtn);
+            this.splitContainer1.Panel1.Controls.Add(this.Btn_addType);
             this.splitContainer1.Panel1.Controls.Add(this.checkBox1);
             this.splitContainer1.Panel1.Controls.Add(this.ObjectsListBox);
             this.splitContainer1.Panel1.Controls.Add(this.label1);
             this.splitContainer1.Panel1.Controls.Add(this.comboBox1);
-            this.splitContainer1.Panel1.Controls.Add(this.BtnAddObj);
-            this.splitContainer1.Panel1.Controls.Add(this.DelObjBtn);
-            this.splitContainer1.Panel1.Controls.Add(this.DuplicateObjBtn);
+            this.splitContainer1.Panel1.Controls.Add(this.Btn_AddObj);
+            this.splitContainer1.Panel1.Controls.Add(this.btn_delObj);
+            this.splitContainer1.Panel1.Controls.Add(this.Btn_Duplicate);
             // 
             // splitContainer1.Panel2
             // 
@@ -500,6 +504,33 @@
             this.splitContainer1.Size = new System.Drawing.Size(244, 529);
             this.splitContainer1.SplitterDistance = 240;
             this.splitContainer1.TabIndex = 7;
+            // 
+            // Btn_CopyObjs
+            // 
+            this.Btn_CopyObjs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.Btn_CopyObjs.Location = new System.Drawing.Point(35, 214);
+            this.Btn_CopyObjs.Name = "Btn_CopyObjs";
+            this.Btn_CopyObjs.Size = new System.Drawing.Size(96, 23);
+            this.Btn_CopyObjs.TabIndex = 12;
+            this.Btn_CopyObjs.Text = "Copy Objects";
+            this.Btn_CopyObjs.UseVisualStyleBackColor = true;
+            this.Btn_CopyObjs.Visible = false;
+            this.Btn_CopyObjs.Click += new System.EventHandler(this.Btn_CopyObjs_Click);
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Location = new System.Drawing.Point(3, 192);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(227, 17);
+            this.checkBox2.TabIndex = 9;
+            this.checkBox2.Text = "Display children objects (in red if unknown)";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            this.checkBox2.Visible = false;
+            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // btn_cameraCode
             // 
@@ -528,15 +559,15 @@
             this.deleteEveryObjectInTheListToolStripMenuItem.Text = "Delete every object in the list";
             this.deleteEveryObjectInTheListToolStripMenuItem.Click += new System.EventHandler(this.deleteEveryObjectInTheListToolStripMenuItem_Click);
             // 
-            // AddTypeBtn
+            // Btn_addType
             // 
-            this.AddTypeBtn.Location = new System.Drawing.Point(215, 3);
-            this.AddTypeBtn.Name = "AddTypeBtn";
-            this.AddTypeBtn.Size = new System.Drawing.Size(23, 21);
-            this.AddTypeBtn.TabIndex = 10;
-            this.AddTypeBtn.Text = "+";
-            this.AddTypeBtn.UseVisualStyleBackColor = true;
-            this.AddTypeBtn.Click += new System.EventHandler(this.AddType_click);
+            this.Btn_addType.Location = new System.Drawing.Point(215, 3);
+            this.Btn_addType.Name = "Btn_addType";
+            this.Btn_addType.Size = new System.Drawing.Size(23, 21);
+            this.Btn_addType.TabIndex = 10;
+            this.Btn_addType.Text = "+";
+            this.Btn_addType.UseVisualStyleBackColor = true;
+            this.Btn_addType.Click += new System.EventHandler(this.AddType_click);
             // 
             // checkBox1
             // 
@@ -557,6 +588,7 @@
             this.ObjectsListBox.FormattingEnabled = true;
             this.ObjectsListBox.Location = new System.Drawing.Point(7, 30);
             this.ObjectsListBox.Name = "ObjectsListBox";
+            this.ObjectsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.ObjectsListBox.Size = new System.Drawing.Size(229, 160);
             this.ObjectsListBox.TabIndex = 8;
             this.ObjectsListBox.SelectedIndexChanged += new System.EventHandler(this.ObjectsListBox_SelectedIndexChanged);
@@ -584,39 +616,39 @@
             this.comboBox1.TabIndex = 6;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // BtnAddObj
+            // Btn_AddObj
             // 
-            this.BtnAddObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.BtnAddObj.Location = new System.Drawing.Point(3, 214);
-            this.BtnAddObj.Name = "BtnAddObj";
-            this.BtnAddObj.Size = new System.Drawing.Size(29, 23);
-            this.BtnAddObj.TabIndex = 5;
-            this.BtnAddObj.Text = "+";
-            this.BtnAddObj.UseVisualStyleBackColor = true;
-            this.BtnAddObj.Click += new System.EventHandler(this.BtnAddObj_Click);
+            this.Btn_AddObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.Btn_AddObj.Location = new System.Drawing.Point(3, 214);
+            this.Btn_AddObj.Name = "Btn_AddObj";
+            this.Btn_AddObj.Size = new System.Drawing.Size(29, 23);
+            this.Btn_AddObj.TabIndex = 5;
+            this.Btn_AddObj.Text = "+";
+            this.Btn_AddObj.UseVisualStyleBackColor = true;
+            this.Btn_AddObj.Click += new System.EventHandler(this.BtnAddObj_Click);
             // 
-            // DelObjBtn
+            // btn_delObj
             // 
-            this.DelObjBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DelObjBtn.ContextMenuStrip = this.DeleteMenuStrip;
-            this.DelObjBtn.Location = new System.Drawing.Point(137, 214);
-            this.DelObjBtn.Name = "DelObjBtn";
-            this.DelObjBtn.Size = new System.Drawing.Size(101, 23);
-            this.DelObjBtn.TabIndex = 4;
-            this.DelObjBtn.Text = "Delete Object";
-            this.DelObjBtn.UseVisualStyleBackColor = true;
-            this.DelObjBtn.Click += new System.EventHandler(this.button3_Click);
+            this.btn_delObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btn_delObj.ContextMenuStrip = this.DeleteMenuStrip;
+            this.btn_delObj.Location = new System.Drawing.Point(137, 214);
+            this.btn_delObj.Name = "btn_delObj";
+            this.btn_delObj.Size = new System.Drawing.Size(101, 23);
+            this.btn_delObj.TabIndex = 4;
+            this.btn_delObj.Text = "Delete object";
+            this.btn_delObj.UseVisualStyleBackColor = true;
+            this.btn_delObj.Click += new System.EventHandler(this.button3_Click);
             // 
-            // DuplicateObjBtn
+            // Btn_Duplicate
             // 
-            this.DuplicateObjBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.DuplicateObjBtn.Location = new System.Drawing.Point(35, 214);
-            this.DuplicateObjBtn.Name = "DuplicateObjBtn";
-            this.DuplicateObjBtn.Size = new System.Drawing.Size(96, 23);
-            this.DuplicateObjBtn.TabIndex = 3;
-            this.DuplicateObjBtn.Text = "Duplicate Object";
-            this.DuplicateObjBtn.UseVisualStyleBackColor = true;
-            this.DuplicateObjBtn.Click += new System.EventHandler(this.button2_Click);
+            this.Btn_Duplicate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.Btn_Duplicate.Location = new System.Drawing.Point(35, 214);
+            this.Btn_Duplicate.Name = "Btn_Duplicate";
+            this.Btn_Duplicate.Size = new System.Drawing.Size(96, 23);
+            this.Btn_Duplicate.TabIndex = 3;
+            this.Btn_Duplicate.Text = "Duplicate Object";
+            this.Btn_Duplicate.UseVisualStyleBackColor = true;
+            this.Btn_Duplicate.Click += new System.EventHandler(this.button2_Click);
             // 
             // button5
             // 
@@ -652,20 +684,12 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // checkBox2
+            // modelImporterToolStripMenuItem
             // 
-            this.checkBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Checked = true;
-            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Location = new System.Drawing.Point(3, 192);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(172, 17);
-            this.checkBox2.TabIndex = 9;
-            this.checkBox2.Text = "Display children objects (in red)";
-            this.checkBox2.UseVisualStyleBackColor = true;
-            this.checkBox2.Visible = false;
-            this.checkBox2.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
+            this.modelImporterToolStripMenuItem.Name = "modelImporterToolStripMenuItem";
+            this.modelImporterToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.modelImporterToolStripMenuItem.Text = "Model importer";
+            this.modelImporterToolStripMenuItem.Click += new System.EventHandler(this.modelImporterToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -704,9 +728,9 @@
         private System.Windows.Forms.ToolStripMenuItem saveAsSZSToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveAsXmlToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.Button DelObjBtn;
-        private System.Windows.Forms.Button DuplicateObjBtn;
-        private System.Windows.Forms.Button BtnAddObj;
+        private System.Windows.Forms.Button btn_delObj;
+        private System.Windows.Forms.Button Btn_Duplicate;
+        private System.Windows.Forms.Button Btn_AddObj;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.ContextMenuStrip ClipBoardMenu;
@@ -743,7 +767,7 @@
         private System.Windows.Forms.ToolStripMenuItem objectByViewIdToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip DeleteMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem deleteEveryObjectInTheListToolStripMenuItem;
-        private System.Windows.Forms.Button AddTypeBtn;
+        private System.Windows.Forms.Button Btn_addType;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
@@ -759,6 +783,8 @@
         private System.Windows.Forms.ToolStripMenuItem gameROMFSPathToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem changeToolStripMenuItem;
         private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.Button Btn_CopyObjs;
+        private System.Windows.Forms.ToolStripMenuItem modelImporterToolStripMenuItem;
     }
 }
 

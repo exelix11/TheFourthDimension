@@ -117,158 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Actor" xml:space="preserve">
-    <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
-&lt;Root&gt;
-  &lt;isBigEndian Value="False" /&gt;
-  &lt;C1&gt;
-    &lt;C1 Name="Collision"&gt;
-      &lt;A0 Name="Sensor" StringValue="Collision" /&gt;
-    &lt;/C1&gt;
-    &lt;C1 Name="Debug"&gt;
-      &lt;A0 Name="NodeName" StringValue="地形" /&gt;
-    &lt;/C1&gt;
-    &lt;C1 Name="Executor"&gt;
-      &lt;A0 Name="CategoryName" StringValue="固定地形" /&gt;
-    &lt;/C1&gt;
-    &lt;C1 Name="GroupClipping"&gt;
-      &lt;D1 Name="MaxCount" StringValue="64" /&gt;
-    &lt;/C1&gt;
-    &lt;FF Name="Model" StringValue="00000000" /&gt;
-  &lt;/C1&gt;
-&lt;/Root&gt;</value>
-  </data>
-  <data name="AllStageList" xml:space="preserve">
-    <value>FirstStageMap1.szs
-CaveInkStageMap1.szs
-DownHillStageMap1.szs
-BalanceTruckStageMap1.szs
-KoopaFirstStageMap1.szs
-FieldWalkStageMap1.szs
-CavePatanStageMap1.szs
-DotCoinStageMap1.szs
-JumpFlipGeneratorStageMap1.szs
-BattleShipKillerStageMap1.szs
-DesertRuinStageMap1.szs
-AquariumSwimStageMap1.szs
-SkyChikuwaStageMap1.szs
-MountainRopeStageMap1.szs
-SweetsScrollStageMap1.szs
-FortressSpikeStageMap1.szs
-UpUpLandStageMap1.szs
-CaveClimbStageMap1.szs
-SkyRotateBlockStageMap1.szs
-FlashTeresaStageMap1.szs
-SkyPatanStageMap1.szs
-BattleShipPanelStageMap1.szs
-BoomerangMountainStageMap1.szs
-DungeonTrapStageMap1.szs
-SkyLiftStageMap1.szs
-TunnelMazeStageMap1.szs
-ProperaBlockStageMap1.szs
-KoopaSecondStageMap1.szs
-BridgePukupukuStageMap1.szs
-PyramidSpikeStageMap1.szs
-TrickTeresaStageMap1.szs
-BeatKabeheiStageMap1.szs
-MoveTrampolineStageMap1.szs
-BattleShipSpikeStageMap1.szs
-UnderseaTunnelStageMap1.szs
-NeedleRollerStageMap1.szs
-RopeClimbStageMap1.szs
-InsideClockStageMap1.szs
-WoodFallStageMap1.szs
-BattleShipRollerStageMap1.szs
-FortressGororiStageMap1.szs
-CanyonPoleStageMap1.szs
-StopRotateStageMap1.szs
-LiftTeresaStageMap1.szs
-CanyonPanelStageMap1.szs
-KoopaThirdStageMap1.szs
-LavaWheelStageMap1.szs
-KoopaLavaTruckStageMap1.szs
-KoopaLastStageMap1.szs
-FieldWalkStageMap2.szs
-CaveInkStageMap2.szs
-DotCannonStageMap1.szs
-BridgePukupukuSp1StageMap1.szs
-KoopaFirstStageMap2.szs
-CloudLiftScrollStageMap1.szs
-AquariumSwimStageMap2.szs
-BalanceTruckSp1StageMap1.szs
-MoveTrampolineStageMap2.szs
-SkyPatanStageMap2.szs
-FortressSpikeStageMap2.szs
-SwingLiftFallSpStageMap1.szs
-SkyRotateBlockSpStageMap1.szs
-RopeClimbStageMap2.szs
-NeedleRollerStageMap2.szs
-BeatKabeheiStageMap2.szs
-BattleShipKillerSp2StageMap1.szs
-EnemyLiftTowerSpStageMap1.szs
-FlashTeresaStageMap2.szs
-BridgePukupukuSp2StageMap1.szs
-DownHillStageMap2.szs
-SkyChikuwaSpStageMap1.szs
-BossParadeSpStageMap1.szs
-JumpFlipGeneratorSpStageMap1.szs
-NeedleRollerStageMap3.szs
-BalanceTruckSp2StageMap1.szs
-SweetsScrollSpStageMap1.szs
-TrickTeresaSpStageMap1.szs
-KoopaSecondStageMap2.szs
-DesertRuinStageMap2.szs
-SkyChikuwaSp2StageMap1.szs
-CavePatanStageMap2.szs
-SkyRotateBlockStageMap2.szs
-LiftTeresaStageMap2.szs
-BattleShipPanelSpStageMap1.szs
-MountainRopeStageMap2.szs
-BeatKabeheiStageMap3.szs
-InsideClockSpStageMap1.szs
-JumpFlipGeneratorStageMap2.szs
-BattleShipRollerSpStageMap1.szs
-KoopaFirstStageMap3.szs
-CaveInkStageMap3.szs
-StopRotateSpStageMap1.szs
-KoopaSecondStageMap3.szs
-LavaWheelStageMap2.szs
-BattleShipRollerSpStageMap2.szs
-KoopaThirdStageMap2.szs
-ChampionshipSpStageMap1.szs</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="BaseModels" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\BaseModels.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="GenericCameraParam" xml:space="preserve">
-    <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
-&lt;Root&gt;
-  &lt;isBigEndian Value="False" /&gt;
-  &lt;C1&gt;
-    &lt;C0 Name="CameraParams"&gt;
-      
-    &lt;/C0&gt;
-    &lt;C1 Name="VisionParam"&gt;
-      &lt;D2 Name="FarClipDistance" StringValue="80000" /&gt;
-      &lt;D2 Name="FovyDegree" StringValue="45" /&gt;
-      &lt;D2 Name="NearClipDistacne" StringValue="100" /&gt;
-      &lt;D2 Name="StereovisionDepth" StringValue="0,4" /&gt;
-      &lt;D2 Name="StereovisionDistance" StringValue="200" /&gt;
-    &lt;/C1&gt;
-  &lt;/C1&gt;
-&lt;/Root&gt;</value>
-  </data>
-  <data name="Sensor" xml:space="preserve">
-    <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
-&lt;Root&gt;
-  &lt;isBigEndian Value="False" /&gt;
-  &lt;C0&gt;
-    &lt;C1&gt;
-      &lt;A0 Name="Name" StringValue="Collision" /&gt;
-      &lt;A0 Name="Type" StringValue="CollisionParts" /&gt;
-    &lt;/C1&gt;
-  &lt;/C0&gt;
-&lt;/Root&gt;</value>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Notes:
+the object (and the file) will have the same name as the model.
+
+The game has a size limit on models, if the game crashes try to reduce the model size by using smaller textures
+
+Don't directly import models from other games, remember 3ds hardware limitations
+
+To view the object in the editor you must copy the obj in the models folder, the obj must have the same name as the model name
+
+If your model has sections you don't want the player can walk on (grass, water surface, etc...) you should make another model without those objects and create the collisions from it</value>
   </data>
 </root>

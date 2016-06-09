@@ -44,9 +44,9 @@ namespace The4Dimension.FormEditors
         private void button2_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex == -1) return;
-            Value.List.RemoveAt(listBox1.SelectedIndex);
-            listBox1.Items.RemoveAt(listBox1.SelectedIndex);
             if (owner.propertyGrid1.SelectedGridItem.Label == "GenerateChildren") owner.render.RemoveModel("TmpChildrenObjs", listBox1.SelectedIndex);
+            Value.List.RemoveAt(listBox1.SelectedIndex);
+            listBox1.Items.RemoveAt(listBox1.SelectedIndex);            
         }
 
         private void ListBox_DoubleClick(object sender, EventArgs e)
@@ -62,7 +62,7 @@ namespace The4Dimension.FormEditors
 
         private void Form_Closing(object sender, FormClosingEventArgs e)
         {
-            owner.C0ListChanged(OldValue);
+            owner.C0ListChanged(OldValue, Value.GetHashCode());
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)

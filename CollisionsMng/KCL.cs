@@ -105,10 +105,11 @@ namespace MarioKart.MK7 //Thanks Gericom for this
                     foreach (string mat in matnames)
                     {
                         int matName = Convert.ToInt32(mat, 16);
-                        while (matName > 0xFF) matName = matName / 2;
+                        while (matName > 0xFF) matName = matName % 255; //Maybe it's better ?
+                        float final = (float)matName / 10f;
                         Mtl += @"newmtl " + mat + @"
 Ka 0.000000 0.000000 0.000000
-Kd 0.000000 0.000000 " + matName.ToString() + @"
+Kd 0.000000 0.000000 " + final.ToString("0.000000").Replace(',','.') + @"
 Ks 0.000000 0.000000 0.000000
 
 ";
@@ -136,8 +137,10 @@ Ks 0.000000 0.000000 0.000000
             List<Vector3> Normals = new List<Vector3>();
             List<KCLPlane> planes = new List<KCLPlane>();
             List<Triangle> Triangles = new List<Triangle>();
+            int face = 0;         
             foreach (var v in o.Faces)
             {
+                Console.Write("\r -Adding face " + (++face).ToString() + "/" + o.Faces.Count.ToString());
                 if (Colli[v.Material])
                 {
                     Triangle t = new Triangle(o.Vertices[v.VertexIndieces[0]], o.Vertices[v.VertexIndieces[1]], o.Vertices[v.VertexIndieces[2]]);
@@ -438,7 +441,7 @@ Ks 0.000000 0.000000 0.000000
             public KCLOctreeNode[] SubNodes;
             public ushort[] Triangles;
 
-            public static KCLOctreeNode Generate(Dictionary<ushort, Triangle> Triangles, Vector3 Position, float BoxSize, int MaxTris, int MinSize)
+            public static KCLOctreeNode Generate(Dictionary<ushort, Triangle> Triangles, Vector3 Position, float BoxSize, int MaxTris, int MinSize, int TotOctree, int ActualOctre)
             {
                 KCLOctreeNode n = new KCLOctreeNode();
                 //Pump this box a little up, to prevent glitches
@@ -446,8 +449,9 @@ Ks 0.000000 0.000000 0.000000
                 float newsize = BoxSize + 50;// 60;
                 Vector3 newpos = midpos - new Vector3(newsize / 2f, newsize / 2f, newsize / 2f);
                 Dictionary<ushort, Triangle> t = new Dictionary<ushort, Triangle>();
+                Console.Write("\r -Generating octree: " + ActualOctre.ToString() + "/" + TotOctree.ToString());
                 foreach (var v in Triangles)
-                {
+                {                    
                     if (tricube_overlap(v.Value, newpos, newsize)) t.Add(v.Key, v.Value);
                 }
                 if (BoxSize > MinSize && t.Count > MaxTris)
@@ -463,7 +467,7 @@ Ks 0.000000 0.000000 0.000000
                             for (int x = 0; x < 2; x++)
                             {
                                 Vector3 pos = Position + childsize * new Vector3(x, y, z);
-                                n.SubNodes[i] = KCLOctreeNode.Generate(t, pos, childsize, MaxTris, MinSize);
+                                n.SubNodes[i] = KCLOctreeNode.Generate(t, pos, childsize, MaxTris, MinSize,8,i+1);
                                 i++;
                             }
                         }
@@ -583,6 +587,7 @@ Ks 0.000000 0.000000 0.000000
             KCLOctree k = new KCLOctree();
             k.RootNodes = new KCLOctreeNode[NrX * NrY * NrZ];
             int i = 0;
+            int maxOCtree = NrX * NrY * NrZ;
             for (int z = 0; z < NrZ; z++)
             {
                 for (int y = 0; y < NrY; y++)
@@ -590,7 +595,7 @@ Ks 0.000000 0.000000 0.000000
                     for (int x = 0; x < NrX; x++)
                     {
                         Vector3 pos = min + ((float)cubesize) * new Vector3(x, y, z);
-                        k.RootNodes[i] = KCLOctreeNode.Generate(tt, pos, cubesize, MaxNrTris, MinCubeSize);
+                        k.RootNodes[i] = KCLOctreeNode.Generate(tt, pos, cubesize, MaxNrTris, MinCubeSize,maxOCtree,i + 1);
                         i++;
                     }
                 }

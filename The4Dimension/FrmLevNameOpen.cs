@@ -30,12 +30,14 @@ namespace The4Dimension
 
         private void ListBox_DoubleClick(object sender, MouseEventArgs e)
         {
+            if (listBox1.SelectedIndex == -1) return;
             res = listBox1.SelectedItem.ToString();
             this.Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if (listBox1.SelectedIndex == -1) return;
             res = listBox1.SelectedItem.ToString();
             this.Close();
         }

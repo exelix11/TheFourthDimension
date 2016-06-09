@@ -22,28 +22,34 @@ namespace The4Dimension.FormEditors
         {
             InitializeComponent();
             CCNT = CreatorClassNameTable;
-            listBox1.Items.AddRange(CCNT.Keys.ToArray());
+            updateListbox();
             own = owner;
             if (listBox1.Items.Count > 0) listBox1.SelectedIndex = 0;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
-            NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
-            SFSDirectory dir = new SFSDirectory("", true);          
-            SFSFile StgData = new SFSFile(0, "CreatorClassNameTable.byml", dir);
-            StgData.Data = BymlConverter.GetByml(MakeXML());
-            dir.Files.Add(StgData);
-            SzsArch.FromFileSystem(dir);
-            File.Delete("CreatorClassNameTable.szs");
-            File.WriteAllBytes("CreatorClassNameTable.szs", y.Compress(SzsArch.Write()));
+            SaveFile(ref CCNT);
             own.LoadCreatorClassNameTable();
             this.Close();
         }
 
+        public static void SaveFile(ref Dictionary<string, string> ccnt_r)
+        {
+            CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
+            NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
+            SFSDirectory dir = new SFSDirectory("", true);
+            SFSFile StgData = new SFSFile(0, "CreatorClassNameTable.byml", dir);
+            StgData.Data = BymlConverter.GetByml(MakeXML(ref ccnt_r));
+            dir.Files.Add(StgData);
+            SzsArch.FromFileSystem(dir);
+            File.Delete("CreatorClassNameTable.szs");
+            File.WriteAllBytes("CreatorClassNameTable.szs", y.Compress(SzsArch.Write()));
+        }
+
         void LoadCCNT2(string stringxml)
-        {           
+        {
+            CCNT2 = new Dictionary<string, string>();
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(stringxml);
             XmlNode n = xml.SelectSingleNode("/Root/C0");
@@ -61,7 +67,7 @@ namespace The4Dimension.FormEditors
             }
         }
 
-        string MakeXML()
+        public static string MakeXML(ref Dictionary<string,string> ccnt_r)
         {
             CustomStringWriter str = new CustomStringWriter(Encoding.Default);
             XmlTextWriter xr;
@@ -73,12 +79,12 @@ namespace The4Dimension.FormEditors
             xr.WriteAttributeString("Value", "False");
             xr.WriteEndElement();
             xr.WriteStartElement("C0"); //Byml Root
-            foreach (string k in CCNT.Keys.ToArray())
+            foreach (string k in ccnt_r.Keys.ToArray())
             {
                 xr.WriteStartElement("C1");
                 xr.WriteStartElement("A0");
                 xr.WriteAttributeString("Name", "ClassName");
-                xr.WriteAttributeString("StringValue", CCNT[k]);
+                xr.WriteAttributeString("StringValue", ccnt_r[k]);
                 xr.WriteEndElement();
                 xr.WriteStartElement("A0");
                 xr.WriteAttributeString("Name", "ObjectName");
@@ -94,15 +100,40 @@ namespace The4Dimension.FormEditors
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex == -1) label4.Text = "";else
-            label4.Text = "Selected object class: " + CCNT[listBox1.SelectedItem.ToString()];
+            label4.Text = "";
+            int[] Selected = GetSelectedObjs(false);
+            if (Selected[0] == -1) label4.Text = "";
+            else if (Selected.Length > 30 ) label4.Text = "Too many objects selected";
+            else
+            {
+                foreach (int i in Selected)
+                    label4.Text += listBox1.Items[i].ToString() + " class: " + CCNT[listBox1.Items[i].ToString()] + "\r\n";
+            }
+        }
+
+        void updateListbox()
+        {
+            listBox1.Items.Clear();
+            listBox1.Items.AddRange(CCNT.Keys.ToArray());
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (listBox1.SelectedIndex == -1) return;
-            CCNT.Remove(listBox1.SelectedItem.ToString());
-            listBox1.Items.RemoveAt(listBox1.SelectedIndex);
+            if (listBox1.SelectedIndex == -1) return;            
+            foreach (int i in GetSelectedObjs())
+            {
+                CCNT.Remove(listBox1.Items[i].ToString());
+            }
+            updateListbox();
+        }
+
+        int[] GetSelectedObjs(bool reverse = true)
+        {
+            if (listBox1.SelectedIndex == -1) return new int[1] { -1 };
+            int[] selectedObjs = new int[listBox1.SelectedItems.Count];
+            for (int i = 0; i < listBox1.SelectedItems.Count; i++) selectedObjs[i] = listBox1.SelectedIndices[i];
+            if (reverse) return selectedObjs.Reverse().ToArray();
+            else return selectedObjs;
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -118,14 +149,14 @@ namespace The4Dimension.FormEditors
                 return;
             }
             CCNT.Add(textBox1.Text, textBox2.Text);
-            listBox1.Items.Add(textBox1.Text);
+            updateListbox();
             textBox1.Text = "";
             textBox2.Text = "";
         }
 
         private void FrmCCNTEdit_Load(object sender, EventArgs e)
         {
-
+            //TestCCNTEdit + add multi file stuff
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -162,8 +193,21 @@ namespace The4Dimension.FormEditors
                 if (!CCNT.ContainsKey(k))
                 {
                     CCNT.Add(k, CCNT2[k]);
-                    listBox1.Items.Add(k);
                 }
+            }
+            updateListbox();
+            MessageBox.Show("Done");
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sav = new SaveFileDialog();
+            sav.Filter = "Xml file|*.xml";
+            if (sav.ShowDialog() == DialogResult.OK)
+            {
+                Dictionary<string, string> NewCCNT = new Dictionary<string, string>();
+                foreach (int i in GetSelectedObjs(false)) NewCCNT.Add(listBox1.Items[i].ToString(), CCNT[listBox1.Items[i].ToString()]);
+                File.WriteAllText(sav.FileName, MakeXML(ref NewCCNT), Form1.DefEnc);
             }
         }
     }
