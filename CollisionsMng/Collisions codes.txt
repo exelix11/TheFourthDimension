@@ -22,8 +22,8 @@ SoundType:
 10: water
 11: water
 12: sand
-13: wet thing ?
+13: Grass ?
 14: solid ground
 15: thin wood
-16: thicker snow
+16: Snow
 19: water with graphical splashes

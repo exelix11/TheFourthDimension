@@ -190,6 +190,7 @@ namespace The4Dimension
             else if (Path.GetExtension(FilePath).ToLower() == ".szs")
             {
                 SetUiLock(true, true);
+                OtherLevelDataMenu.DropDownItems.Clear();
                 SzsFiles = new Dictionary<string, byte[]>();
                 CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
                 NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
