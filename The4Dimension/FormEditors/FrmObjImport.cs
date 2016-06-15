@@ -83,6 +83,7 @@ namespace The4Dimension.FormEditors
                 render.addModel(Name, "Model", new System.Windows.Media.Media3D.Vector3D(0, 0, 0), new System.Windows.Media.Media3D.Vector3D(1, 1, 1), 0, 0, 0);
                 textBox1.Text = mod.Data.Models[0].Name;
                 textBox1.Enabled = false;
+                render.SetSortFrequency(0);
             }
             else
             {
@@ -93,6 +94,7 @@ namespace The4Dimension.FormEditors
 
         private void f_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (ObjModelPath == "") return;
             render.RemoveModel("Model", 0);
             render.Clean();
             elementHost1.Dispose();

@@ -38,24 +38,34 @@ arg[2]= max y
 KoopaFirstGear*:
 arg[1] = speed, if > 0 it goes counterclockwise
 
+Pukupuku (Cheep Cheep):
+No args, needs a rail
+
+Dokan (pipe):
+GenerateChildren:
+A DokanOutOnly object in the place where mario should appear.
+Args can control if camera moves to the DokanOutOnly or just appears there ?
+
+PoleGoal:
+arg[0] = if 0 the smb level completed theme plays
+
 NoteGenerator:
+Found inside game data:
+arg[0] = 20 ?
+arg[2] = 210 ?
+arg[3]:
+probably the index of the sounds that can be played by the notes
 - Kind: NoteObj
-          Label: SsNoteObjTest
-
-        - Kind: UnderGround
-          Label: SS_NOTE_OBJ_CHIKA
-
-        - Kind: UnderSea
-          Label: SS_NOTE_OBJ_SEA
-
-        - Kind: MarioWorld
-          Label: SS_NOTE_OBJ_MWORLD
-
-        - Kind: Athletic
-          Label: SS_NOTE_OBJ_M3INTRO
-
-        - Kind: MarioWorldShort
-          Label: SS_NOTE_OBJ_MWORLD2
-
-        - Kind: MusicalScale
-          Label: SsNoteObjTest
+  Label: SsNoteObjTest
+- Kind: UnderGround
+  Label: SS_NOTE_OBJ_CHIKA
+- Kind: UnderSea
+  Label: SS_NOTE_OBJ_SEA
+- Kind: MarioWorld
+  Label: SS_NOTE_OBJ_MWORLD
+- Kind: Athletic
+  Label: SS_NOTE_OBJ_M3INTRO : 3 
+- Kind: MarioWorldShort
+  Label: SS_NOTE_OBJ_MWORLD2 : 4
+- Kind: MusicalScale
+  Label: SsNoteObjTest

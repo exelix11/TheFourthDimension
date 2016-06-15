@@ -23,7 +23,10 @@ namespace The4Dimension.Ohana
 
             RenderBase.OModel mdl = model.model[modelIndex];
             output.AppendLine("mtllib " + Path.GetFileNameWithoutExtension(fileName) + ".mtl");
-            for (int i = 0; i < model.texture.Count; i++) model.texture[i].texture.Save(@"models\Tex\" + model.texture[i].name + ".png");
+            for (int i = 0; i < model.texture.Count; i++)
+            {                
+                model.texture[i].texture.Save(@"models\Tex\" + model.texture[i].name + ".png");
+            }
             int faceIndexBase = 1;
             for (int objIndex = 0; objIndex < mdl.mesh.Count; objIndex++)
             {
@@ -72,7 +75,7 @@ namespace The4Dimension.Ohana
                             mat.materialColor.diffuse.B.ToString()));
                     outputMTL.AppendLine("Ks 0 0 0");
                     outputMTL.AppendLine("d 1");
-                    outputMTL.AppendLine("map_Kd " + @"Tex\" + mat.name0 + ".png");
+                    if (mat.name0 == null) outputMTL.AppendLine("map_Kd " + @"Tex\dummy.png"); else outputMTL.AppendLine("map_Kd " + @"Tex\" + mat.name0 + ".png");
                 }
             }
             File.WriteAllText(fileName, output.ToString());

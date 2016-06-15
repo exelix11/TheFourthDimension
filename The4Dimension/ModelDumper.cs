@@ -84,8 +84,7 @@ namespace The4Dimension
                             }
                             catch
                             {
-
-                            }
+                                Debug.Print(@"\models\" + file.FileName.Remove(file.FileName.Length - 6, 6) + ".obj");                            }
                         }
                     }
                 }
@@ -137,6 +136,10 @@ namespace The4Dimension
             {
                 if (File.Exists(@"models\Tex\" + s)) RemoveTextureAlpha(@"models\Tex\" + s);
             }
+            Bitmap dummy = new Bitmap(10, 10);
+            Graphics g = Graphics.FromImage(dummy);
+            g.Clear(Color.White);
+            dummy.Save(@"models\Tex\dummy.png");
             MessageBox.Show("Done !");
             this.Close();
         }
