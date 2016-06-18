@@ -92,6 +92,7 @@
             this.Name = "FrmStringInput";
             this.Text = "Add object type";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.FrmStringInput_Load);
             this.ResumeLayout(false);
 
         }

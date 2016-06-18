@@ -51,7 +51,7 @@ namespace The4Dimension.FormEditors
                 }
                 else
                 {
-                    MessageBox.Show("You can convert the model to bcmdl with the leaked nw4c toolkit");
+                    MessageBox.Show("You can convert the model to bcmdl with the leaked tools");
                     this.Close();
                 }
             }

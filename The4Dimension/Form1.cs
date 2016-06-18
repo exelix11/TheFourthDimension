@@ -25,9 +25,9 @@ namespace The4Dimension
         string LoadedFile = "";
 
         public Form1(string FileLoad = "")
-        {        
+        {
             InitializeComponent();
-            #region StageList
+            #region StageList 
             string[] lines = Properties.Resources.AllStageList.Split(Environment.NewLine[0]);
             int nextIndex = -1;
             for (int i = 1; i < 3; i++)
@@ -82,7 +82,7 @@ namespace The4Dimension
         Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
         public List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
-        Dictionary<string, string> ModelResolver = new Dictionary<string, string>(); //Converts names like BlockBrickCoins to BlockBrick.obj
+        Dictionary<string, string> ModelResolver = new Dictionary<string, string>(); //Converts names like BlockBrickCoins to BlockBrick.obj, will be replaced with an object database
         public Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
         public CustomStack<UndoAction> Undo = new CustomStack<UndoAction>();
         public static List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
@@ -94,7 +94,7 @@ namespace The4Dimension
             {
                 if (MessageBox.Show("You must convert every model from the game before you can use the editor, convert now ? (you need to have the extracted ROMFS of the game on your pc)", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    MessageBox.Show("Select the ROMFS folder (This folder should contain ObjectData, SystemData, StageData, etc...)\r\nKeep this folder in the same path, from there will be loaded some files needed for editing the levels and the bgm data.\r\nThe content of the folder won't be edited");
+                    MessageBox.Show("Select the ROMFS folder (This folder should contain ObjectData, SystemData, StageData, etc...)\r\nKeep this folder in the same path, from there will be loaded the levels, some files needed for editing the levels and the bgm.\r\nThe content of the folder won't be modified unless you save edited levels there");
                     ModelDumper dlg = new ModelDumper();
                     dlg.ShowDialog();
                     if (!Directory.Exists("models")) Application.Exit();
@@ -179,16 +179,19 @@ namespace The4Dimension
         {
             if (Path.GetExtension(FilePath).ToLower() == ".xml")
             {
+                LoadedFile = FilePath;
                 SetUiLock(false, true);
                 OpenFile(File.ReadAllText(FilePath, DefEnc));
             }
             else if (Path.GetExtension(FilePath).ToLower() == ".byml")
             {
+                LoadedFile = FilePath;
                 SetUiLock(false, true);
                 OpenFile(BymlConverter.GetXml(FilePath));
             }
             else if (Path.GetExtension(FilePath).ToLower() == ".szs")
             {
+                LoadedFile = FilePath;
                 SetUiLock(true, true);
                 OtherLevelDataMenu.DropDownItems.Clear();
                 SzsFiles = new Dictionary<string, byte[]>();
@@ -487,7 +490,8 @@ namespace The4Dimension
                 XmlNode xNode = xml[i];
                 if (xNode.NodeType == XmlNodeType.Element)
                 {
-                    if (xNode.Attributes["Name"].Value.StartsWith("Arg")) Args.Add(Int32.Parse(xNode.Attributes["StringValue"].Value)); else
+                    if (xNode.Attributes["Name"].Value.StartsWith("Arg")) Args.Add(Int32.Parse(xNode.Attributes["StringValue"].Value));
+                    else
                     {
                         if (xNode.Name == "C1")
                         {
@@ -572,7 +576,7 @@ namespace The4Dimension
                     checkBox2.Visible = false;
                     for (int i = 0; i < AllRailInfos.Count; i++) ObjectsListBox.Items.Add(AllRailInfos[i].ToString());
                 }
-                ObjectsListBox.SelectionMode = SelectionMode.One;                
+                ObjectsListBox.SelectionMode = SelectionMode.One;
                 return;
             }
             else
@@ -848,6 +852,15 @@ namespace The4Dimension
             c.ShowDialog();
         }
 
+        private void tipsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("- To quickly add children to an object, paste other objects inside that object\r\n" +
+                "- To paste an object to the list right click on the list to delesect every object and paste the object\r\n" +
+                "- To quickly make rails, add some non-exsisting objects (like a random name) they will be showed as blue cubes, place them in the positions of the points of the rail, copy their position, you can have up to 10 items in the clipboard, add a new rail and paste the positions in the points\r\n" +
+                "- Objects with rails need a copy of the rail in the object itself, every time you edit the rail you must copy and paste it inside the object\r\n" + 
+                "- To set the camera angle, add a @CameraPositionHelper and use it to get the right angle (every object starting with @ will be deleted before saving)");
+        }
+
         private void hotkeysListToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Hotkeys list:\r\n" +
@@ -861,7 +874,7 @@ namespace The4Dimension
                 "In the 3D view:\r\n" +
                 " Ctrl + drag : Move object\r\n" +
                 " Ctrl + Alt + drag : Move object snapping every 100 units\r\n" +
-                " -Every other combination without having to press Ctrl");
+                " -Every other combination without having to press Ctrl\r\n");
         }
 
         private void Undo_loading(object sender, EventArgs e)
@@ -944,6 +957,7 @@ namespace The4Dimension
         {
             FormEditors.FrmCCNTEdit f = new FormEditors.FrmCCNTEdit(CreatorClassNameTable, this);
             f.ShowDialog();
+            LoadCreatorClassNameTable();
         }
 
         private void changeToolStripMenuItem_Click_1(object sender, EventArgs e)
@@ -1137,8 +1151,9 @@ namespace The4Dimension
 
         public void C0ListChanged(C0List OldList, int Hash)
         {
-            if (((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).GetHashCode() != Hash) return; //every time a FrmC0ListEdit form is closed triggers this, even for C0Lists inside an object from another C0List
-            if (checkBox2.Checked && propertyGrid1.SelectedGridItem.Label == "GenerateChildren") AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
+            string lbl = propertyGrid1.SelectedGridItem.Label;
+            if (((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop[lbl]).GetHashCode() != Hash) return; //every time a FrmC0ListEdit form is closed triggers this, even for C0Lists inside an object from another C0List
+            if (checkBox2.Checked && lbl == "GenerateChildren") AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
             Action<string, int, string, object> act;
             act = (string type, int id, string propName, object value) =>
             {
@@ -1146,7 +1161,7 @@ namespace The4Dimension
                 propertyGrid1.Refresh();
                 if (checkBox2.Checked && propName == "GenerateChildren") AddChildrenModels((C0List)AllInfos[type].Objs[id].Prop["GenerateChildren"]);
             };
-            Undo.Push(new UndoAction("Changed " + propertyGrid1.SelectedGridItem.Label + " of object: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, propertyGrid1.SelectedGridItem.Label, OldList, act));
+            Undo.Push(new UndoAction("Changed " + lbl + " of object: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, lbl, OldList, act));
         }
 
         public void UpdateOBJPos(int id, ref List<LevelObj> Source, string Type)
@@ -1283,7 +1298,7 @@ namespace The4Dimension
             higestID["AllRailInfos"]++;
             r.l_id = higestID["AllRailInfos"];
             LoadRailsModels(r, at);
-            if (at == -1) AllRailInfos.Add(r); else AllRailInfos.Insert(at, r);            
+            if (at == -1) AllRailInfos.Add(r); else AllRailInfos.Insert(at, r);
             if (at == -1) ObjectsListBox.Items.Add(r.ToString()); else ObjectsListBox.Items.Insert(at, r.ToString());
             ObjectsListBox.SetSelected(at == -1 ? ObjectsListBox.Items.Count - 1 : at, true);
             if (!IsUndo)
@@ -1344,7 +1359,7 @@ namespace The4Dimension
         }
 
         private void pasteValueToolStripMenuItem_Click(object sender, EventArgs e)
-        {            
+        {
             if (ObjectsListBox.SelectedIndex < 0)
             {
                 if (clipboard[clipboard.Count - 1].Type != ClipBoardItem.ClipboardType.FullObject) return;
@@ -1358,7 +1373,7 @@ namespace The4Dimension
         {
             if (ObjectsListBox.SelectedItems.Count == 0) return new int[] { -1 };
             int[] res = new int[ObjectsListBox.SelectedItems.Count];
-            for (int i = 0; i < ObjectsListBox.SelectedItems.Count;i ++) res[i] = ObjectsListBox.SelectedIndices[i];
+            for (int i = 0; i < ObjectsListBox.SelectedItems.Count; i++) res[i] = ObjectsListBox.SelectedIndices[i];
             return res.Reverse().ToArray(); //From the last to the first
         }
 
@@ -1522,7 +1537,7 @@ namespace The4Dimension
                 }
                 Items.Reverse();
                 ClipBoardMenu_Paste.DropDownItems.AddRange(Items.ToArray());
-            }           
+            }
         }
 
         private void QuickClipboardItem_Click(object sender, EventArgs e)
@@ -1619,9 +1634,12 @@ namespace The4Dimension
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.ObjectArray)
             {
-                if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
-                foreach (LevelObj o in itm.Objs) ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(o.Clone());
-
+                if (index < 0 || propertyGrid1.SelectedObject == null) foreach (LevelObj o in itm.Objs) AddObj(o, ref AllInfos[type].Objs, type, true);
+                else
+                {
+                    if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
+                    foreach (LevelObj o in itm.Objs) ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(o.Clone());
+                }
             }
             propertyGrid1.Refresh();
             if (index >= 0) UpdateOBJPos(index, ref AllInfos[type].Objs, comboBox1.Text);
@@ -1685,7 +1703,7 @@ namespace The4Dimension
             if (HitsIndexes.Count == 0) { MessageBox.Show("Not found"); return; }
             else
             {
-                FormEditors.FrmSearchResults f = new FormEditors.FrmSearchResults(Type, HitsNames, HitsIndexes,this);
+                FormEditors.FrmSearchResults f = new FormEditors.FrmSearchResults(Type, HitsNames, HitsIndexes, this);
                 f.Text = "Search Results for: " + PropertyName + " = " + Value.ToString() + "  in " + Type;
                 f.Show();
             }
@@ -1703,6 +1721,7 @@ namespace The4Dimension
         private void saveAsBymlToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sav = new SaveFileDialog();
+            sav.FileName = Path.GetFileNameWithoutExtension(LoadedFile);
             sav.Filter = "Szs file|*.Szs";
             if (sav.ShowDialog() == DialogResult.OK)
             {
@@ -1727,6 +1746,7 @@ namespace The4Dimension
         private void saveAsXmlToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sav = new SaveFileDialog();
+            sav.FileName = Path.GetFileNameWithoutExtension(LoadedFile);
             sav.Filter = "Xml file|*.xml";
             if (sav.ShowDialog() == DialogResult.OK)
             {
@@ -1738,6 +1758,7 @@ namespace The4Dimension
         private void saveAsBymlToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             SaveFileDialog sav = new SaveFileDialog();
+            sav.FileName = Path.GetFileNameWithoutExtension(LoadedFile);
             sav.Filter = "Byml file|*.byml";
             if (sav.ShowDialog() == DialogResult.OK)
             {
@@ -1788,7 +1809,7 @@ namespace The4Dimension
                     xr.Close();
                 }
 
-               return (DefEnc.GetString(stream.ToArray()));
+                return (DefEnc.GetString(stream.ToArray()));
             }
         }
 
@@ -1796,7 +1817,7 @@ namespace The4Dimension
         {
             //string[] LayerNames = new string[5] { "共通", "共通サブ", "シナリオ1", "シナリオ1＆2", "シナリオ1＆3" }; //PlaceHolders
             List<string> LayerNames = new List<string>();
-            Dictionary<string,Dictionary<string,List<LevelObj>>> _AllInfos = new Dictionary<string, Dictionary<string, List<LevelObj>>>();
+            Dictionary<string, Dictionary<string, List<LevelObj>>> _AllInfos = new Dictionary<string, Dictionary<string, List<LevelObj>>>();
             List<string> keys = AllInfos.Keys.ToList();
             keys.Sort(StringComparer.Ordinal);
             foreach (string k in keys)
@@ -1822,7 +1843,7 @@ namespace The4Dimension
                 xr.WriteAttributeString("StringValue", GetEnglishName(LayerNames[i]));
                 xr.WriteEndElement();
                 xr.WriteEndElement();
-            }            
+            }
         }
 
         string GetEnglishName(string Name)
@@ -1831,8 +1852,8 @@ namespace The4Dimension
             else if (Name == "共通サブ") return "CommonSub";
             else if (Name.StartsWith("シナリオ"))
             {
-                if (Name.Length == "シナリオ1".Length) return "Scenario" + Name.Substring("シナリオ".Length, 1); 
-                else return "Scenario" + Name.Substring("シナリオ".Length , 1) + "And" + Name.Substring("シナリオ1＆".Length , 1);
+                if (Name.Length == "シナリオ1".Length) return "Scenario" + Name.Substring("シナリオ".Length, 1);
+                else return "Scenario" + Name.Substring("シナリオ".Length, 1) + "And" + Name.Substring("シナリオ1＆".Length, 1);
             }
             else throw new Exception("Unsupported name !");
         }
@@ -1849,7 +1870,7 @@ namespace The4Dimension
             if (AllLayerNames.Count > 5) throw new Exception("Too many layer names !");
         }
 
-        void WriteOBJInfoSection(XmlWriter xr,string name, List<LevelObj> list, string startelement = "C0")
+        void WriteOBJInfoSection(XmlWriter xr, string name, List<LevelObj> list, string startelement = "C0")
         {
             xr.WriteStartElement(startelement);
             xr.WriteAttributeString("Name", name);
@@ -1974,7 +1995,7 @@ namespace The4Dimension
             for (int i = 0; i < p._X.Count; i++)
             {
                 xr.WriteStartElement("D2");
-                xr.WriteAttributeString("Name", "pnt" + i.ToString()+"_x");
+                xr.WriteAttributeString("Name", "pnt" + i.ToString() + "_x");
                 xr.WriteAttributeString("StringValue", p._X[i].ToString());
                 xr.WriteEndElement();
                 xr.WriteStartElement("D2");
@@ -1995,5 +2016,6 @@ namespace The4Dimension
         {
             new FormEditors.FrmObjImport().ShowDialog();
         }
+
     }
 }

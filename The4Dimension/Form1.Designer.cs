@@ -56,6 +56,7 @@
             this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creatorClassNameTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stagesBgmEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modelImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.gameROMFSPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,7 +93,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.modelImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -328,6 +329,13 @@
             this.stagesBgmEditorToolStripMenuItem.Text = "Change stages BGM";
             this.stagesBgmEditorToolStripMenuItem.Click += new System.EventHandler(this.stagesBgmEditorToolStripMenuItem_Click);
             // 
+            // modelImporterToolStripMenuItem
+            // 
+            this.modelImporterToolStripMenuItem.Name = "modelImporterToolStripMenuItem";
+            this.modelImporterToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.modelImporterToolStripMenuItem.Text = "Model importer";
+            this.modelImporterToolStripMenuItem.Click += new System.EventHandler(this.modelImporterToolStripMenuItem_Click);
+            // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
@@ -452,6 +460,7 @@
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hotkeysListToolStripMenuItem,
+            this.tipsToolStripMenuItem,
             this.gbatempThreadToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
@@ -684,12 +693,12 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // modelImporterToolStripMenuItem
+            // tipsToolStripMenuItem
             // 
-            this.modelImporterToolStripMenuItem.Name = "modelImporterToolStripMenuItem";
-            this.modelImporterToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.modelImporterToolStripMenuItem.Text = "Model importer";
-            this.modelImporterToolStripMenuItem.Click += new System.EventHandler(this.modelImporterToolStripMenuItem_Click);
+            this.tipsToolStripMenuItem.Name = "tipsToolStripMenuItem";
+            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.tipsToolStripMenuItem.Text = "Tips";
+            this.tipsToolStripMenuItem.Click += new System.EventHandler(this.tipsToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -785,6 +794,7 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Button Btn_CopyObjs;
         private System.Windows.Forms.ToolStripMenuItem modelImporterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tipsToolStripMenuItem;
     }
 }
 

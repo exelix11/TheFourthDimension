@@ -30,5 +30,10 @@ namespace The4Dimension.FormEditors
             Result = comboBox1.Text;
             this.Close();
         }
+
+        private void FrmStringInput_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
