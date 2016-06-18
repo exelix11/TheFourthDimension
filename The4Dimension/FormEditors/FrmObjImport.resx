@@ -121,6 +121,8 @@
     <value>Notes:
 the object (and the file) will have the same name as the model.
 
+If the model disappears in game, use a higher value for clipping radius
+
 The game has a size limit on models, if the game crashes try to reduce the model size by using smaller textures
 
 Don't directly import models from other games, remember 3ds hardware limitations

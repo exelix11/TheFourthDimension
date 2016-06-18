@@ -57,7 +57,7 @@ namespace The4Dimension.FormEditors
             Value.List[listBox1.SelectedIndex] = f.Value;
             listBox1.Items[listBox1.SelectedIndex] = f.Value.ToString();
             List<LevelObj> tmp = Value.List;
-            owner.UpdateOBJPos(listBox1.SelectedIndex, ref tmp, "TmpChildrenObjs");
+            if (owner.propertyGrid1.SelectedGridItem.Label == "GenerateChildren") owner.UpdateOBJPos(listBox1.SelectedIndex, ref tmp, "TmpChildrenObjs");
         }
 
         private void Form_Closing(object sender, FormClosingEventArgs e)

@@ -52,7 +52,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.elementHost1.Location = new System.Drawing.Point(202, 1);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(502, 531);
+            this.elementHost1.Size = new System.Drawing.Size(502, 563);
             this.elementHost1.TabIndex = 0;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
@@ -60,7 +60,7 @@
             // button1
             // 
             this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button1.Location = new System.Drawing.Point(4, 505);
+            this.button1.Location = new System.Drawing.Point(4, 537);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(192, 23);
             this.button1.TabIndex = 1;
@@ -178,7 +178,7 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.Location = new System.Drawing.Point(1, 197);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(195, 305);
+            this.label6.Size = new System.Drawing.Size(195, 337);
             this.label6.TabIndex = 13;
             this.label6.Text = resources.GetString("label6.Text");
             // 
@@ -186,7 +186,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(706, 532);
+            this.ClientSize = new System.Drawing.Size(706, 564);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
