@@ -151,6 +151,30 @@ namespace The4Dimension.Properties {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a @echo off
+        ///Title CCNT patcher
+        ///cls
+        ///echo This will add the object entries to the CreatorClassNameTable.szs file.
+        ///echo You should make a backup of this file.
+        ///echo Press enter to continue
+        ///pause &gt;nul
+        ///Start /W Patcher.exe CCNTpatch Done, you are ready to go !
+        ///del 3DS.dll
+        ///del CCNTpatch.xml
+        ///del CommonCompressors.dll
+        ///del CommonFiles.dll
+        ///del LibEveryFileExplorer.dll
+        ///del NDS.dll
+        ///del Patcher.exe
+        ///del &quot;Patch script.bat&quot;.
+        /// </summary>
+        internal static string PatchScript {
+            get {
+                return ResourceManager.GetString("PatchScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
         ///&lt;Root&gt;
         ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;

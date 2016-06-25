@@ -75,7 +75,10 @@
             this.objectByRailNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectsDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Btn_CopyObjs = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -90,10 +93,11 @@
             this.Btn_AddObj = new System.Windows.Forms.Button();
             this.btn_delObj = new System.Windows.Forms.Button();
             this.Btn_Duplicate = new System.Windows.Forms.Button();
+            this.lblDescription = new System.Windows.Forms.Label();
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.tipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -109,9 +113,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.propertyGrid1.ContextMenuStrip = this.ClipBoardMenu;
+            this.propertyGrid1.HelpVisible = false;
             this.propertyGrid1.Location = new System.Drawing.Point(4, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(230, 252);
+            this.propertyGrid1.Size = new System.Drawing.Size(234, 201);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridChange);
             // 
@@ -461,7 +466,10 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hotkeysListToolStripMenuItem,
             this.tipsToolStripMenuItem,
-            this.gbatempThreadToolStripMenuItem});
+            this.toolStripSeparator4,
+            this.gbatempThreadToolStripMenuItem,
+            this.toolStripSeparator6,
+            this.objectsDatabaseToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -469,16 +477,35 @@
             // hotkeysListToolStripMenuItem
             // 
             this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
-            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
             this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
+            // 
+            // tipsToolStripMenuItem
+            // 
+            this.tipsToolStripMenuItem.Name = "tipsToolStripMenuItem";
+            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.tipsToolStripMenuItem.Text = "Tips";
+            this.tipsToolStripMenuItem.Click += new System.EventHandler(this.tipsToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(161, 6);
             // 
             // gbatempThreadToolStripMenuItem
             // 
             this.gbatempThreadToolStripMenuItem.Name = "gbatempThreadToolStripMenuItem";
-            this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
+            this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.gbatempThreadToolStripMenuItem.Text = "Gbatemp thread";
             this.gbatempThreadToolStripMenuItem.Click += new System.EventHandler(this.gbatempThreadToolStripMenuItem_Click);
+            // 
+            // objectsDatabaseToolStripMenuItem
+            // 
+            this.objectsDatabaseToolStripMenuItem.Name = "objectsDatabaseToolStripMenuItem";
+            this.objectsDatabaseToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.objectsDatabaseToolStripMenuItem.Text = "Objects database editor";
+            this.objectsDatabaseToolStripMenuItem.Click += new System.EventHandler(this.objectsDatabaseToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -507,6 +534,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel2.Controls.Add(this.lblDescription);
             this.splitContainer1.Panel2.Controls.Add(this.button5);
             this.splitContainer1.Panel2.Controls.Add(this.button4);
             this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
@@ -659,14 +687,25 @@
             this.Btn_Duplicate.UseVisualStyleBackColor = true;
             this.Btn_Duplicate.Click += new System.EventHandler(this.button2_Click);
             // 
+            // lblDescription
+            // 
+            this.lblDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblDescription.Location = new System.Drawing.Point(3, 207);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(235, 49);
+            this.lblDescription.TabIndex = 9;
+            this.lblDescription.Tag = "-1";
+            this.lblDescription.Text = "No object selected";
+            this.lblDescription.Click += new System.EventHandler(this.lblDescription_Click);
+            // 
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(163, 259);
+            this.button5.Location = new System.Drawing.Point(84, 259);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.Size = new System.Drawing.Size(152, 23);
             this.button5.TabIndex = 2;
-            this.button5.Text = "-";
+            this.button5.Text = "Remove selected property";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
@@ -677,7 +716,7 @@
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 1;
-            this.button4.Text = "+";
+            this.button4.Text = "Add property";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -693,12 +732,10 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // tipsToolStripMenuItem
+            // toolStripSeparator6
             // 
-            this.tipsToolStripMenuItem.Name = "tipsToolStripMenuItem";
-            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.tipsToolStripMenuItem.Text = "Tips";
-            this.tipsToolStripMenuItem.Click += new System.EventHandler(this.tipsToolStripMenuItem_Click);
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(195, 6);
             // 
             // Form1
             // 
@@ -795,6 +832,10 @@
         private System.Windows.Forms.Button Btn_CopyObjs;
         private System.Windows.Forms.ToolStripMenuItem modelImporterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tipsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.Label lblDescription;
+        private System.Windows.Forms.ToolStripMenuItem objectsDatabaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
     }
 }
 

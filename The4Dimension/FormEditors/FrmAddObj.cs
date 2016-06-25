@@ -14,35 +14,50 @@ namespace The4Dimension
     {
         public LevelObj Value { get; set; }
         string LayerName;
-        public FrmAddObj(Dictionary<string,string> CCNT, string text)
+        string[] CCNT;
+        string[] ObjDb;
+
+        public FrmAddObj(string[] _CCNT, string[] _ObjDb, string text)
         {
             InitializeComponent();
             LayerName = text;
-            if (LayerName == "StartInfo") { comboBox1.Text = "Mario"; comboBox1.Enabled = false; }
+            CCNT = _CCNT;
+            ObjDb = _ObjDb;
+        }
+
+        void LoadObjList(string[] array)
+        {
+            comboBox1.Items.Clear();
+            if (LayerName == "StartInfo")
+            {
+                comboBox1.Text = "Mario";
+                comboBox1.Enabled = false;
+                checkBox1.Enabled = false;
+            }
             else if (LayerName == "AreaObjInfo")
             {
-                foreach (string s in CCNT.Keys.ToArray())
+                foreach (string s in array)
                 {
                     if (s.ToLower().EndsWith("area") && !s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
                 }
             }
             else if (LayerName == "CameraAreaInfo")
             {
-                foreach (string s in CCNT.Keys.ToArray())
+                foreach (string s in array)
                     if (s.ToLower().EndsWith("area") && s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
             }
             else if (LayerName == "ObjInfo")
             {
                 comboBox1.Items.Add("@CameraPositionHelper");
-                foreach (string s in CCNT.Keys.ToArray())
+                foreach (string s in array)
                     if (!s.ToLower().EndsWith("area")) comboBox1.Items.Add(s);
             }
             else if (LayerName == "StartEventObjInfo")
             {
-                foreach (string s in CCNT.Keys.ToArray())
+                foreach (string s in array)
                     if (s.ToLower().StartsWith("startevent")) comboBox1.Items.Add(s);
             }
-            else comboBox1.Items.AddRange(CCNT.Keys.ToArray());
+            else comboBox1.Items.AddRange(array);
             Value = null;
         }
 
@@ -86,7 +101,18 @@ namespace The4Dimension
 
         private void FrmAddObj_Load(object sender, EventArgs e)
         {
+            if (checkBox1.Enabled)
+            {
+                if (Properties.Settings.Default.OnlyKnwonObjs) checkBox1.Checked = true;
+                else LoadObjList(CCNT);
+            }
+        }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadObjList(checkBox1.Checked ? ObjDb : CCNT);
+            Properties.Settings.Default.OnlyKnwonObjs = checkBox1.Checked;
+            Properties.Settings.Default.Save();
         }
     }
 }

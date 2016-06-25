@@ -35,7 +35,10 @@ namespace The4Dimension
                     else Application.Run(new Form1(Args[0].Trim()));
                 }
             }
-            else Application.Run(new Form1());
+            else
+            {
+                    Application.Run(new Form1());                
+            }
         }
 
         static void PatchCCNT(string[] Args)

@@ -28,9 +28,10 @@ namespace ModelViewer
         public UserControl1()
         {
             InitializeComponent();
-            ModelViewer.SortingFrequency = 0.6;
+            ModelViewer.SortingFrequency = 0.5;
             ModelView.Children.Add(ModelViewer);
             AddKey("TmpChildrenObjs");
+            AddKey("SelectedRail");
         }
 
         public void Clean()
@@ -43,7 +44,7 @@ namespace ModelViewer
         }
 
         public void SetSortFrequency(double t)
-        {        
+        {
             ModelViewer.SortingFrequency = t;
         }
 
@@ -72,12 +73,28 @@ namespace ModelViewer
             string Type = "AllRailInfos";
             LinesVisual3D l = new LinesVisual3D();
             if (at == -1) Models[Type].Add(l); else Models[Type].Insert(at, l);
-            if (at == -1) Positions[Type].Add(PointToVec(Points[0])); else Positions[Type].Insert(at, PointToVec(Points[0]));
+            if (at == -1) Positions[Type].Add(Points[0].ToVector3D()); else Positions[Type].Insert(at, Points[0].ToVector3D());
             if (at == -1) ModelViewer.Children.Add(Models[Type][Models[Type].Count - 1]); else ModelViewer.Children.Insert(at, Models[Type][at]);
             if (Points.Length < 2) return;
             l.Color = Color.FromRgb(255, 0, 0);
             l.Thickness = Thickness;
             AddRailpoints(l, Points, Thickness);
+        }
+
+        public void SelectRail(Point3D[] Points)
+        {
+            UnselectRail(); 
+            foreach (Point3D p in Points)
+            {
+                addModel(@"models\UnkRed.obj", "SelectedRail", p.ToVector3D(), new Vector3D(.5f, .5f, .5f), 0, 0, 0);
+            }
+        }
+
+        public void UnselectRail()
+        {
+            string type = "SelectedRail";
+            while (Models[type].Count != 0) RemoveModel(type, 0);
+            ModelView.UpdateLayout();
         }
 
         public void AddRailpoints(LinesVisual3D l, Point3D[] Points, int Thickness)
@@ -102,13 +119,8 @@ namespace ModelViewer
             RemoveRailPoints(((LinesVisual3D)Models["AllRailInfos"][id]));
             if (Points.Length < 2) return;
             AddRailpoints((LinesVisual3D)Models["AllRailInfos"][id], Points, 5);
-            Positions["AllRailInfos"][id] = PointToVec(Points[0]);
+            Positions["AllRailInfos"][id] = Points[0].ToVector3D();
             ModelView.UpdateLayout();
-        }
-
-        Vector3D PointToVec(Point3D input)
-        {
-            return new Vector3D(input.X, input.Y, input.Z);
         }
 
         public void addModel(string path, string Type, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ, int at = -1)

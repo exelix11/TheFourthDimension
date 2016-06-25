@@ -15,6 +15,7 @@ using System.Xml;
 using System.Windows.Input;
 using System.IO;
 using LibEveryFileExplorer.Files.SimpleFileSystem;
+using ExtensionMethods;
 
 namespace The4Dimension
 {
@@ -22,59 +23,73 @@ namespace The4Dimension
     {
         public UserControl1 render = new UserControl1();
         public Dictionary<string, string> LevelNameNum = new Dictionary<string, string>(); //WX-X, stageName
+        int APP_VER = Int32.Parse(Application.ProductVersion.Replace(".", ""));
         string LoadedFile = "";
+        bool IsFocus = true;
 
         public Form1(string FileLoad = "")
         {
-            InitializeComponent();
-            #region StageList 
-            string[] lines = Properties.Resources.AllStageList.Split(Environment.NewLine[0]);
-            int nextIndex = -1;
-            for (int i = 1; i < 3; i++)
+            try
             {
+                InitializeComponent();
+                #region StageList 
+                string[] lines = Properties.Resources.AllStageList.Split(Environment.NewLine[0]);
+                int nextIndex = -1;
+                for (int i = 1; i < 3; i++)
+                {
+                    for (int y = 1; y < 6; y++)
+                    {
+                        LevelNameNum.Add("W " + i.ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                    }
+                }
+                for (int i = 3; i < 8; i++)
+                {
+                    for (int y = 1; y < 7; y++)
+                    {
+                        LevelNameNum.Add("W " + i.ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                    }
+                }
+                for (int y = 1; y < 10; y++)
+                {
+                    LevelNameNum.Add("W 8-" + y.ToString(), lines[++nextIndex].Trim());
+                }
                 for (int y = 1; y < 6; y++)
                 {
-                    LevelNameNum.Add("W " + i.ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                    LevelNameNum.Add("W S1-" + y.ToString(), lines[++nextIndex].Trim());
                 }
-            }
-            for (int i = 3; i < 8; i++)
-            {
-                for (int y = 1; y < 7; y++)
+                for (int i = 10; i < 17; i++)
                 {
-                    LevelNameNum.Add("W " + i.ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                    for (int y = 1; y < 7; y++)
+                    {
+                        LevelNameNum.Add("W S" + (i - 8).ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                    }
                 }
-            }
-            for (int y = 1; y < 10; y++)
-            {
-                LevelNameNum.Add("W 8-" + y.ToString(), lines[++nextIndex].Trim());
-            }
-            for (int y = 1; y < 6; y++)
-            {
-                LevelNameNum.Add("W S1-" + y.ToString(), lines[++nextIndex].Trim());
-            }
-            for (int i = 10; i < 17; i++)
-            {
-                for (int y = 1; y < 7; y++)
+                LevelNameNum.Add("W S8-Championship", lines[++nextIndex].Trim());
+                #endregion
+
+                KeyPreview = true;
+                elementHost1.Child = render;
+                render.MouseLeftButtonDown += render_LeftClick;
+                render.MouseMove += render_MouseMove;
+                render.MouseLeftButtonDown += render_MouseLeftButtonDown;
+                render.MouseLeftButtonUp += render_MouseLeftButtonUp;
+                render.KeyDown += render_KeyDown;
+                render.KeyUp += render_KeyUP;
+
+                Focus();
+                if (FileLoad != "")
                 {
-                    LevelNameNum.Add("W S" + (i - 8).ToString() + "-" + y.ToString(), lines[++nextIndex].Trim());
+                    LoadedFile = FileLoad;
                 }
             }
-            LevelNameNum.Add("W S8-Championship", lines[++nextIndex].Trim());
-            #endregion
-
-            KeyPreview = true;
-            elementHost1.Child = render;
-            render.MouseLeftButtonDown += render_LeftClick;
-            render.MouseMove += render_MouseMove;
-            render.MouseLeftButtonDown += render_MouseLeftButtonDown;
-            render.MouseLeftButtonUp += render_MouseLeftButtonUp;
-            render.KeyDown += render_KeyDown;
-            render.KeyUp += render_KeyUP;
-
-            Focus();
-            if (FileLoad != "")
+            catch (Exception ex)
             {
-                LoadedFile = FileLoad;
+                string err = "There was an error in the application.\r\n" +
+                    "________________________________________\r\n" +
+                    ex.Message + "\r\n\r\n" + ex.StackTrace + "\r\n";
+                File.WriteAllText("Error.log", err);
+                MessageBox.Show("There was an error in the application:\r\n" +  ex.Message);
+                MessageBox.Show("A log of the error was saved in the same folder of this application.");
             }
         }
 
@@ -83,6 +98,8 @@ namespace The4Dimension
         public List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
         Dictionary<string, string> ModelResolver = new Dictionary<string, string>(); //Converts names like BlockBrickCoins to BlockBrick.obj, will be replaced with an object database
+        public DataSet ObjDatabase = new DataSet("ObjDB");
+        public List<string> ObjDatabaseNames = new List<string>(); //For quickly getting the right index in the database
         public Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
         public CustomStack<UndoAction> Undo = new CustomStack<UndoAction>();
         public static List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
@@ -102,7 +119,7 @@ namespace The4Dimension
                 }
                 else Application.Exit();
             }
-            LoadModelResolver();
+            LoadObjectDatabase();
             LoadCreatorClassNameTable();
             if (LoadedFile != "") LoadFile(LoadedFile);
             else SetUiLock(false, false);
@@ -242,16 +259,37 @@ namespace The4Dimension
             if (frm.XmlRes != null) SzsFiles[name] = BymlConverter.GetByml(frm.XmlRes);
         }
 
-        void LoadModelResolver()
+        public void LoadObjectDatabase()
         {
-            string[] Text = File.ReadAllLines(@"models\ModelResolver.inf");
-            if (Text[0] != "[ModelResolver]") return;
-            foreach (string Line in Text)
+            ObjDatabase.Clear();
+            ObjDatabaseNames.Clear();
+            if (!File.Exists(@"ObjectsDb.xml"))
             {
-                if (!Line.StartsWith(";") && !Line.StartsWith("["))
+                DataTable info = new DataTable("Infos");
+                info.Columns.Add("AppVer");
+                info.Rows.Add(APP_VER);
+                DataTable tb = new DataTable("Objects");
+                tb.Columns.Add("InGameName");
+                tb.Columns.Add("ModelName");
+                tb.Columns.Add("ShortDescription");
+                tb.Columns.Add("LongDescription");
+                tb.Columns.Add("Author");
+                ObjDatabase.Tables.Add(info);
+                ObjDatabase.Tables.Add(tb);
+                MessageBox.Show("The object database wasn't found, some objects may not appear, and you won't be able to get informations about how to use objects, you can download the database from ???");
+                return;
+            } else
+            {
+                XmlReader xml = XmlReader.Create(@"ObjectsDb.xml");
+                ObjDatabase.ReadXml(xml);
+                if (Int32.Parse(((string)ObjDatabase.Tables[0].Rows[0][0]).Replace(".", "")) > APP_VER)
                 {
-                    string[] Sections = Line.Split(';');
-                    ModelResolver.Add(Sections[0].Substring(0, Sections[0].Length - 1), Sections[1]);
+                    MessageBox.Show("This object database was made with a newer version of the editor, some data may not work in this version.\r\nYou should update your editor to the latest version");
+                }
+                for (int i = 0; i < ObjDatabase.Tables[1].Rows.Count; i++)
+                {
+                    string tmpName = (string)ObjDatabase.Tables[1].Rows[i][0];
+                    if (!tmpName.Contains("*")) ObjDatabaseNames.Add(tmpName);
                 }
             }
         }
@@ -401,9 +439,16 @@ namespace The4Dimension
 
         string GetModelname(string ObjName)
         {
-            foreach (string key in ModelResolver.Keys.ToArray())
+            foreach (DataRow row in ObjDatabase.Tables[1].Rows) //Using this and not find because find throws an exception if fails
             {
-                if (ObjName.StartsWith(key.ToLower())) return "models\\" + ModelResolver[key];
+                if (((string)row.ItemArray[0]).EndsWith("*"))
+                {
+                    string name = ((string)row.ItemArray[0]);
+                    name = name.Substring(0, name.Length - 1);
+                    if (ObjName.ToLower().StartsWith(name.ToLower())) return "models\\" + (string)row.ItemArray[1];
+                }
+                else
+                if (ObjName.Trim() != "" && ObjName.ToLower() == ((string)row.ItemArray[0]).ToLower()) return "models\\" + (string)row.ItemArray[1];
             }
             return "models\\" + ObjName + ".obj";
         }
@@ -602,6 +647,7 @@ namespace The4Dimension
             if ((ModifierKeys & Keys.Control) == Keys.Control || RenderIsDragging) return;
             object[] indexes = render.GetOBJ(sender, e); //indexes[0] string, [1] int
             if (indexes[0] == null) return; //this means indexes[0] = -1
+            if ((string)indexes[0] == "SelectedRail") return;
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
             ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = (int)indexes[1];
@@ -678,31 +724,63 @@ namespace The4Dimension
             }
         }
 
+        void UpdateRailpos(int id, Point3D[] Points)
+        {
+            render.UpdateRailpos(id, Points);
+            if (comboBox1.SelectedItem.ToString() == "AllRailInfos" && ObjectsListBox.SelectedIndex != -1) render.SelectRail(AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+        }
+
         private void render_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (Mouse.LeftButton != MouseButtonState.Pressed || (ModifierKeys & Keys.Control) != Keys.Control || !RenderIsDragging) { RenderIsDragging = false; return; }
             Vector3D NewPos = render.Drag(DraggingArgs, e, ((ModifierKeys & Keys.Alt) == Keys.Alt) ? true : false);
             if (NewPos == null) return;
-            ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue = NewPos.X.ToString();
-            ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue = NewPos.Z.ToString();
-            ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue = (-NewPos.Y).ToString();
-            UpdateOBJPos((int)DraggingArgs[1], ref AllInfos[(string)DraggingArgs[0]].Objs, (string)DraggingArgs[0]);
+            if ((string)DraggingArgs[0] == "SelectedRail")
+            {
+                AllRailInfos[ObjectsListBox.SelectedIndex].Points[(int)DraggingArgs[1]].X = (float)NewPos.X;
+                AllRailInfos[ObjectsListBox.SelectedIndex].Points[(int)DraggingArgs[1]].Y = (float)NewPos.Z;
+                AllRailInfos[ObjectsListBox.SelectedIndex].Points[(int)DraggingArgs[1]].Z = -(float)NewPos.Y;
+                UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+            }
+            else
+            {
+                ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue = NewPos.X.ToString();
+                ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue = NewPos.Z.ToString();
+                ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue = (-NewPos.Y).ToString();
+                UpdateOBJPos((int)DraggingArgs[1], ref AllInfos[(string)DraggingArgs[0]].Objs, (string)DraggingArgs[0]);
+            }
             DraggingArgs[2] = NewPos;
         }
 
         void endDragging()
         {
             if (DraggingArgs[0] == null || DraggingArgs[1] == null || DraggingArgs[2] == null) return;
-            Action<string, int, Vector3D> act;
-            act = (string type, int id, Vector3D pos) =>
+            if ((string)DraggingArgs[0] == "SelectedRail")
             {
-                ((Node)AllInfos[type].Objs[id].Prop["pos_x"]).StringValue = pos.X.ToString(); //These values were stored directly
-                ((Node)AllInfos[type].Objs[id].Prop["pos_y"]).StringValue = pos.Y.ToString();
-                ((Node)AllInfos[type].Objs[id].Prop["pos_z"]).StringValue = pos.Z.ToString();
-                UpdateOBJPos(id, ref AllInfos[type].Objs, type);
-                propertyGrid1.Refresh();
-            };
-            Undo.Push(new UndoAction("Moved object : " + AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].ToString(), (string)DraggingArgs[0], (int)DraggingArgs[1], StartPos, act));
+                Action<string, int, Vector3D> act;
+                act = (string type, int id, Vector3D pos) =>
+                {
+                    AllRailInfos[int.Parse(type)].Points[id].X = (float)pos.X;
+                    AllRailInfos[int.Parse(type)].Points[id].Y = (float)pos.Z;
+                    AllRailInfos[int.Parse(type)].Points[id].Z = -(float)pos.Y;
+                    UpdateRailpos(int.Parse(type), AllRailInfos[int.Parse(type)].GetPointArray());
+                    propertyGrid1.Refresh();
+                };
+                Undo.Push(new UndoAction("Moved "+ ObjectsListBox.SelectedItem.ToString() + "'s point["+ DraggingArgs[1].ToString() + "] : " , ObjectsListBox.SelectedIndex.ToString(), (int)DraggingArgs[1], StartPos, act));
+            }
+            else
+            {
+                Action<string, int, Vector3D> act;
+                act = (string type, int id, Vector3D pos) =>
+                {
+                    ((Node)AllInfos[type].Objs[id].Prop["pos_x"]).StringValue = pos.X.ToString(); //These values were stored directly
+                    ((Node)AllInfos[type].Objs[id].Prop["pos_y"]).StringValue = pos.Y.ToString();
+                    ((Node)AllInfos[type].Objs[id].Prop["pos_z"]).StringValue = pos.Z.ToString();
+                    UpdateOBJPos(id, ref AllInfos[type].Objs, type);
+                    propertyGrid1.Refresh();
+                };
+                Undo.Push(new UndoAction("Moved object : " + AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].ToString(), (string)DraggingArgs[0], (int)DraggingArgs[1], StartPos, act));
+            }
         }
 
         private void render_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -719,8 +797,17 @@ namespace The4Dimension
             RenderIsDragging = true;
             DraggingArgs = render.GetOBJ(sender, e);
             if (DraggingArgs[0] == null) { RenderIsDragging = false; return; }
-            comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
-            if (comboBox1.Text == "AllRailInfos") { RenderIsDragging = false; DraggingArgs = null; return; }
+            if ((string)DraggingArgs[0] == "SelectedRail")
+            {
+                /*
+                RenderIsDragging = false;
+                DraggingArgs = null;
+                return;
+                */
+                StartPos = AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray()[(int)DraggingArgs[1]].ToVect();
+                return;
+            }
+            comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);            
             ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
             StartPos = new Vector3D(float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
@@ -765,6 +852,9 @@ namespace The4Dimension
         {
             btn_cameraCode.Visible = false;
             render.CleanTmpObjects();
+            render.UnselectRail();
+            lblDescription.Text = "";
+            lblDescription.Tag = -1;
             if (ObjectsListBox.SelectedIndex < 0) return;
             if (ObjectsListBox.SelectedItems.Count > 1)
             {
@@ -779,6 +869,7 @@ namespace The4Dimension
                 Btn_CopyObjs.Visible = false;
                 Btn_Duplicate.Visible = true;
                 btn_delObj.Text = "Delete object";
+                UpdateHint();
             }
             if (comboBox1.Text == "AreaObjInfo")
             {
@@ -808,8 +899,9 @@ namespace The4Dimension
             else if (comboBox1.Text == "AllRailInfos")
             {
                 propertyGrid1.SelectedObject = AllRailInfos[ObjectsListBox.SelectedIndex];
-                render.UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
-                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+                UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+                render.SelectRail(AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);                
             }
             else
             {
@@ -819,6 +911,27 @@ namespace The4Dimension
                 {
                     AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
                 }
+            }
+        }
+
+        void UpdateHint()
+        {
+            if (comboBox1.Text == "AllRailInfos")
+            {
+                lblDescription.Text = "";
+                lblDescription.Tag = -1;
+                return;
+            }
+            int index = ObjDatabaseNames.IndexOf(ObjectsListBox.SelectedItem.ToString());
+            if (index == -1)
+            {
+                lblDescription.Text = "This object is not in the database";
+                lblDescription.Tag = -1;
+            }
+            else
+            {
+                lblDescription.Text = (string)ObjDatabase.Tables[1].Rows[index][2];
+                lblDescription.Tag = index;
             }
         }
 
@@ -1016,11 +1129,13 @@ namespace The4Dimension
 
         private void From_Activated(object sender, EventArgs e) //Resume sorting
         {
-            render.SetSortFrequency(0.6);
+            IsFocus = true;
+            render.SetSortFrequency(0.5);
         }
 
         private void Form_Deactivate(object sender, EventArgs e) //Stop sorting
         {
+            IsFocus = false;
             render.SetSortFrequency(0);
         }
 
@@ -1032,6 +1147,23 @@ namespace The4Dimension
                 ObjectsListBox.SelectedIndex = -1;
                 propertyGrid1.SelectedObject = null;
             }
+        }
+
+        private void modelImporterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormEditors.FrmObjImport().ShowDialog();
+        }
+
+        private void objectsDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ObjectDbEditor d = new ObjectDbEditor(ObjDatabase);
+            d.ShowDialog();
+            LoadObjectDatabase();
+        }
+
+        private void lblDescription_Click(object sender, EventArgs e)
+        {
+            if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjDatabase.Tables[1].Rows[(int)lblDescription.Tag].ItemArray).Show();
         }
         #endregion
 
@@ -1101,13 +1233,13 @@ namespace The4Dimension
             if (ObjectsListBox.SelectedIndex < 0) { MessageBox.Show("No object selected in the list"); return; }
             if (comboBox1.Text == "AllRailInfos")
             {
-                render.UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+                UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
                 Action<string, int, string, object> act;
                 act = (string type, int id, string propName, object value) =>
                 {
                     AllRailInfos[id][propName] = value;
                     propertyGrid1.Refresh();
-                    render.UpdateRailpos(id, ((Rail)value).GetPointArray());
+                    UpdateRailpos(id, ((Rail)value).GetPointArray());
                 };
                 Undo.Push(new UndoAction("Changed value: " + e.ChangedItem.Label + " of rail: " + AllRailInfos[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, e.ChangedItem.Label, e.OldValue, act));
                 ObjectsListBox.Items[ObjectsListBox.SelectedIndex] = AllRailInfos[ObjectsListBox.SelectedIndex].ToString();
@@ -1133,18 +1265,18 @@ namespace The4Dimension
 
         public void UpdateSelectedRailView()
         {
-            render.UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+            UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
         }
 
         public void RailPointsChanged(List<Rail.Point> OldPoints)
         {
-            render.UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+            UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
             Action<string, int, string, object> act;
             act = (string type, int id, string propName, object value) =>
             {
                 AllRailInfos[id].Points = (List<Rail.Point>)value;
                 propertyGrid1.Refresh();
-                render.UpdateRailpos(id, AllRailInfos[id].GetPointArray());
+                UpdateRailpos(id, AllRailInfos[id].GetPointArray());
             };
             Undo.Push(new UndoAction("Changed points of rail: " + AllRailInfos[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, "", OldPoints, act));
         }
@@ -1351,7 +1483,7 @@ namespace The4Dimension
             }
             else
             {
-                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable, comboBox1.Text);
+                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable.Keys.ToArray(), ObjDatabaseNames.ToArray(), comboBox1.Text);
                 frm.ShowDialog();
                 if (frm.Value == null) return;
                 AddObj(frm.Value, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
@@ -2011,11 +2143,6 @@ namespace The4Dimension
         }
 
         #endregion
-
-        private void modelImporterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new FormEditors.FrmObjImport().ShowDialog();
-        }
 
     }
 }

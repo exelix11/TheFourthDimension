@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,5 +17,11 @@ namespace The4Dimension
         {
             InitializeComponent();
         }
+
+        private void FrmCredits_Load(object sender, EventArgs e)
+        {
+            label4.Text = "V. " + Application.ProductVersion;            
+        }
+           
     }
 }

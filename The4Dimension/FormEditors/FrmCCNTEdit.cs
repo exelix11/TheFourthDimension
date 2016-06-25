@@ -188,6 +188,7 @@ namespace The4Dimension.FormEditors
                     return;
                 }
             }
+            else return;
             foreach (string k in CCNT2.Keys.ToArray())
             {
                 if (!CCNT.ContainsKey(k))
@@ -208,6 +209,34 @@ namespace The4Dimension.FormEditors
                 Dictionary<string, string> NewCCNT = new Dictionary<string, string>();
                 foreach (int i in GetSelectedObjs(false)) NewCCNT.Add(listBox1.Items[i].ToString(), CCNT[listBox1.Items[i].ToString()]);
                 File.WriteAllText(sav.FileName, MakeXML(ref NewCCNT), Form1.DefEnc);
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            if (listBox1.SelectedIndex == -1)
+            {
+                MessageBox.Show("Select at least one entry in the list");
+                return;
+            }
+            FolderBrowserDialog d = new FolderBrowserDialog();
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                if (new DirectoryInfo(d.SelectedPath).GetFiles().Length != 0)
+                {
+                    if (MessageBox.Show("This folder isn't empty, do you want to continue ?", "Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
+                }
+                File.Copy(System.Reflection.Assembly.GetEntryAssembly().Location, d.SelectedPath + "\\patcher.exe");
+                File.Copy("3DS.dll", d.SelectedPath + "\\3DS.dll");
+                File.Copy("CommonCompressors.dll", d.SelectedPath + "\\CommonCompressors.dll");
+                File.Copy("CommonFiles.dll", d.SelectedPath + "\\CommonFiles.dll");
+                File.Copy("LibEveryFileExplorer.dll", d.SelectedPath + "\\LibEveryFileExplorer.dll");
+                File.Copy("NDS.dll", d.SelectedPath + "\\NDS.dll");
+                Dictionary<string, string> NewCCNT = new Dictionary<string, string>();
+                foreach (int i in GetSelectedObjs(false)) NewCCNT.Add(listBox1.Items[i].ToString(), CCNT[listBox1.Items[i].ToString()]);
+                File.WriteAllText(d.SelectedPath + "\\CCNTpatch.xml", MakeXML(ref NewCCNT), Form1.DefEnc);
+                File.WriteAllText(d.SelectedPath + "\\Patch script.bat", Properties.Resources.PatchScript);
+                MessageBox.Show("Done !");
             }
         }
     }

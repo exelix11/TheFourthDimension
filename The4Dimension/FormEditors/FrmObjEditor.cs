@@ -13,6 +13,8 @@ namespace The4Dimension
     public partial class FrmObjEditor : Form
     {
         public LevelObj Value { get; set; }
+        DataSet ObjDb;
+        List<string> objdbNames;
 
         public FrmObjEditor(Dictionary<string, object> Lev)
         {
@@ -20,11 +22,29 @@ namespace The4Dimension
             Value = new LevelObj();
             Value.Prop = Lev;
             this.Text = "Edit object: " + Value.ToString();
+            Form1 owner = (Form1)Application.OpenForms["Form1"];
+            objdbNames = owner.ObjDatabaseNames;
+            ObjDb = owner.ObjDatabase;
         }
 
         private void FrmObjEditor_Load(object sender, EventArgs e)
         {
             propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(Value.Prop);
+        }
+
+        void UpdateHint()
+        {
+            int index = objdbNames.IndexOf(Value.ToString());
+            if (index == -1)
+            {
+                lblDescription.Text = "This object is not in the database";
+                lblDescription.Tag = -1;
+            }
+            else
+            {
+                lblDescription.Text = (string)ObjDb.Tables[1].Rows[index][2];
+                lblDescription.Tag = index;
+            }
         }
 
         private void button4_Click(object sender, EventArgs e)
@@ -183,6 +203,11 @@ namespace The4Dimension
             }
             Items.Reverse();
             ClipBoardMenu_Paste.DropDownItems.AddRange(Items.ToArray());
+        }
+
+        private void lblDescription_Click(object sender, EventArgs e)
+        {
+            if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjDb.Tables[1].Rows[(int)lblDescription.Tag].ItemArray).Show();
         }
     }
 }

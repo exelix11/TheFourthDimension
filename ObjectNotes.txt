@@ -11,14 +11,14 @@ PatanBoard (the green platforms):
 add a PatanBoardStarter, set the SwitchA property to a number >0,
 add a PatanBoard and set it's SwitchA to the same number, inside this PatanBoard you can add other PatanBoards that will spawn after that, to make a path you must create a "chain" of PatanBoards (The first contains the second, that contains the third and so on)
 
-LiftRailMove***M:
+LiftRailMove\LiftRailMove3x3:
 Add a rail to the level, then copy it inside this object.
 arg[7]: unknown, sometimes is 0
 
 Dossun (thwomp):
 arg[0] = max y, if not set is 500
 
-FireBar*m:
+FireBar4m/FireBar8m:
 arg[0] = how many bars, if not set is 1
 arg[1] = speed, if >0 it goes counterclockwise
 
@@ -32,10 +32,10 @@ arg[0] = max y
 KoopaFloor6x6M:
 arg[0] = max y
 
-LavaGeyser*M:
+LavaGeyser4M/LavaGeyser4M:
 arg[2]= max y
 
-KoopaFirstGear*:
+KoopaFirstGearA/KoopaFirstGearB:
 arg[1] = speed, if > 0 it goes counterclockwise
 
 Pukupuku (Cheep Cheep):

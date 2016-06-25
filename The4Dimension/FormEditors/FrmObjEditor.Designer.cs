@@ -40,15 +40,17 @@
             this.ClipBoardMenu_CopyFull = new System.Windows.Forms.ToolStripMenuItem();
             this.button3 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
+            this.lblDescription = new System.Windows.Forms.Label();
             this.ClipBoardMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // propertyGrid1
             // 
             this.propertyGrid1.ContextMenuStrip = this.ClipBoardMenu;
+            this.propertyGrid1.HelpVisible = false;
             this.propertyGrid1.Location = new System.Drawing.Point(3, 6);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(271, 278);
+            this.propertyGrid1.Size = new System.Drawing.Size(271, 238);
             this.propertyGrid1.TabIndex = 0;
             // 
             // ClipBoardMenu
@@ -133,11 +135,23 @@
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // lblDescription
+            // 
+            this.lblDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblDescription.Location = new System.Drawing.Point(0, 247);
+            this.lblDescription.Name = "lblDescription";
+            this.lblDescription.Size = new System.Drawing.Size(274, 40);
+            this.lblDescription.TabIndex = 10;
+            this.lblDescription.Tag = "-1";
+            this.lblDescription.Text = "No object selected";
+            this.lblDescription.Click += new System.EventHandler(this.lblDescription_Click);
+            // 
             // FrmObjEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(278, 319);
+            this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.propertyGrid1);
@@ -166,5 +180,6 @@
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyScale;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyArgs;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyFull;
+        private System.Windows.Forms.Label lblDescription;
     }
 }
