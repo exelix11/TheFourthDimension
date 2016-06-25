@@ -354,3 +354,14 @@ namespace The4Dimension
         }
     }
 }
+
+namespace ExtensionMethods
+{
+    static class Extensions
+    {
+        public static Vector3D ToVect(this Point3D p)
+        {
+            return new Vector3D(p.X, p.Y, p.Z);
+        }
+    }
+}

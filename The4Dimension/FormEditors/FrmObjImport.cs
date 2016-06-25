@@ -39,7 +39,8 @@ namespace The4Dimension.FormEditors
             OpenFileDialog opn = new OpenFileDialog();
             opn.Title = "Open a model file";
             opn.Filter = "Supported formats (.bcmdl, .obj)|*.bcmdl; *.obj";
-            if (opn.ShowDialog() != DialogResult.OK) this.Close();
+            bool ok = true;
+            if (opn.ShowDialog() != DialogResult.OK) ok = false;
             if (Path.GetExtension(opn.FileName).ToLower() == ".obj")
             {
                 if (MessageBox.Show("The obj will be converted to bcmdl with Every File Explorer's method, this is known to have problems, especially with models made in sketchup.\r\nDo you want to continue ?", "Warning", MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -87,7 +88,8 @@ namespace The4Dimension.FormEditors
             }
             else
             {
-                MessageBox.Show("File not supported");
+                if (ok) MessageBox.Show("File not supported");
+                else MessageBox.Show("You must select your model file to use this function");
                 this.Close();
             }
         }
@@ -136,7 +138,7 @@ namespace The4Dimension.FormEditors
             Process p = new Process();
             ProcessStartInfo s = new ProcessStartInfo();
             s.FileName = "CollisionsMng.exe";
-            s.Arguments = ObjModelPath;
+            s.Arguments = (!ObjModelPath.StartsWith("\"")) ? "\"" + ObjModelPath + "\"" : ObjModelPath;
             p.StartInfo = s;
             p.Start();
             p.WaitForExit();
@@ -190,7 +192,7 @@ namespace The4Dimension.FormEditors
             Actor.Data = BymlConverter.GetByml(Properties.Resources.Actor);
             dir.Files.Add(Actor);
             //InitClipping
-            string clip = "<?xml version=\"1.0\" encoding=\"shift_jis\"?>\r\n<Root>\r\n  <isBigEndian Value=\"False\" />\r\n  <C1>\r\n    <D2 Name=\"Radius\" StringValue=\""+ numericUpDown1.Value.ToString() + "\" />\r\n  </C1>\r\n</Root>";
+            string clip = "<?xml version=\"1.0\" encoding=\"shift_jis\"?>\r\n<Root>\r\n  <isBigEndian Value=\"False\" />\r\n  <C1>\r\n    <D2 Name=\"Radius\" StringValue=\"" + numericUpDown1.Value.ToString() + "\" />\r\n  </C1>\r\n</Root>";
             SFSFile Clipping = new SFSFile(5, "InitClipping.byml", dir);
             Clipping.Data = BymlConverter.GetByml(clip);
             dir.Files.Add(Clipping);
@@ -199,6 +201,7 @@ namespace The4Dimension.FormEditors
             File.WriteAllBytes(s.FileName, y.Compress(SzsArch.Write()));
             MessageBox.Show("Done !");
             MessageBox.Show("Remember you need to add the object to the CreatorClassNameTable to use the object in-game (Other modding -> CreatorClassNameTable editor)");
+            MessageBox.Show("To view the model in the editor you must copy it in the models folder with the name " + textBox1.Text + ".obj or else you will see a blue box");
             this.Close();
         }
     }

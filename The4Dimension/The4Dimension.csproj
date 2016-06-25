@@ -205,6 +205,18 @@
     <Compile Include="ModelDumper.Designer.cs">
       <DependentUpon>ModelDumper.cs</DependentUpon>
     </Compile>
+    <Compile Include="ObjectDB\ObjectDbEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ObjectDB\ObjectDbEditor.Designer.cs">
+      <DependentUpon>ObjectDbEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectDB\ObjectDBView.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ObjectDB\ObjectDBView.Designer.cs">
+      <DependentUpon>ObjectDBView.cs</DependentUpon>
+    </Compile>
     <Compile Include="Ohana3DS_stuff\CGFX.cs" />
     <Compile Include="Ohana3DS_stuff\IOUtils.cs" />
     <Compile Include="Ohana3DS_stuff\MeshUtils.cs" />
@@ -267,6 +279,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ModelDumper.resx">
       <DependentUpon>ModelDumper.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ObjectDB\ObjectDbEditor.resx">
+      <DependentUpon>ObjectDbEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ObjectDB\ObjectDBView.resx">
+      <DependentUpon>ObjectDBView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

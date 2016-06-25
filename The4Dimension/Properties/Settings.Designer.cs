@@ -34,5 +34,17 @@ namespace The4Dimension.Properties {
                 this["GamePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool OnlyKnwonObjs {
+            get {
+                return ((bool)(this["OnlyKnwonObjs"]));
+            }
+            set {
+                this["OnlyKnwonObjs"] = value;
+            }
+        }
     }
 }

@@ -72,17 +72,17 @@
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.label4.Location = new System.Drawing.Point(-1, 157);
+            this.label4.Location = new System.Drawing.Point(-1, 174);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(60, 13);
+            this.label4.Size = new System.Drawing.Size(16, 13);
             this.label4.TabIndex = 9;
-            this.label4.Text = "V. 0.4 Beta";
+            this.label4.Text = "...";
             // 
             // FrmCredits
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(304, 170);
+            this.ClientSize = new System.Drawing.Size(304, 187);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -92,6 +92,7 @@
             this.MinimizeBox = false;
             this.Name = "FrmCredits";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Load += new System.EventHandler(this.FrmCredits_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
