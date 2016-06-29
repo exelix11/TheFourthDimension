@@ -88,7 +88,7 @@ namespace The4Dimension
                     "________________________________________\r\n" +
                     ex.Message + "\r\n\r\n" + ex.StackTrace + "\r\n";
                 File.WriteAllText("Error.log", err);
-                MessageBox.Show("There was an error in the application:\r\n" +  ex.Message);
+                MessageBox.Show("There was an error in the application:\r\n" + ex.Message);
                 MessageBox.Show("A log of the error was saved in the same folder of this application.");
             }
         }
@@ -235,6 +235,7 @@ namespace The4Dimension
                 OtherLevelDataMenu.DropDownItems.AddRange(OtherFiles.ToArray());
                 if (StageData != null)
                 {
+                    Debug.Print("Size : " + (StageData.Length / 1024).ToString());
                     OpenFile(BymlConverter.GetXml(StageData));
                 }
                 else
@@ -254,7 +255,7 @@ namespace The4Dimension
         private void LoadFileList_click(object sender, EventArgs e)
         {
             string name = ((ToolStripMenuItem)sender).Text;
-            FormEditors.FrmXmlEditor frm = new FormEditors.FrmXmlEditor(BymlConverter.GetXml(SzsFiles[name]), name);
+            FormEditors.FrmXmlEditor frm = new FormEditors.FrmXmlEditor(BymlConverter.GetXml(SzsFiles[name]), name, false);
             frm.ShowDialog();
             if (frm.XmlRes != null) SzsFiles[name] = BymlConverter.GetByml(frm.XmlRes);
         }
@@ -276,7 +277,7 @@ namespace The4Dimension
                 tb.Columns.Add("Author");
                 ObjDatabase.Tables.Add(info);
                 ObjDatabase.Tables.Add(tb);
-                MessageBox.Show("The object database wasn't found, some objects may not appear, and you won't be able to get informations about how to use objects, you can download the database from ???");
+                MessageBox.Show("The object database wasn't found, some objects may not appear, and you won't be able to get informations about how to use objects, you can download the database from ???"); //TODO: objectdb updater/downloader
                 return;
             } else
             {
@@ -289,7 +290,7 @@ namespace The4Dimension
                 for (int i = 0; i < ObjDatabase.Tables[1].Rows.Count; i++)
                 {
                     string tmpName = (string)ObjDatabase.Tables[1].Rows[i][0];
-                    if (!tmpName.Contains("*")) ObjDatabaseNames.Add(tmpName);
+                    ObjDatabaseNames.Add(tmpName);
                 }
             }
         }
@@ -406,7 +407,7 @@ namespace The4Dimension
             }
         }
 
-        public void AddChildrenModels(C0List tmp)
+        public void AddChildrenModels(C0List tmp, bool area)
         {
             if (tmp.List.Count > 0)
             {
@@ -416,8 +417,12 @@ namespace The4Dimension
                 List<Vector3D> Scale = new List<Vector3D>();
                 foreach (LevelObj o in tmp.List)
                 {
-                    string Path = GetModelname(((Node)o.Prop["name"]).StringValue.ToLower());
-                    if (!System.IO.File.Exists(Path)) Path = "models\\UnkRed.obj";
+                    string Path;
+                    if (area) Path = "models\\UnkYellow.obj"; else
+                    {
+                        Path = GetModelname(((Node)o.Prop["name"]).StringValue.ToLower());
+                        if (!System.IO.File.Exists(Path)) Path = "models\\UnkRed.obj";
+                    }
                     Single X, Y, Z, ScaleX, ScaleY, ScaleZ, RotX, RotY, RotZ;
                     X = Single.Parse(((Node)o.Prop["pos_x"]).StringValue);
                     Y = Single.Parse(((Node)o.Prop["pos_y"]).StringValue);
@@ -433,13 +438,13 @@ namespace The4Dimension
                     Scale.Add(new Vector3D(ScaleX, ScaleZ, ScaleY));
                     modelsPaths.Add(Path);
                 }
-                render.AddTmpObjects(Pos, Scale, Rot, modelsPaths);
+                render.AddTmpObjects(Pos, Scale, Rot, modelsPaths, area ? "TmpAreaChildrenObjs" : "TmpChildrenObjs");
             }
         }
 
         string GetModelname(string ObjName)
         {
-            foreach (DataRow row in ObjDatabase.Tables[1].Rows) //Using this and not find because find throws an exception if fails
+            foreach (DataRow row in ObjDatabase.Tables[1].Rows) 
             {
                 if (((string)row.ItemArray[0]).EndsWith("*"))
                 {
@@ -448,7 +453,10 @@ namespace The4Dimension
                     if (ObjName.ToLower().StartsWith(name.ToLower())) return "models\\" + (string)row.ItemArray[1];
                 }
                 else
-                if (ObjName.Trim() != "" && ObjName.ToLower() == ((string)row.ItemArray[0]).ToLower()) return "models\\" + (string)row.ItemArray[1];
+                if (ObjName.Trim() != "" && ObjName.ToLower() == ((string)row.ItemArray[0]).ToLower())
+                {
+                    if ((string)row.ItemArray[1] != "") return "models\\" + (string)row.ItemArray[1];
+                }
             }
             return "models\\" + ObjName + ".obj";
         }
@@ -766,7 +774,7 @@ namespace The4Dimension
                     UpdateRailpos(int.Parse(type), AllRailInfos[int.Parse(type)].GetPointArray());
                     propertyGrid1.Refresh();
                 };
-                Undo.Push(new UndoAction("Moved "+ ObjectsListBox.SelectedItem.ToString() + "'s point["+ DraggingArgs[1].ToString() + "] : " , ObjectsListBox.SelectedIndex.ToString(), (int)DraggingArgs[1], StartPos, act));
+                Undo.Push(new UndoAction("Moved " + ObjectsListBox.SelectedItem.ToString() + "'s point[" + DraggingArgs[1].ToString() + "] : ", ObjectsListBox.SelectedIndex.ToString(), (int)DraggingArgs[1], StartPos, act));
             }
             else
             {
@@ -807,7 +815,7 @@ namespace The4Dimension
                 StartPos = AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray()[(int)DraggingArgs[1]].ToVect();
                 return;
             }
-            comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);            
+            comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
             ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
             StartPos = new Vector3D(float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
@@ -840,7 +848,12 @@ namespace The4Dimension
             render.CleanTmpObjects();
             if (checkBox2.Checked && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("GenerateChildren"))
             {
-                AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
+                AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"], false);
+            }
+
+            if (checkBox2.Checked && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("AreaChildren"))
+            {
+                AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["AreaChildren"], true);
             }
         }
         #endregion
@@ -901,7 +914,7 @@ namespace The4Dimension
                 propertyGrid1.SelectedObject = AllRailInfos[ObjectsListBox.SelectedIndex];
                 UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
                 render.SelectRail(AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
-                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);                
+                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
             }
             else
             {
@@ -909,7 +922,11 @@ namespace The4Dimension
                 if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 if (checkBox2.Checked && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("GenerateChildren"))
                 {
-                    AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
+                    AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"], false);
+                }
+                if (checkBox2.Checked && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("AreaChildren"))
+                {
+                    AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["AreaChildren"], true);
                 }
             }
         }
@@ -970,7 +987,7 @@ namespace The4Dimension
             MessageBox.Show("- To quickly add children to an object, paste other objects inside that object\r\n" +
                 "- To paste an object to the list right click on the list to delesect every object and paste the object\r\n" +
                 "- To quickly make rails, add some non-exsisting objects (like a random name) they will be showed as blue cubes, place them in the positions of the points of the rail, copy their position, you can have up to 10 items in the clipboard, add a new rail and paste the positions in the points\r\n" +
-                "- Objects with rails need a copy of the rail in the object itself, every time you edit the rail you must copy and paste it inside the object\r\n" + 
+                "- Objects with rails need a copy of the rail in the object itself, every time you edit the rail you must copy and paste it inside the object\r\n" +
                 "- To set the camera angle, add a @CameraPositionHelper and use it to get the right angle (every object starting with @ will be deleted before saving)");
         }
 
@@ -1216,9 +1233,11 @@ namespace The4Dimension
         {
             FormEditors.FrmStringInput f = new FormEditors.FrmStringInput();
             f.ShowDialog();
+            string[] internalNames = new string[] { "TmpChildrenObjs", "SelectedRail", "TmpAreaChildrenObjs" };
             if (f.Result == null) return;
             else if (f.Result.Trim() == "") return;
             else if (AllInfos.ContainsKey(f.Result)) MessageBox.Show("This type is already in use");
+            else if (internalNames.Contains(f.Result)) MessageBox.Show("This type name is reserved");
             else
             {
                 comboBox1.Items.Add(f.Result);
@@ -1285,15 +1304,22 @@ namespace The4Dimension
         {
             string lbl = propertyGrid1.SelectedGridItem.Label;
             if (((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop[lbl]).GetHashCode() != Hash) return; //every time a FrmC0ListEdit form is closed triggers this, even for C0Lists inside an object from another C0List
-            if (checkBox2.Checked && lbl == "GenerateChildren") AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]);
+            if (checkBox2.Checked && (lbl == "GenerateChildren" || lbl == "AreaChildren"))
+                AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop[lbl], lbl == "AreaChildren");
             Action<string, int, string, object> act;
             act = (string type, int id, string propName, object value) =>
             {
                 AllInfos[type].Objs[id].Prop[propName] = value;
                 propertyGrid1.Refresh();
-                if (checkBox2.Checked && propName == "GenerateChildren") AddChildrenModels((C0List)AllInfos[type].Objs[id].Prop["GenerateChildren"]);
+                if (checkBox2.Checked && (propName == "GenerateChildren" || propName == "AreaChildren")) AddChildrenModels((C0List)AllInfos[type].Objs[id].Prop[propName], propName == "AreaChildren");
             };
             Undo.Push(new UndoAction("Changed " + lbl + " of object: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, lbl, OldList, act));
+        }
+
+        public int GetObjectGenChidCount(string type, int index)
+        {
+            if (!AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("GenerateChildren")) return 0;
+            else return ((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List.Count;
         }
 
         public void UpdateOBJPos(int id, ref List<LevelObj> Source, string Type)
@@ -1910,6 +1936,9 @@ namespace The4Dimension
                     xr.WriteStartElement("isBigEndian");
                     xr.WriteAttributeString("Value", "False");
                     xr.WriteEndElement();
+                    xr.WriteStartElement("BymlFormatVersion");
+                    xr.WriteAttributeString("Value", ((uint)1).ToString());
+                    xr.WriteEndElement(); 
                     xr.WriteStartElement("C1"); //Byml Root
                     xr.WriteStartElement("C1");
                     xr.WriteAttributeString("Name", "AllInfos");

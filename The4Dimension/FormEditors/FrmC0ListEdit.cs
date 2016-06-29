@@ -38,13 +38,15 @@ namespace The4Dimension.FormEditors
             if (frm.Value == null) return;
             Value.List.Add(frm.Value);
             listBox1.Items.Add(frm.Value.ToString());
-            if (owner.propertyGrid1.SelectedGridItem.Label == "GenerateChildren") owner.AddChildrenModels(Value);
+            if (owner.propertyGrid1.SelectedGridItem.Label == "GenerateChildren") owner.AddChildrenModels(Value,false);
+            else if (owner.propertyGrid1.SelectedGridItem.Label == "AreaChildren") owner.AddChildrenModels(Value, true);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex == -1) return;
             if (owner.propertyGrid1.SelectedGridItem.Label == "GenerateChildren") owner.render.RemoveModel("TmpChildrenObjs", listBox1.SelectedIndex);
+            else if (owner.propertyGrid1.SelectedGridItem.Label == "AreaChildren") owner.render.RemoveModel("TmpAreaChildrenObjs", listBox1.SelectedIndex);
             Value.List.RemoveAt(listBox1.SelectedIndex);
             listBox1.Items.RemoveAt(listBox1.SelectedIndex);            
         }
@@ -58,6 +60,7 @@ namespace The4Dimension.FormEditors
             listBox1.Items[listBox1.SelectedIndex] = f.Value.ToString();
             List<LevelObj> tmp = Value.List;
             if (owner.propertyGrid1.SelectedGridItem.Label == "GenerateChildren") owner.UpdateOBJPos(listBox1.SelectedIndex, ref tmp, "TmpChildrenObjs");
+            else if (owner.propertyGrid1.SelectedGridItem.Label == "AreaChildren") owner.UpdateOBJPos(listBox1.SelectedIndex, ref tmp, "TmpAreaChildrenObjs"); 
         }
 
         private void Form_Closing(object sender, FormClosingEventArgs e)
@@ -69,6 +72,7 @@ namespace The4Dimension.FormEditors
         {
             if (listBox1.SelectedIndex == -1) return;
             if (owner.propertyGrid1.SelectedGridItem.Label == "GenerateChildren") owner.render.CameraToObj("TmpChildrenObjs", listBox1.SelectedIndex);
+            else if (owner.propertyGrid1.SelectedGridItem.Label == "AreaChildren") owner.render.CameraToObj("TmpAreaChildrenObjs", listBox1.SelectedIndex);
         }
     }
 }

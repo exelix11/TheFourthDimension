@@ -98,6 +98,9 @@ namespace The4Dimension.BgmEditors
                     xr.WriteStartElement("isBigEndian");
                     xr.WriteAttributeString("Value", "False");
                     xr.WriteEndElement();
+                    xr.WriteStartElement("BymlFormatVersion");
+                    xr.WriteAttributeString("Value", ((uint)1).ToString());
+                    xr.WriteEndElement();
                     xr.WriteStartElement("C1");
                     xr.WriteStartElement("C0");
                     xr.WriteAttributeString("Name", "StageDefaultBgmList");

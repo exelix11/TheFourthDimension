@@ -32,6 +32,7 @@ namespace ModelViewer
             ModelView.Children.Add(ModelViewer);
             AddKey("TmpChildrenObjs");
             AddKey("SelectedRail");
+            AddKey("TmpAreaChildrenObjs");
         }
 
         public void Clean()
@@ -54,9 +55,8 @@ namespace ModelViewer
             if (!Positions.ContainsKey(Type)) Positions.Add(Type, new List<Vector3D>());
         }
 
-        public void AddTmpObjects(List<Vector3D> positions, List<Vector3D> scale, List<Vector3D> rot, List<string> Paths)
+        public void AddTmpObjects(List<Vector3D> positions, List<Vector3D> scale, List<Vector3D> rot, List<string> Paths,string type)
         {
-            string type = "TmpChildrenObjs";
             if (Models[type].Count != 0) CleanTmpObjects();
             for (int i = 0; i < positions.Count; i++) addModel(Paths[i], type, positions[i], scale[i], (float)rot[i].X, (float)rot[i].Y, (float)rot[i].Z);
         }
@@ -64,6 +64,8 @@ namespace ModelViewer
         public void CleanTmpObjects()
         {
             string type = "TmpChildrenObjs";
+            while (Models[type].Count != 0) RemoveModel(type, 0);
+            type = "TmpAreaChildrenObjs";
             while (Models[type].Count != 0) RemoveModel(type, 0);
             ModelView.UpdateLayout();
         }
@@ -230,7 +232,7 @@ namespace ModelViewer
             if (result == null) return res;
             foreach (string k in Models.Keys)
             {
-                if (k != "TmpChildrenObjs" && Models[k].Contains(result))
+                if (k != "TmpChildrenObjs" && k != "TmpAreaChildrenObjs" && Models[k].Contains(result))
                 {
                     res[0] = k;
                     res[1] = Models[k].IndexOf(result);

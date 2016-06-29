@@ -192,7 +192,7 @@ namespace The4Dimension.FormEditors
             Actor.Data = BymlConverter.GetByml(Properties.Resources.Actor);
             dir.Files.Add(Actor);
             //InitClipping
-            string clip = "<?xml version=\"1.0\" encoding=\"shift_jis\"?>\r\n<Root>\r\n  <isBigEndian Value=\"False\" />\r\n  <C1>\r\n    <D2 Name=\"Radius\" StringValue=\"" + numericUpDown1.Value.ToString() + "\" />\r\n  </C1>\r\n</Root>";
+            string clip = "<?xml version=\"1.0\" encoding=\"shift_jis\"?>\r\n<Root>\r\n  <isBigEndian Value=\"False\" />\r\n  <BymlFormatVersion Value=\"1\" />\r\n  <C1>\r\n    <D2 Name=\"Radius\" StringValue=\"" + numericUpDown1.Value.ToString() + "\" />\r\n  </C1>\r\n</Root>";
             SFSFile Clipping = new SFSFile(5, "InitClipping.byml", dir);
             Clipping.Data = BymlConverter.GetByml(clip);
             dir.Files.Add(Clipping);

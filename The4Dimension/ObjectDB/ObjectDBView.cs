@@ -27,7 +27,12 @@ namespace The4Dimension.ObjectDB
 
         private void ObjectDBView_Load(object sender, EventArgs e)
         {
-            label1.Text = (objEntry[3].Trim() == "" ? objEntry[2] : objEntry[3]) + Environment.NewLine + Environment.NewLine + "Model name: " + objEntry[1] + Environment.NewLine + Environment.NewLine + "Found by: " + objEntry[4];
+            label1.Text = 
+                (objEntry[3].Trim() == "" ? objEntry[2] : objEntry[3]) 
+                + Environment.NewLine + Environment.NewLine + 
+                "Model name: " + (objEntry[1] == "" ? "Not in the database" : objEntry[1]) + 
+                Environment.NewLine + Environment.NewLine +
+                "Found by: " + objEntry[4];
             this.Text = objEntry[0];
         }
     }

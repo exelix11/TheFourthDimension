@@ -78,6 +78,9 @@ namespace The4Dimension.FormEditors
             xr.WriteStartElement("isBigEndian");
             xr.WriteAttributeString("Value", "False");
             xr.WriteEndElement();
+            xr.WriteStartElement("BymlFormatVersion");
+            xr.WriteAttributeString("Value", ((uint)1).ToString());
+            xr.WriteEndElement();
             xr.WriteStartElement("C0"); //Byml Root
             foreach (string k in ccnt_r.Keys.ToArray())
             {
