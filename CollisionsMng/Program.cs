@@ -179,5 +179,6 @@ namespace CollisionsMng
             Console.ReadLine();
             Console.ForegroundColor = ConsoleColor.White;
         }
+
     }
 }

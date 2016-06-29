@@ -58,6 +58,9 @@ namespace The4Dimension
             xr.WriteStartElement("isBigEndian");
             xr.WriteAttributeString("Value", File.header.BigEndian.ToString());
             xr.WriteEndElement();
+            xr.WriteStartElement("BymlFormatVersion");
+            xr.WriteAttributeString("Value", File.header.Version.ToString());
+            xr.WriteEndElement();
             GenericNode RootNode = File.RootNode;
             xr.WriteStartElement(RootNode.NodeType == (byte)0xC1 ? "C1" : "C0");
             saveNode(RootNode.SubNodes.ToArray(), xr);
@@ -97,7 +100,9 @@ namespace The4Dimension
                 case (byte)SubNodeValTypes.Single:
                     return BitConverter.ToSingle(Node.Value, 0).ToString();
                 case (byte)SubNodeValTypes.String:
-                    return LoadedFile.StringRes.Strings[(int)BitConverter.ToUInt32(Node.Value, 0)];
+                    int val = (int)BitConverter.ToUInt32(Node.Value, 0);
+                    if (val >= LoadedFile.StringRes.Strings.Count) return "Missing string ?";
+                    return LoadedFile.StringRes.Strings[val];
                     /*Encoding enc = Encoding.GetEncoding(932);
                     byte[] Data = enc.GetBytes(LoadedFile.StringRes.Strings[(int)BitConverter.ToUInt32(Node.Value, 0)]);
                     return Encoding.Default.GetString(Data);*/
@@ -127,6 +132,8 @@ namespace The4Dimension
             XmlNode n = xml.SelectSingleNode("/Root/isBigEndian");
             ret.header = new Header();
             ret.header.BigEndian = Convert.ToBoolean(n.Attributes["Value"].Value);
+            n = xml.SelectSingleNode("/Root/BymlFormatVersion");
+            if (n == null) ret.header.Version = 1; else ret.header.Version = UInt16.Parse(n.Attributes["Value"].Value);
             n = xml.SelectSingleNode("/Root");
             ret.RootNode.NodeType = n.LastChild.Name == "C1" ? (byte)0xC1 : (byte)0xC0;
             ret.RootNode.SubNodes.AddRange(XmlToNode(n.LastChild.ChildNodes));
@@ -178,24 +185,24 @@ namespace The4Dimension
                             ret[i].SubNodes.AddRange(XmlToNode(xNode.ChildNodes));
                             break;
                         case "A0":
-                            ret.Add(new GenericNode(xNode.Attributes["Name"].Value, StringFromXml(xNode.Attributes["StringValue"].Value), 0xA0));
+                            ret.Add(new GenericNode(xNode.Attributes["Name"] != null ? xNode.Attributes["Name"].Value : "", StringFromXml(xNode.Attributes["StringValue"].Value), 0xA0));
                             break;
                         case "A1":
-                            ret.Add(new GenericNode(xNode.Attributes["Name"].Value, xNode.Attributes["StringValue"].Value, 0xA1));
+                            ret.Add(new GenericNode(xNode.Attributes["Name"] != null ? xNode.Attributes["Name"].Value : "", xNode.Attributes["StringValue"].Value, 0xA1));
                             break;
                         case "D1":
-                            ret.Add(new GenericNode(xNode.Attributes["Name"].Value, xNode.Attributes["StringValue"].Value, 0xD1));
+                            ret.Add(new GenericNode(xNode.Attributes["Name"] != null ? xNode.Attributes["Name"].Value : "", xNode.Attributes["StringValue"].Value, 0xD1));
                             break;
                         case "D2":
-                            ret.Add(new GenericNode(xNode.Attributes["Name"].Value, xNode.Attributes["StringValue"].Value, 0xD2));
+                            ret.Add(new GenericNode(xNode.Attributes["Name"] != null ? xNode.Attributes["Name"].Value : "", xNode.Attributes["StringValue"].Value, 0xD2));
                             break;
                         case "D0":
-                            ret.Add(new GenericNode(xNode.Attributes["Name"].Value, xNode.Attributes["StringValue"].Value, 0xD0));
+                            ret.Add(new GenericNode(xNode.Attributes["Name"] != null ? xNode.Attributes["Name"].Value : "", xNode.Attributes["StringValue"].Value, 0xD0));
                             break;
                         default:
                             if (xNode.LocalName.Trim().Length == 2)
                             {
-                                ret.Add(new GenericNode(xNode.Attributes["Name"].Value, xNode.Attributes["StringValue"].Value, Convert.ToByte("0x" + xNode.LocalName.Trim(), 16)));
+                                ret.Add(new GenericNode(xNode.Attributes["Name"] != null ? xNode.Attributes["Name"].Value : "", xNode.Attributes["StringValue"].Value, Convert.ToByte("0x" + xNode.LocalName.Trim(), 16)));
                             }
                             break;
                     }

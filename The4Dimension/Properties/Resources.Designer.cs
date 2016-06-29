@@ -64,6 +64,7 @@ namespace The4Dimension.Properties {
         ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
         ///&lt;Root&gt;
         ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;BymlFormatVersion Value=&quot;1&quot; /&gt;
         ///  &lt;C1&gt;
         ///    &lt;C1 Name=&quot;Collision&quot;&gt;
         ///      &lt;A0 Name=&quot;Sensor&quot; StringValue=&quot;Collision&quot; /&gt;
@@ -77,9 +78,7 @@ namespace The4Dimension.Properties {
         ///    &lt;C1 Name=&quot;GroupClipping&quot;&gt;
         ///      &lt;D1 Name=&quot;MaxCount&quot; StringValue=&quot;64&quot; /&gt;
         ///    &lt;/C1&gt;
-        ///    &lt;FF Name=&quot;Model&quot; StringValue=&quot;00000000&quot; /&gt;
-        ///  &lt;/C1&gt;
-        ///&lt;/Root&gt;.
+        ///    &lt;FF Name=&quot;Model&quot; StringValue=&quot; [stringa troncata]&quot;;.
         /// </summary>
         internal static string Actor {
             get {
@@ -130,6 +129,7 @@ namespace The4Dimension.Properties {
         ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
         ///&lt;Root&gt;
         ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;BymlFormatVersion Value=&quot;1&quot; /&gt;
         ///  &lt;C1&gt;
         ///    &lt;C0 Name=&quot;CameraParams&quot;&gt;
         ///      
@@ -178,6 +178,7 @@ namespace The4Dimension.Properties {
         ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
         ///&lt;Root&gt;
         ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;BymlFormatVersion Value=&quot;1&quot; /&gt;
         ///  &lt;C0&gt;
         ///    &lt;C1&gt;
         ///      &lt;A0 Name=&quot;Name&quot; StringValue=&quot;Collision&quot; /&gt;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,6 +16,7 @@ namespace The4Dimension.FormEditors
     public partial class FrmXmlEditor : Form
     {
         public String XmlRes = null;
+        bool IsConverter = false;
         Style IntStyle = new TextStyle(Brushes.Blue, null, FontStyle.Bold);
         Style FloatStyle = new TextStyle(Brushes.Green, null, FontStyle.Bold);
         Style StringStyle = new TextStyle(Brushes.Red, null, FontStyle.Bold);
@@ -22,16 +24,27 @@ namespace The4Dimension.FormEditors
         Style KeyWordStyle = new TextStyle(Brushes.DarkBlue, null, FontStyle.Bold);
         Style C1Style = new TextStyle(Brushes.Silver, null, FontStyle.Bold);
 
-        public FrmXmlEditor(string Xml, string Name)
+        public FrmXmlEditor(string Xml, string Name, bool converter)
         {
             InitializeComponent();
             fastColoredTextBox1.Text = Xml;
             this.Text = "Xml editor: " + Name;
+            IsConverter = converter;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            XmlRes = fastColoredTextBox1.Text;
+            if (IsConverter)
+            {
+                SaveFileDialog s = new SaveFileDialog();
+                s.Filter = ".xml file|*.xml|.byml file|*.byml";
+                if (s.ShowDialog() == DialogResult.OK)
+                {
+                    if (Path.GetFileName(s.FileName).EndsWith(".xml")) File.WriteAllText(s.FileName, fastColoredTextBox1.Text, Encoding.GetEncoding(932));
+                    else File.WriteAllBytes(s.FileName, BymlConverter.GetByml(fastColoredTextBox1.Text));
+                }
+            }
+            else XmlRes = fastColoredTextBox1.Text;
             this.Close();
         }
 
@@ -48,7 +61,7 @@ namespace The4Dimension.FormEditors
             fastColoredTextBox1.Range.SetStyle(FloatStyle, @"\b(D2|/D2|d2|/d2)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             fastColoredTextBox1.Range.SetStyle(StringStyle, @"\b(A0|/A0|a0|/a0)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             fastColoredTextBox1.Range.SetStyle(PropNameWordStyle, @"\b(Name|StringValue|version|encoding|Value)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-            fastColoredTextBox1.Range.SetStyle(KeyWordStyle, @"\b(isBigEndian|Root|/Root|shift_jis|xml|True|False|D0|d0)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            fastColoredTextBox1.Range.SetStyle(KeyWordStyle, @"\b(BymlFormatVersion|isBigEndian|Root|/Root|shift_jis|xml|True|False|D0|d0)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
             fastColoredTextBox1.Range.SetStyle(C1Style, @"\b(C0|C1|/C0|/C1|c1|c0|/c1|/c0)\b", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
         }
 

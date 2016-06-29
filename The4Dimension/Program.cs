@@ -30,8 +30,11 @@ namespace The4Dimension
                 else
                 {
                     string Cont = System.IO.File.ReadAllText(Args[0]);
-                    if (Cont.StartsWith("<?xml")) System.IO.File.WriteAllBytes(Args[0] + ".byml", BymlConverter.GetByml(Cont));
-                    else if (Cont.StartsWith("YB")) System.IO.File.WriteAllText(Args[0] + ".xml", BymlConverter.GetXml(Args[0]), Encoding.GetEncoding(932));
+                    if (Cont.StartsWith("<?xml") || Cont.StartsWith("YB") || Cont.StartsWith("BY"))
+                    {
+                        if (Cont.StartsWith("<?xml")) new FormEditors.FrmXmlEditor(File.ReadAllText(Args[0]), Args[0], true).ShowDialog();
+                        else new FormEditors.FrmXmlEditor(BymlConverter.GetXml(Args[0]), Args[0], true).ShowDialog();
+                    }
                     else Application.Run(new Form1(Args[0].Trim()));
                 }
             }

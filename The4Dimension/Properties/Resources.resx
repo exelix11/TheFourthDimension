@@ -121,6 +121,7 @@
     <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
 &lt;Root&gt;
   &lt;isBigEndian Value="False" /&gt;
+  &lt;BymlFormatVersion Value="1" /&gt;
   &lt;C1&gt;
     &lt;C1 Name="Collision"&gt;
       &lt;A0 Name="Sensor" StringValue="Collision" /&gt;
@@ -245,6 +246,7 @@ ChampionshipSpStageMap1.szs</value>
     <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
 &lt;Root&gt;
   &lt;isBigEndian Value="False" /&gt;
+  &lt;BymlFormatVersion Value="1" /&gt;
   &lt;C1&gt;
     &lt;C0 Name="CameraParams"&gt;
       
@@ -281,6 +283,7 @@ del "Patch script.bat"</value>
     <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
 &lt;Root&gt;
   &lt;isBigEndian Value="False" /&gt;
+  &lt;BymlFormatVersion Value="1" /&gt;
   &lt;C0&gt;
     &lt;C1&gt;
       &lt;A0 Name="Name" StringValue="Collision" /&gt;

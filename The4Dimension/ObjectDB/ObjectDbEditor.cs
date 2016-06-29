@@ -14,7 +14,6 @@ namespace The4Dimension
     public partial class ObjectDbEditor : Form
     {
         List<string[]> objs = new List<string[]>();
-        List<string> Names = new List<string>();
         DataSet database;
         bool changing = false;
 
@@ -31,8 +30,7 @@ namespace The4Dimension
                 string[] t = new string[5];
                 for (int i = 0; i < 5; i++) t[i] = (string)row.ItemArray[i];
                 objs.Add(t);
-                Names.Add(objs[objs.Count - 1][0]);
-                listBox1.Items.Add(Names[Names.Count - 1]);
+                listBox1.Items.Add(objs[objs.Count - 1][0]);
             }
         }
 
@@ -40,9 +38,7 @@ namespace The4Dimension
         {
             foreach (int i in listBox1.SelectedIndices)
             {
-                int actualIndex = Names.IndexOf(listBox1.Items[i].ToString());
-                objs.RemoveAt(actualIndex);
-                Names.RemoveAt(actualIndex);
+                objs.RemoveAt(i);
                 listBox1.Items.RemoveAt(i);
             }
         }
@@ -50,7 +46,6 @@ namespace The4Dimension
         private void button1_Click(object sender, EventArgs e)
         {
             objs.Add(new string[5] { "NewObj", "", "", "", "" });
-            Names.Add("NewObj");
             listBox1.ClearSelected();
             listBox1.SelectedIndex = listBox1.Items.Add("NewObj");
         }        
@@ -65,12 +60,11 @@ namespace The4Dimension
             {
                 changing = true;
                 groupBox1.Enabled = true;
-                int actualIndex = Names.IndexOf(listBox1.SelectedItem.ToString());
-                textBox1.Text = objs[actualIndex][0];
-                textBox2.Text = objs[actualIndex][1];
-                textBox3.Text = objs[actualIndex][2];
-                textBox4.Text = objs[actualIndex][3];
-                textBox5.Text = objs[actualIndex][4];
+                textBox1.Text = objs[listBox1.SelectedIndex][0];
+                textBox2.Text = objs[listBox1.SelectedIndex][1];
+                RichtextBox3.Text = objs[listBox1.SelectedIndex][2];
+                RichtextBox4.Text = objs[listBox1.SelectedIndex][3];
+                textBox5.Text = objs[listBox1.SelectedIndex][4];
                 changing = false;
             }
         }        
@@ -96,16 +90,19 @@ namespace The4Dimension
         private void button4_Click(object sender, EventArgs e)
         {
             if (changing) return;
-            int actualIndex = Names.IndexOf(listBox1.SelectedItem.ToString());
-            objs[actualIndex][0] = textBox1.Text;
-            objs[actualIndex][1] = textBox2.Text;
-            objs[actualIndex][2] = textBox3.Text;
-            objs[actualIndex][3] = textBox4.Text;
-            objs[actualIndex][4] = textBox5.Text;
+            objs[listBox1.SelectedIndex][0] = textBox1.Text;
+            objs[listBox1.SelectedIndex][1] = textBox2.Text;
+            objs[listBox1.SelectedIndex][2] = RichtextBox3.Text;
+            objs[listBox1.SelectedIndex][3] = RichtextBox4.Text;
+            objs[listBox1.SelectedIndex][4] = textBox5.Text;
             int index = listBox1.SelectedIndex;
             listBox1.ClearSelected();
-            Names[actualIndex] = textBox1.Text;
             listBox1.Items[index] = textBox1.Text;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("For names like BlockBrick*, the * means the editor will load the same model for every object with the name starting with BlockBrick, this entry description won't be shown.");
         }
     }
 }
