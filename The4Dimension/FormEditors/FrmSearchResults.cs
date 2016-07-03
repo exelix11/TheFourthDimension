@@ -32,5 +32,10 @@ namespace The4Dimension.FormEditors
             owner.SetSelectedObj(Type, HitIndexes[listBox1.SelectedIndex]);
             owner.Focus();
         }
+
+        private void FrmSearchResults_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

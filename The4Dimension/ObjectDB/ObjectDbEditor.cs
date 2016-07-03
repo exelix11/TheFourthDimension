@@ -85,6 +85,7 @@ namespace The4Dimension
             }
             database.Tables.Add(tb);
             File.WriteAllText("ObjectsDb.xml", database.GetXml());
+            this.Close();
         }
 
         private void button4_Click(object sender, EventArgs e)

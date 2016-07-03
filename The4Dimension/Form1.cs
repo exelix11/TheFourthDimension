@@ -306,9 +306,9 @@ namespace The4Dimension
                 }
                 else
                 {
-                    if (Properties.Settings.Default.GamePath.Trim() == "") MessageBox.Show("to add new objects you need CreatorClassNameTable.szs in the same folder as this program, this file is placed inside GameRomFS:SystemData\\CreatorClassNameTable.szs\r\nWithout this file you can only duplicate or delete objects.");
+                    if (Properties.Settings.Default.GamePath.Trim() == "") MessageBox.Show("to add objects to the game, and get list of every objects in the editor you need CreatorClassNameTable.szs in the same folder as this program, this file is placed inside GameRomFS:SystemData\\CreatorClassNameTable.szs");
                     else MessageBox.Show(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs not found.\r\nProbably your Romfs dump is incomplete or was modified.\r\nWithout this file you can only duplicate or delete objects.");
-                    Btn_AddObj.Enabled = false;
+                    //Btn_AddObj.Enabled = false;
                     creatorClassNameTableEditorToolStripMenuItem.Enabled = false;
                     return;
                 }
@@ -1267,6 +1267,7 @@ namespace The4Dimension
             else
             {
                 string name = e.ChangedItem.Parent.Value is Node ? e.ChangedItem.Parent.Label : e.ChangedItem.Label;
+                if (name == "name" || name == "l_id") MessageBox.Show("You shouldn't mess up with the name or the l_id property of the objects, you should add a new object instead and copy the position from this object to the new one.\r\nYou can undo this action from the undo button", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 UpdateOBJPos(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
                 Action<string, int, string, object> action;
                 action = (string type, int id, string propName, object value) =>
@@ -1821,6 +1822,17 @@ namespace The4Dimension
                     {
                         if (((Rail)AllInfos[Type].Objs[i].Prop[PropertyName]).Name.ToLower() == Value.ToLower()) { HitsNames.Add(AllInfos[Type].Objs[i].ToString()); HitsIndexes.Add(i); }
                     }
+                    if (AllInfos[Type].Objs[i].Prop.ContainsKey("GenerateChildren"))
+                    {
+                        C0List children = (C0List)AllInfos[Type].Objs[i].Prop["GenerateChildren"];
+                        for (int ii = 0; ii < children.List.Count; ii++)
+                        {
+                            if (children.List[ii].Prop.ContainsKey(PropertyName) && children.List[ii].Prop[PropertyName] is Rail)
+                            {
+                                if (((Rail)children.List[ii].Prop[PropertyName]).Name.ToLower() == Value.ToLower()) { HitsNames.Add(children.List[ii].ToString() + " In GenerateChildren[" + ii.ToString() + "]"); HitsIndexes.Add(i); }
+                            }
+                        }
+                    }
                 }
             }
             if (HitsIndexes.Count == 0) { MessageBox.Show("Not found"); return; }
@@ -1855,6 +1867,17 @@ namespace The4Dimension
                     if (AllInfos[Type].Objs[i].Prop.ContainsKey(PropertyName) && AllInfos[Type].Objs[i].Prop[PropertyName] is Node && ((Node)AllInfos[Type].Objs[i].Prop[PropertyName]).NodeType == Node.NodeTypes.Int)
                     {
                         if (((Node)AllInfos[Type].Objs[i].Prop[PropertyName]).StringValue == Value.ToString()) { HitsNames.Add(AllInfos[Type].Objs[i].ToString()); HitsIndexes.Add(i); }
+                    }
+                    if (AllInfos[Type].Objs[i].Prop.ContainsKey("GenerateChildren"))
+                    {
+                        C0List children = (C0List)AllInfos[Type].Objs[i].Prop["GenerateChildren"];
+                        for (int ii = 0; ii < children.List.Count; ii++)
+                        {
+                            if (children.List[ii].Prop.ContainsKey(PropertyName) && children.List[ii].Prop[PropertyName] is Node && ((Node)children.List[ii].Prop[PropertyName]).NodeType == Node.NodeTypes.Int)
+                            {
+                                if (((Node)children.List[ii].Prop[PropertyName]).StringValue == Value.ToString()) { HitsNames.Add(children.List[ii].ToString() + " In GenerateChildren[" + ii.ToString() + "]"); HitsIndexes.Add(i); }
+                            }
+                        }
                     }
                 }
             }
@@ -2173,5 +2196,9 @@ namespace The4Dimension
 
         #endregion
 
+        private void oggToBcstmConverterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new BgmEditors.FrmMakeBcstm().ShowDialog();
+        }
     }
 }

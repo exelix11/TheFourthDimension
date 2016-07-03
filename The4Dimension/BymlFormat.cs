@@ -320,7 +320,7 @@ namespace BymlFormat
             if (count == 0) return;
             for (int i = 0; i < count; i++)
             {
-                Debug.Print("DICTIONARY SUBNODE AT: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+                //Debug.Print("DICTIONARY SUBNODE AT: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
                 GenericNode g = new GenericNode();
                 List<byte> _stringIndex = new List<byte>();
                 _stringIndex.AddRange(bin.ReadBytes(3));
@@ -333,7 +333,7 @@ namespace BymlFormat
                 {
                     long OldPos = bin.BaseStream.Position;
                     bin.BaseStream.Position = BitConverter.ToUInt32(g.Value, 0);
-                    Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+                    //Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
                     DictionaryNode dict = new DictionaryNode(bin);
                     if (dict.SubNodes.Count != 0) g.SubNodes = dict.SubNodes;
                     bin.BaseStream.Position = OldPos;
@@ -342,11 +342,11 @@ namespace BymlFormat
                 {
                     long OldPos = bin.BaseStream.Position;
                     bin.BaseStream.Position = BitConverter.ToUInt32(g.Value, 0);
-                    Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+                    //Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
                     ArrayNode arr = new ArrayNode(bin);
                     if (arr.SubNodes.Count != 0) g.SubNodes = arr.SubNodes;
                     bin.BaseStream.Position = OldPos;
-                }// else //Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+                }// else Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
 
                 SubNodes.Add(g);
             }
@@ -375,7 +375,7 @@ namespace BymlFormat
             while ((bin.BaseStream.Position % 4) != 0) bin.ReadByte(); //Padding
             for (int i = 0; i < Count; i++)
             {
-                Debug.Print("ARRAY SUBNODE AT: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+               // Debug.Print("ARRAY SUBNODE AT: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
                 GenericNode g = new GenericNode();
                 g.NodeType = NodeTypes[i];
                 g.Value = bin.ReadBytes(4);
@@ -383,7 +383,7 @@ namespace BymlFormat
                 {
                     long OldPos = bin.BaseStream.Position;
                     bin.BaseStream.Position = BitConverter.ToUInt32(g.Value, 0);
-                    Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+                    //Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
                     DictionaryNode dict = new DictionaryNode(bin);
                     if (dict.SubNodes.Count != 0) g.SubNodes = dict.SubNodes;
                     bin.BaseStream.Position = OldPos;
@@ -392,11 +392,11 @@ namespace BymlFormat
                 {
                     long OldPos = bin.BaseStream.Position;
                     bin.BaseStream.Position = BitConverter.ToUInt32(g.Value, 0);
-                    Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+                    //Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
                     ArrayNode Arr = new ArrayNode(bin);
                     if (Arr.SubNodes.Count != 0) g.SubNodes = Arr.SubNodes;
                     bin.BaseStream.Position = OldPos;
-                }//else //Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
+                }//else Debug.Print(HelpFunctions.GetHexString(NodeType) + " node at: " + HelpFunctions.GetHexString((int)bin.BaseStream.Position));
 
 
                 SubNodes.Add(g);

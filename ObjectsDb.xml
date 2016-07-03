@@ -1,0 +1,218 @@
+<ObjDB>
+  <Infos>
+    <AppVer>500</AppVer>
+  </Infos>
+  <Objects>
+    <InGameName>BlockBrick*</InGameName>
+    <ModelName>BlockBrick.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>BlockQuestionLong*</InGameName>
+    <ModelName>BlockQuestionLong.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>WoodBox*</InGameName>
+    <ModelName>WoodBox.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>BlockQuestion*</InGameName>
+    <ModelName>BlockQuestion.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>FlowerBlue*</InGameName>
+    <ModelName>FlowerBlue.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Bird*</InGameName>
+    <ModelName>Bird.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author />
+  </Objects>
+  <Objects>
+    <InGameName>TimerClock*</InGameName>
+    <ModelName>TimerClock.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>ViewCtrlArea</InGameName>
+    <ModelName />
+    <ShortDescription>This zone controls visibility of certain objects
+arg[0] = value , set this value to the ViewId property of other objects to make them visible when the player is in this area</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>WarpCube</InGameName>
+    <ModelName>WarpCube.obj</ModelName>
+    <ShortDescription>Warps the player to another point in the stage.
+add a WarpCubeOutOnly object in the GenerateChildren property</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LiftRailMove</InGameName>
+    <ModelName>LiftRailMove.obj</ModelName>
+    <ShortDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?</ShortDescription>
+    <LongDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?
+
+arg[7]: unknown, sometimes is 0</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Dossun</InGameName>
+    <ModelName>Dossun.obj</ModelName>
+    <ShortDescription>This is a thwomp,
+arg[0] = max y (relative to it's position), if not set or -1 is 500</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LiftRailMove3x3</InGameName>
+    <ModelName>LiftRailMove3x3.obj</ModelName>
+    <ShortDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?</ShortDescription>
+    <LongDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?
+
+arg[7]: unknown, sometimes is 0</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>FireBar4m</InGameName>
+    <ModelName />
+    <ShortDescription>arg[0] = how many bars, if not set is 1
+arg[1] = speed, if &gt;0 it goes counterclockwise</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>FireBar8m</InGameName>
+    <ModelName />
+    <ShortDescription>arg[0] = how many bars, if not set is 1
+arg[1] = speed, if &gt;0 it goes counterclockwise</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>HammerBros</InGameName>
+    <ModelName>HammerBros.obj</ModelName>
+    <ShortDescription>Add in the GenerateChildren property a HammerBrosMovePoint for each point it will jump</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Bubble</InGameName>
+    <ModelName>Bubble.obj</ModelName>
+    <ShortDescription>A lava fireball
+arg[0] = max y (relative to it's position)</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>KoopaFloor6x6M</InGameName>
+    <ModelName>KoopaFloor6x6M.obj</ModelName>
+    <ShortDescription>Elevator found in bowser's castle of world 1
+arg[0] = max y (relative to it's position)</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LavaGeyser4M</InGameName>
+    <ModelName>LavaGeyser4M.obj</ModelName>
+    <ShortDescription>arg[2] = max y (relative to it's position)</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LavaGeyser16M</InGameName>
+    <ModelName>LavaGeyser4M.obj</ModelName>
+    <ShortDescription>arg[2] = max y (relative to it's position)</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>KoopaFirstGearA</InGameName>
+    <ModelName>KoopaFirstGearA.obj</ModelName>
+    <ShortDescription>A rotating gear.
+arg[1] = speed, if &gt; 0 it goes counterclockwise</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>KoopaFirstGearB</InGameName>
+    <ModelName>KoopaFirstGearB.obj</ModelName>
+    <ShortDescription>A rotating gear.
+arg[1] = speed, if &gt; 0 it goes counterclockwise</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Pukupuku</InGameName>
+    <ModelName>Pukupuku.obj</ModelName>
+    <ShortDescription>a Cheep Cheep.
+Add a rail to the stage and copy it inside this object</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Dokan</InGameName>
+    <ModelName>Dokan.obj</ModelName>
+    <ShortDescription>A green pipe
+Add a DokanOutOnly object in the place where mario should spawn.</ShortDescription>
+    <LongDescription>A green pipe
+Add a DokanOutOnly object in the place where mario should spawn.
+Args can control if camera moves to the DokanOutOnly or just appears there ?</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>PoleGoal</InGameName>
+    <ModelName>PoleGoal.obj</ModelName>
+    <ShortDescription>Can be only one copy of this object in the stage.
+arg[0] = if 0 the smb level completed theme plays</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>GeneratorEnemy</InGameName>
+    <ModelName>GeneratorEnemy.obj</ModelName>
+    <ShortDescription>Spawns enemies, arg[0] how many enemies can be on stage, arg[1] enemy type</ShortDescription>
+    <LongDescription>Spawns enemies:
+arg[0] how many enemies can be on stage
+arg[1] enemy type
+
+arg[1]: 1: Drybone, other values Goomba</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>NeedleBarCore</InGameName>
+    <ModelName />
+    <ShortDescription>Rotating bar(s) of NeedleBlocks, arg[0] how many blocks per bar, arg[1] how many bars, arg[2] rotating speed </ShortDescription>
+    <LongDescription>Rotating bar(s) of NeedleBlocks
+arg[0] how many blocks per bar
+ since every block is 100 units arg[0] * 100 is the length of the bar
+arg[1] how many bars
+arg[2] rotating speed 
+</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+</ObjDB>

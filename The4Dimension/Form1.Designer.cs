@@ -56,6 +56,8 @@
             this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creatorClassNameTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stagesBgmEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.oggToBcstmConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modelImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.gameROMFSPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +80,7 @@
             this.tipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.objectsDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Btn_CopyObjs = new System.Windows.Forms.Button();
@@ -97,7 +100,6 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -313,6 +315,8 @@
             this.otherToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.creatorClassNameTableEditorToolStripMenuItem,
             this.stagesBgmEditorToolStripMenuItem,
+            this.toolStripSeparator7,
+            this.oggToBcstmConverterToolStripMenuItem,
             this.modelImporterToolStripMenuItem,
             this.toolStripSeparator5,
             this.gameROMFSPathToolStripMenuItem});
@@ -333,6 +337,18 @@
             this.stagesBgmEditorToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.stagesBgmEditorToolStripMenuItem.Text = "Change stages BGM";
             this.stagesBgmEditorToolStripMenuItem.Click += new System.EventHandler(this.stagesBgmEditorToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(231, 6);
+            // 
+            // oggToBcstmConverterToolStripMenuItem
+            // 
+            this.oggToBcstmConverterToolStripMenuItem.Name = "oggToBcstmConverterToolStripMenuItem";
+            this.oggToBcstmConverterToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.oggToBcstmConverterToolStripMenuItem.Text = "Ogg to Bcstm converter";
+            this.oggToBcstmConverterToolStripMenuItem.Click += new System.EventHandler(this.oggToBcstmConverterToolStripMenuItem_Click);
             // 
             // modelImporterToolStripMenuItem
             // 
@@ -477,28 +493,33 @@
             // hotkeysListToolStripMenuItem
             // 
             this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
-            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
             this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
             // 
             // tipsToolStripMenuItem
             // 
             this.tipsToolStripMenuItem.Name = "tipsToolStripMenuItem";
-            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.tipsToolStripMenuItem.Text = "Tips";
             this.tipsToolStripMenuItem.Click += new System.EventHandler(this.tipsToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(161, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(195, 6);
             // 
             // gbatempThreadToolStripMenuItem
             // 
             this.gbatempThreadToolStripMenuItem.Name = "gbatempThreadToolStripMenuItem";
-            this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
             this.gbatempThreadToolStripMenuItem.Text = "Gbatemp thread";
             this.gbatempThreadToolStripMenuItem.Click += new System.EventHandler(this.gbatempThreadToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(195, 6);
             // 
             // objectsDatabaseToolStripMenuItem
             // 
@@ -732,11 +753,6 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
-            // toolStripSeparator6
-            // 
-            this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(195, 6);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -836,6 +852,8 @@
         private System.Windows.Forms.Label lblDescription;
         private System.Windows.Forms.ToolStripMenuItem objectsDatabaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripMenuItem oggToBcstmConverterToolStripMenuItem;
     }
 }
 
