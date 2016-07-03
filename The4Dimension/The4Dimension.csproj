@@ -113,6 +113,12 @@
     <Compile Include="BgmEditors\FrmBgmMain.Designer.cs">
       <DependentUpon>FrmBgmMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="BgmEditors\FrmMakeBcstm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BgmEditors\FrmMakeBcstm.Designer.cs">
+      <DependentUpon>FrmMakeBcstm.cs</DependentUpon>
+    </Compile>
     <Compile Include="BymlConverter.cs" />
     <Compile Include="BymlFormat.cs" />
     <Compile Include="CustomClasses.cs" />
@@ -188,6 +194,7 @@
     <Compile Include="FormEditors\FrmXmlEditor.Designer.cs">
       <DependentUpon>FrmXmlEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="BgmEditors\TempoWrite.cs" />
     <Compile Include="FrmCredits.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -239,6 +246,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BgmEditors\FrmBgmMain.resx">
       <DependentUpon>FrmBgmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BgmEditors\FrmMakeBcstm.resx">
+      <DependentUpon>FrmMakeBcstm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
@@ -315,6 +325,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <None Include="Resources\BaseModels.zip" />
+    <None Include="Resources\BCSTMtools.zip" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

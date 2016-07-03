@@ -126,6 +126,16 @@ namespace The4Dimension.Properties {
         }
         
         /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Byte[].
+        /// </summary>
+        internal static byte[] BCSTMtools {
+            get {
+                object obj = ResourceManager.GetObject("BCSTMtools", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
         ///&lt;Root&gt;
         ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;

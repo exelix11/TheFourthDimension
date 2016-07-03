@@ -38,24 +38,24 @@ namespace The4Dimension
             {
                 foreach (string s in array)
                 {
-                    if (s.ToLower().EndsWith("area") && !s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
+                    if (!s.EndsWith("*") && s.ToLower().EndsWith("area") && !s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
                 }
             }
             else if (LayerName == "CameraAreaInfo")
             {
                 foreach (string s in array)
-                    if (s.ToLower().EndsWith("area") && s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
+                    if (!s.EndsWith("*") && s.ToLower().EndsWith("area") && s.ToLower().Contains("camera")) comboBox1.Items.Add(s);
             }
             else if (LayerName == "ObjInfo")
             {
                 comboBox1.Items.Add("@CameraPositionHelper");
                 foreach (string s in array)
-                    if (!s.ToLower().EndsWith("area")) comboBox1.Items.Add(s);
+                    if (!s.EndsWith("*") && !s.ToLower().EndsWith("area")) comboBox1.Items.Add(s);
             }
             else if (LayerName == "StartEventObjInfo")
             {
                 foreach (string s in array)
-                    if (s.ToLower().StartsWith("startevent")) comboBox1.Items.Add(s);
+                    if (!s.EndsWith("*") && s.ToLower().StartsWith("startevent")) comboBox1.Items.Add(s);
             }
             else comboBox1.Items.AddRange(array);
             Value = null;

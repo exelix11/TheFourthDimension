@@ -32,6 +32,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -59,12 +60,12 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(77, 69);
+            this.label3.Location = new System.Drawing.Point(78, 70);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(159, 78);
+            this.label3.Size = new System.Drawing.Size(159, 91);
             this.label3.TabIndex = 2;
             this.label3.Text = "By Exelix11\r\n\r\n\r\nThanks to:\r\nGericom for Every File Explorer\r\nGdkchan for Ohana3D" +
-    "S Rebirth";
+    "S Rebirth\r\nHCS for vgmstream and RevB";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label4
@@ -78,11 +79,22 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "...";
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 5.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(76, 179);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(166, 7);
+            this.label5.TabIndex = 10;
+            this.label5.Text = "Also thanks to HCS for hosting a secret file ( ͡° ͜ʖ ͡°)";
+            // 
             // FrmCredits
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(304, 187);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -104,5 +116,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
     }
 }

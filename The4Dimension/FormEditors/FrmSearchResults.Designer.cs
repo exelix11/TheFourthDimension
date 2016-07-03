@@ -55,6 +55,7 @@
             this.ShowIcon = false;
             this.Text = "Search results";
             this.TopMost = true;
+            this.Load += new System.EventHandler(this.FrmSearchResults_Load);
             this.ResumeLayout(false);
 
         }
