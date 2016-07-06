@@ -78,10 +78,11 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.downloadLatestObjectDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.objectsDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.objectsDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Btn_CopyObjs = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -100,6 +101,7 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.ClipBoardMenu_CopyRail = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -131,9 +133,10 @@
             this.ClipBoardMenu_CopyRot,
             this.ClipBoardMenu_CopyScale,
             this.ClipBoardMenu_CopyArgs,
-            this.ClipBoardMenu_CopyFull});
+            this.ClipBoardMenu_CopyFull,
+            this.ClipBoardMenu_CopyRail});
             this.ClipBoardMenu.Name = "contextMenuStrip1";
-            this.ClipBoardMenu.Size = new System.Drawing.Size(159, 142);
+            this.ClipBoardMenu.Size = new System.Drawing.Size(159, 186);
             this.ClipBoardMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ClipBoardMenu_Opening);
             // 
             // ClipBoardMenu_Paste
@@ -482,10 +485,11 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.hotkeysListToolStripMenuItem,
             this.tipsToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.gbatempThreadToolStripMenuItem,
             this.toolStripSeparator6,
-            this.objectsDatabaseToolStripMenuItem});
+            this.downloadLatestObjectDatabaseToolStripMenuItem,
+            this.objectsDatabaseToolStripMenuItem,
+            this.toolStripSeparator4,
+            this.gbatempThreadToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
@@ -493,40 +497,47 @@
             // hotkeysListToolStripMenuItem
             // 
             this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
-            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
             this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
             // 
             // tipsToolStripMenuItem
             // 
             this.tipsToolStripMenuItem.Name = "tipsToolStripMenuItem";
-            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.tipsToolStripMenuItem.Text = "Tips";
             this.tipsToolStripMenuItem.Click += new System.EventHandler(this.tipsToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(195, 6);
-            // 
-            // gbatempThreadToolStripMenuItem
-            // 
-            this.gbatempThreadToolStripMenuItem.Name = "gbatempThreadToolStripMenuItem";
-            this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
-            this.gbatempThreadToolStripMenuItem.Text = "Gbatemp thread";
-            this.gbatempThreadToolStripMenuItem.Click += new System.EventHandler(this.gbatempThreadToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
-            this.toolStripSeparator6.Size = new System.Drawing.Size(195, 6);
+            this.toolStripSeparator6.Size = new System.Drawing.Size(242, 6);
+            // 
+            // downloadLatestObjectDatabaseToolStripMenuItem
+            // 
+            this.downloadLatestObjectDatabaseToolStripMenuItem.Name = "downloadLatestObjectDatabaseToolStripMenuItem";
+            this.downloadLatestObjectDatabaseToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.downloadLatestObjectDatabaseToolStripMenuItem.Text = "Download latest object database";
+            this.downloadLatestObjectDatabaseToolStripMenuItem.Click += new System.EventHandler(this.downloadLatestObjectDatabaseToolStripMenuItem_Click);
             // 
             // objectsDatabaseToolStripMenuItem
             // 
             this.objectsDatabaseToolStripMenuItem.Name = "objectsDatabaseToolStripMenuItem";
-            this.objectsDatabaseToolStripMenuItem.Size = new System.Drawing.Size(198, 22);
+            this.objectsDatabaseToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.objectsDatabaseToolStripMenuItem.Text = "Objects database editor";
             this.objectsDatabaseToolStripMenuItem.Click += new System.EventHandler(this.objectsDatabaseToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(242, 6);
+            // 
+            // gbatempThreadToolStripMenuItem
+            // 
+            this.gbatempThreadToolStripMenuItem.Name = "gbatempThreadToolStripMenuItem";
+            this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.gbatempThreadToolStripMenuItem.Text = "Gbatemp thread";
+            this.gbatempThreadToolStripMenuItem.Click += new System.EventHandler(this.gbatempThreadToolStripMenuItem_Click);
             // 
             // splitContainer1
             // 
@@ -753,6 +764,14 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
+            // ClipBoardMenu_CopyRail
+            // 
+            this.ClipBoardMenu_CopyRail.Name = "ClipBoardMenu_CopyRail";
+            this.ClipBoardMenu_CopyRail.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_CopyRail.Text = "Copy rail";
+            this.ClipBoardMenu_CopyRail.Visible = false;
+            this.ClipBoardMenu_CopyRail.Click += new System.EventHandler(this.ClipBoardMenu_CopyRail_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -854,6 +873,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripMenuItem oggToBcstmConverterToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem downloadLatestObjectDatabaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyRail;
     }
 }
 

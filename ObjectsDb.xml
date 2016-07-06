@@ -215,4 +215,11 @@ arg[2] rotating speed
 </LongDescription>
     <Author>exelix11</Author>
   </Objects>
+  <Objects>
+    <InGameName>GrassCoin</InGameName>
+    <ModelName>Grass.obj</ModelName>
+    <ShortDescription>Spawns a coin</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
 </ObjDB>
