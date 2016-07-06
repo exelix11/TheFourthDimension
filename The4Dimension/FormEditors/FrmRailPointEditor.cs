@@ -139,7 +139,12 @@ namespace The4Dimension
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex == -1) return;
-            propertyGrid1.SelectedObject = Value[listBox1.SelectedIndex];
+            if (listBox1.SelectedItems.Count > 1) propertyGrid1.Enabled = false;
+            else
+            {
+                propertyGrid1.Enabled = true;
+                propertyGrid1.SelectedObject = Value[listBox1.SelectedIndex];
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -152,12 +157,15 @@ namespace The4Dimension
         private void button2_Click(object sender, EventArgs e)
         {
             if (listBox1.SelectedIndex == -1) return;
-            if (listBox1.Items.Count < 3)
+            if (listBox1.Items.Count - listBox1.SelectedItems.Count +1 < 3)
             {
                 MessageBox.Show("A rail must have at least 2 points !");
                 return;
             }
-            Value.RemoveAt(listBox1.SelectedIndex);
+            foreach (Rail.Point i in listBox1.SelectedItems)
+            {
+                Value.Remove(i);
+            }
             RefreshListBox();
         }
 

@@ -16,11 +16,13 @@ using System.Windows.Input;
 using System.IO;
 using LibEveryFileExplorer.Files.SimpleFileSystem;
 using ExtensionMethods;
+using System.Net;
 
 namespace The4Dimension
 {
     public partial class Form1 : Form
     {
+        public static string ObjectDbLink = "https://raw.githubusercontent.com/exelix11/TheFourthDimension/master/ObjectsDb.xml";
         public UserControl1 render = new UserControl1();
         public Dictionary<string, string> LevelNameNum = new Dictionary<string, string>(); //WX-X, stageName
         int APP_VER = Int32.Parse(Application.ProductVersion.Replace(".", ""));
@@ -277,7 +279,7 @@ namespace The4Dimension
                 tb.Columns.Add("Author");
                 ObjDatabase.Tables.Add(info);
                 ObjDatabase.Tables.Add(tb);
-                MessageBox.Show("The object database wasn't found, some objects may not appear, and you won't be able to get informations about how to use objects, you can download the database from ???"); //TODO: objectdb updater/downloader
+                MessageBox.Show("The object database wasn't found, some objects may not appear, and you won't be able to get informations about how to use objects, you can download the database from Help -> Download latest object database");
                 return;
             } else
             {
@@ -672,13 +674,24 @@ namespace The4Dimension
                 if (Undo.Count > 0) Undo.Pop().Undo();
                 return;
             }
-            if (comboBox1.Text == "AllRailInfos" || ObjectsListBox.SelectedIndex == -1) return;
-            if (e.Key == Key.Space) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
-            else if (e.Key == Key.OemPlus) { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
+            if (ObjectsListBox.SelectedIndex == -1) return;
+            if (comboBox1.Text == "AllRailInfos")
+            {
+                if (propertyGrid1.SelectedObject is Rail && e.Key == Key.N)
+                {
+                    Rail tmp = (Rail)propertyGrid1.SelectedObject;
+                    tmp.Points.Add(tmp.Points[tmp.Points.Count - 1].Clone_increment());
+                    propertyGrid1.SelectedObject = AllRailInfos[ObjectsListBox.SelectedIndex];
+                    UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+                    render.SelectRail(AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
+                }
+            }
+            if (e.Key == Key.Space && comboBox1.Text != "AllRailInfos") render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+            else if (e.Key == Key.OemPlus && comboBox1.Text != "AllRailInfos") { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
             else if (e.Key == Key.D) button2_Click(null, null); //Duplicate
             else if (e.Key == Key.Delete) button3_Click(null, null); //Delete obj
             else if (e.Key == Key.F) findToolStripMenuItem.ShowDropDown();
-            else if (e.Key == Key.R) //Round selected object position to a multiple of 100
+            else if (e.Key == Key.R && comboBox1.Text != "AllRailInfos") //Round selected object position to a multiple of 100
             {
                 if (RenderIsDragging) return;
                 string type = comboBox1.Text;
@@ -1000,10 +1013,11 @@ namespace The4Dimension
                 " + : Add a new object\r\n" +
                 " Del : Delete selected object\r\n" +
                 " Ctrl + R : Round the selected object position to a multiple of 100 (like Ctrl + alt + drag, but without dragging)\r\n" +
-                " Ctrl + F : Open the search menu\r\n" +
+                " Ctrl + F : Open the search menu\r\n\r\n" +
                 "In the 3D view:\r\n" +
                 " Ctrl + drag : Move object\r\n" +
                 " Ctrl + Alt + drag : Move object snapping every 100 units\r\n" +
+                " (With a rail selected) N : Add a new point at the end of the rail\r\n" +
                 " -Every other combination without having to press Ctrl\r\n");
         }
 
@@ -1181,6 +1195,41 @@ namespace The4Dimension
         private void lblDescription_Click(object sender, EventArgs e)
         {
             if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjDatabase.Tables[1].Rows[(int)lblDescription.Tag].ItemArray).Show();
+        }
+
+        private void oggToBcstmConverterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new BgmEditors.FrmMakeBcstm().ShowDialog();
+        }
+
+        private void downloadLatestObjectDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (File.Exists("ObjectsDb.xml"))
+            {
+                if (MessageBox.Show("An object database file already exists, if you download a new one it will be replaced, if you edited it your changes will be lost, do you want to continue ?", "Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
+                File.Copy("ObjectsDb.xml", "ObjectsDb.xml.old");
+                File.Delete("ObjectsDb.xml");
+            }
+            try
+            {
+                WebClient w = new WebClient();
+                w.DownloadFile(ObjectDbLink, "ObjectsDb.xml");
+                w.Dispose();
+                LoadObjectDatabase();
+                File.Delete("ObjectsDb.xml.old");
+                MessageBox.Show("Done !");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error, the file wasn't downloaded: \r\n" + ex.Message);
+                if (File.Exists("ObjectsDb.xml.old"))
+                {
+                    File.Copy("ObjectsDb.xml.old", "ObjectsDb.xml");
+                    File.Delete("ObjectsDb.xml.old");
+                    MessageBox.Show("The backup was restored");
+                }
+                return;
+            }
         }
         #endregion
 
@@ -1578,6 +1627,13 @@ namespace The4Dimension
             if (indexes.Length > 1) CopyValue(indexes, comboBox1.Text, "FullArray");
         }
 
+
+        private void ClipBoardMenu_CopyRail_Click(object sender, EventArgs e)
+        {
+            if (ObjectsListBox.SelectedIndex < 0) return;
+            CopyValue(GetSelectedIndexes(), comboBox1.Text, "Rail");
+        }
+
         void CopyValue(int[] indexes, string type, string value)
         {
             ClipBoardItem cl = new ClipBoardItem();
@@ -1639,6 +1695,11 @@ namespace The4Dimension
                     cl.Objs = l.ToArray();
                 }
             }
+            else if (value == "Rail")
+            {
+                cl.Type = ClipBoardItem.ClipboardType.Rail;
+                cl.Rail = ((Rail)AllInfos[type].Objs[index].Prop["Rail"]).Clone();
+            }
             clipboard.Add(cl);
             if (clipboard.Count > 10) clipboard.RemoveAt(0);
             ClipBoardMenu_Paste.DropDownItems.Clear();
@@ -1666,23 +1727,28 @@ namespace The4Dimension
                 ClipBoardMenu_CopyArgs.Enabled = false;
                 ClipBoardMenu_CopyFull.Text = "Copy objects";
                 ClipBoardMenu_Paste.Enabled = false;
+                ClipBoardMenu_CopyRail.Visible = false;
             }
             else
             {
                 ClipBoardMenu_CopyArgs.Enabled = true;
-                ClipBoardMenu_CopyFull.Text = "Copy full object";
                 ClipBoardMenu_Paste.Enabled = true;
+                ClipBoardMenu_CopyRail.Visible = false;
                 if (comboBox1.Text == "AllRailInfos")
                 {
                     ClipBoardMenu_CopyPos.Enabled = false;
                     ClipBoardMenu_CopyRot.Enabled = false;
                     ClipBoardMenu_CopyScale.Enabled = false;
+                    ClipBoardMenu_CopyFull.Text = "Copy rail";
                 }
                 else
                 {
+                    ClipBoardMenu_CopyFull.Text = "Copy full object";
                     ClipBoardMenu_CopyPos.Enabled = true;
                     ClipBoardMenu_CopyRot.Enabled = true;
                     ClipBoardMenu_CopyScale.Enabled = true;
+                    if (AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.Keys.Contains("Rail") && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["Rail"] is Rail)
+                        ClipBoardMenu_CopyRail.Visible = true;
                 }
                 ClipBoardMenu_Paste.DropDownItems.Clear();
                 List<ToolStripMenuItem> Items = new List<ToolStripMenuItem>();
@@ -2196,9 +2262,6 @@ namespace The4Dimension
 
         #endregion
 
-        private void oggToBcstmConverterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            new BgmEditors.FrmMakeBcstm().ShowDialog();
-        }
+      
     }
 }

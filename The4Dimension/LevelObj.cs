@@ -281,6 +281,17 @@ namespace The4Dimension
                 return N;
             }
 
+            public Point Clone_increment()
+            {
+                Point N = new Point();
+                foreach (int i in _Args) N._Args.Add(i);
+                N.ID = _ID + 1;
+                foreach (int s in _X) N._X.Add(s + 100);
+                foreach (int s in _Y) N._Y.Add(s);
+                foreach (int s in _Z) N._Z.Add(s);
+                return N;
+            }
+
             object ICloneable.Clone()
             {
                 return Clone();
