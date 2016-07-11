@@ -222,7 +222,20 @@ namespace ModelViewer
             t.Children.Add(new TranslateTransform3D(pos));
             Positions[Type][index] = pos;
             Models[Type][index].Transform = t;
-        }        
+        }
+
+        public void ChangeModel(string Type, int index, string path)
+        {
+            Model3D Model;
+            if (!ImportedModels.ContainsKey(path))
+            {
+                Model = Importer.Load(path);
+                ImportedModels.Add(path, Model);
+            }
+            else Model = ImportedModels[path];
+            Models[Type][index].Content = Model;
+            ModelView.UpdateLayout();
+        }
 
         public object[] GetOBJ(object sender, MouseButtonEventArgs e)
         {
