@@ -38,6 +38,7 @@
             this.ClipBoardMenu_CopyScale = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu_CopyArgs = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu_CopyFull = new System.Windows.Forms.ToolStripMenuItem();
+            this.ClipBoardMenu_CopyRail = new System.Windows.Forms.ToolStripMenuItem();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -101,7 +102,6 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.ClipBoardMenu_CopyRail = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -136,7 +136,7 @@
             this.ClipBoardMenu_CopyFull,
             this.ClipBoardMenu_CopyRail});
             this.ClipBoardMenu.Name = "contextMenuStrip1";
-            this.ClipBoardMenu.Size = new System.Drawing.Size(159, 186);
+            this.ClipBoardMenu.Size = new System.Drawing.Size(159, 164);
             this.ClipBoardMenu.Opening += new System.ComponentModel.CancelEventHandler(this.ClipBoardMenu_Opening);
             // 
             // ClipBoardMenu_Paste
@@ -186,6 +186,14 @@
             this.ClipBoardMenu_CopyFull.Size = new System.Drawing.Size(158, 22);
             this.ClipBoardMenu_CopyFull.Text = "Copy full object";
             this.ClipBoardMenu_CopyFull.Click += new System.EventHandler(this.ClipBoardMenu_CopyFull_Click);
+            // 
+            // ClipBoardMenu_CopyRail
+            // 
+            this.ClipBoardMenu_CopyRail.Name = "ClipBoardMenu_CopyRail";
+            this.ClipBoardMenu_CopyRail.Size = new System.Drawing.Size(158, 22);
+            this.ClipBoardMenu_CopyRail.Text = "Copy rail";
+            this.ClipBoardMenu_CopyRail.Visible = false;
+            this.ClipBoardMenu_CopyRail.Click += new System.EventHandler(this.ClipBoardMenu_CopyRail_Click);
             // 
             // elementHost1
             // 
@@ -662,6 +670,7 @@
             this.ObjectsListBox.TabIndex = 8;
             this.ObjectsListBox.SelectedIndexChanged += new System.EventHandler(this.ObjectsListBox_SelectedIndexChanged);
             this.ObjectsListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Listbox_keyDown);
+            this.ObjectsListBox.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ObjectsListBox_Doubleclick);
             this.ObjectsListBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ListBox_MouseUp);
             // 
             // label1
@@ -763,14 +772,6 @@
             this.label2.TabIndex = 8;
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
-            // 
-            // ClipBoardMenu_CopyRail
-            // 
-            this.ClipBoardMenu_CopyRail.Name = "ClipBoardMenu_CopyRail";
-            this.ClipBoardMenu_CopyRail.Size = new System.Drawing.Size(158, 22);
-            this.ClipBoardMenu_CopyRail.Text = "Copy rail";
-            this.ClipBoardMenu_CopyRail.Visible = false;
-            this.ClipBoardMenu_CopyRail.Click += new System.EventHandler(this.ClipBoardMenu_CopyRail_Click);
             // 
             // Form1
             // 

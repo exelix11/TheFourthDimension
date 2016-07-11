@@ -900,7 +900,7 @@ namespace The4Dimension
             if (comboBox1.Text == "AreaObjInfo")
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
-                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+               // if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 if (AllInfos[comboBox1.Text].IsHidden)
                 {
                     if (AreaObjOldSelection != -1 && AreaObjOldSelection < AllInfos["AreaObjInfo"].Objs.Count) render.ChangeTransform(comboBox1.Text, AreaObjOldSelection, render.Positions[comboBox1.Text][AreaObjOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
@@ -912,7 +912,7 @@ namespace The4Dimension
             else if (comboBox1.Text == "CameraAreaInfo")
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
-                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+                //if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 if (AllInfos[comboBox1.Text].IsHidden)
                 {
                     if (CameraAreaOldSelection != -1 && AreaObjOldSelection < AllInfos["CameraAreaInfo"].Objs.Count) render.ChangeTransform(comboBox1.Text, CameraAreaOldSelection, render.Positions[comboBox1.Text][CameraAreaOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
@@ -927,12 +927,12 @@ namespace The4Dimension
                 propertyGrid1.SelectedObject = AllRailInfos[ObjectsListBox.SelectedIndex];
                 UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
                 render.SelectRail(AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
-                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+               // if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
             }
             else
             {
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop);
-                if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+               // if (!RenderIsDragging) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
                 if (checkBox2.Checked && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.ContainsKey("GenerateChildren"))
                 {
                     AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"], false);
@@ -942,6 +942,14 @@ namespace The4Dimension
                     AddChildrenModels((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["AreaChildren"], true);
                 }
             }
+        }
+
+
+        private void ObjectsListBox_Doubleclick(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (ObjectsListBox.SelectedIndex < 0) return;
+            if (ObjectsListBox.SelectedItems.Count > 1) return;
+            render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
         }
 
         void UpdateHint()
@@ -1008,12 +1016,15 @@ namespace The4Dimension
         {
             MessageBox.Show("Hotkeys list:\r\n" +
                 " Ctrl + Z : Undo\r\n" +
-                " Space : Focus the camera on the selected object\r\n" +
+                " Space : Move the camera on the selected object\r\n" +
                 " Ctrl + D : Duplicate selected object\r\n" +
                 " + : Add a new object\r\n" +
                 " Del : Delete selected object\r\n" +
                 " Ctrl + R : Round the selected object position to a multiple of 100 (like Ctrl + alt + drag, but without dragging)\r\n" +
                 " Ctrl + F : Open the search menu\r\n\r\n" +
+                "In the Objects list:\r\n" +
+                " Click once on an object to select it\r\n"+
+                " Double click an object to select it and move the camera to it"+
                 "In the 3D view:\r\n" +
                 " Ctrl + drag : Move object\r\n" +
                 " Ctrl + Alt + drag : Move object snapping every 100 units\r\n" +
@@ -1316,7 +1327,13 @@ namespace The4Dimension
             else
             {
                 string name = e.ChangedItem.Parent.Value is Node ? e.ChangedItem.Parent.Label : e.ChangedItem.Label;
-                if (name == "name" || name == "l_id") MessageBox.Show("You shouldn't mess up with the name or the l_id property of the objects, you should add a new object instead and copy the position from this object to the new one.\r\nYou can undo this action from the undo button", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (name == "name" || name == "l_id")
+                {
+                    MessageBox.Show("You shouldn't mess up with the name or the l_id property of the objects, you should add a new object instead and copy the position from this object to the new one.\r\nYou can undo this action from the undo button", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    string path = GetModelname(((Node)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop[name]).StringValue);
+                    if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
+                    if (name == "name") render.ChangeModel(comboBox1.Text, ObjectsListBox.SelectedIndex, path);
+                }
                 UpdateOBJPos(ObjectsListBox.SelectedIndex, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
                 Action<string, int, string, object> action;
                 action = (string type, int id, string propName, object value) =>
@@ -1326,6 +1343,13 @@ namespace The4Dimension
                         AllInfos[type].Objs[id].Prop[propName] = value;
                     propertyGrid1.Refresh();
                     UpdateOBJPos(id, ref AllInfos[type].Objs, type);
+                    if (propName == "name")
+                    {
+                        string path = GetModelname(((Node)AllInfos[type].Objs[id].Prop[propName]).StringValue);
+                        if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
+                        if (name == "name") render.ChangeModel(type, id, path);
+                        ObjectsListBox.Items[id] = AllInfos[type].Objs[id].ToString();
+                    }
                 };
                 Undo.Push(new UndoAction("Changed value: " + name + " of object: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, ObjectsListBox.SelectedIndex, name, e.OldValue, action));
                 ObjectsListBox.Items[ObjectsListBox.SelectedIndex] = AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString();
@@ -1747,7 +1771,7 @@ namespace The4Dimension
                     ClipBoardMenu_CopyPos.Enabled = true;
                     ClipBoardMenu_CopyRot.Enabled = true;
                     ClipBoardMenu_CopyScale.Enabled = true;
-                    if (AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.Keys.Contains("Rail") && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["Rail"] is Rail)
+                    if (ObjectsListBox.SelectedItems.Count == 1 && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop.Keys.Contains("Rail") && AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["Rail"] is Rail)
                         ClipBoardMenu_CopyRail.Visible = true;
                 }
                 ClipBoardMenu_Paste.DropDownItems.Clear();
@@ -2260,8 +2284,8 @@ namespace The4Dimension
             xr.WriteEndElement();
         }
 
-        #endregion
 
-      
+        #endregion
+        
     }
 }
