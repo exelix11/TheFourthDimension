@@ -216,6 +216,15 @@ arg[2] rotating speed
     <Author>exelix11</Author>
   </Objects>
   <Objects>
+    <InGameName>WarpPorter</InGameName>
+    <ModelName />
+    <ShortDescription>Purple warp box, has a timer that warps the player back, the player is spawned from the children WarpPorter.</ShortDescription>
+    <LongDescription>Purple warp box, a timer that warps the player back, the default timer is 10 seconds.
+Add another WarpPorter as a children, that will spawn the player
+</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
     <InGameName>GrassCoin</InGameName>
     <ModelName>Grass.obj</ModelName>
     <ShortDescription>Spawns a coin</ShortDescription>
