@@ -736,7 +736,8 @@
             this.lblDescription.Size = new System.Drawing.Size(235, 49);
             this.lblDescription.TabIndex = 9;
             this.lblDescription.Tag = "-1";
-            this.lblDescription.Text = "No object selected";
+            this.lblDescription.Text = "No object selected, when an object is selected you can click here to show the ful" +
+    "l description";
             this.lblDescription.Click += new System.EventHandler(this.lblDescription_Click);
             // 
             // button5

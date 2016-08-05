@@ -79,6 +79,7 @@ namespace The4Dimension
             tb.Columns.Add("ShortDescription");
             tb.Columns.Add("LongDescription");
             tb.Columns.Add("Author");
+            objs.Sort(new strArrayComparer());
             foreach (string[] obj in objs)
             {
                 tb.Rows.Add(obj[0], obj[1], obj[2], obj[3], obj[4]);
@@ -104,6 +105,14 @@ namespace The4Dimension
         private void button5_Click(object sender, EventArgs e)
         {
             MessageBox.Show("For names like BlockBrick*, the * means the editor will load the same model for every object with the name starting with BlockBrick, this entry description won't be shown.");
+        }
+    }
+
+    public class strArrayComparer : IComparer<string[]>
+    {
+        public int Compare(string[] x, string[] y)
+        {
+            return string.Compare(x[0], y[0]);
         }
     }
 }

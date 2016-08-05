@@ -23,6 +23,7 @@ namespace The4Dimension
             LayerName = text;
             CCNT = _CCNT;
             ObjDb = _ObjDb;
+            comboBox1.Sorted = true;
         }
 
         void LoadObjList(string[] array)
@@ -83,7 +84,8 @@ namespace The4Dimension
                 obj.Prop.Add("SwitchB", new Node("-1", "D1"));
                 obj.Prop.Add("SwitchKill", new Node("-1", "D1"));
                 obj.Prop.Add("SwitchDeadOn", new Node("-1", "D1"));
-            } else obj.Prop.Add("MarioNo", new Node("0", "D1"));
+            }
+            else obj.Prop.Add("MarioNo", new Node("0", "D1"));
             obj.Prop.Add("LayerName", new Node("共通", "A0"));
             obj.Prop.Add("name", new Node(comboBox1.Text, "A0"));
             obj.Prop.Add("dir_x", new Node("0", "D2"));
