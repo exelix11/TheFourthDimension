@@ -231,4 +231,160 @@ Add another WarpPorter as a children, that will spawn the player
     <LongDescription />
     <Author>exelix11</Author>
   </Objects>
+  <Objects>
+    <InGameName>PackunFlowerDokan</InGameName>
+    <ModelName />
+    <ShortDescription>Piranha Plant for Pipe.
+If defeated, it will activate SwitchDeadOn.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>KinokoOneUpMysteryBoxPresent</InGameName>
+    <ModelName />
+    <ShortDescription>Spawns a "loose" 1-Up Mushroom. Has an animation and effect when spawned via SwitchAppear.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Bunbun</InGameName>
+    <ModelName />
+    <ShortDescription>Activates SwitchA when it finishes its cutscene.
+Appears with cutscene when SwitchAppear is activated.</ShortDescription>
+    <LongDescription>Activates SwitchA when it finishes its cutscene. This is used to cancel the effect of the PlayerControlOffArea.
+Appears with cutscene when SwitchAppear is activated. If SwitchAppear is set to -1, it appears on level load.</LongDescription>
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>PlayerControlOffArea</InGameName>
+    <ModelName />
+    <ShortDescription>If the Mario enters this area, they cannot be controlled until the flag associated with the area's SwitchKill is turned on.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>BlockNoteWide</InGameName>
+    <ModelName />
+    <ShortDescription>The dimensions of this object are 200x100x200</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>NoteObj</InGameName>
+    <ModelName />
+    <ShortDescription>Spawns Rainbow Notes along the specified path when SwitchA is turned on</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>CoinGathering</InGameName>
+    <ModelName />
+    <ShortDescription>Used to make coins appear with an effect when a flag is turned on. Give it child "Coin"/s with their "SwitchAppear"s all set to the flag that will be turned on.
+Args[1] = CoinGathering Time</ShortDescription>
+    <LongDescription>Used to make coins appear with an effect when a flag is turned on. Give it child "Coin"/s with their "SwitchAppear"s all set to the flag that will be turned on.
+Args[1] = The amount of time the coin appears for after being activated in a CoinGathering setup. -1 is permanently.
+</LongDescription>
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>CandlestandObserver</InGameName>
+    <ModelName />
+    <ShortDescription>Switches on the flag specified in SwitchA when all child Candlestand objects are lit</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>EnemyCounter</InGameName>
+    <ModelName />
+    <ShortDescription>Spawns a powerup (at the location of the last defeated enemy) when the specified number of the child enemies(Arg[0]) are defeated. The powerup spawned depends on the enemy.</ShortDescription>
+    <LongDescription>Spawns a powerup (at the location of the last defeated enemy) when the specified number of the child enemies are defeated. The powerup spawned depends on the enemy. Possibilities:
+Fire Piranha Plant - Fire Flower
+Big Tail Goomba, Tail Boo - Super Leaf
+Boomerang Bro. - Boomerang Flower
+
+Args[0] = Number to defeat</LongDescription>
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Kuribo</InGameName>
+    <ModelName />
+    <ShortDescription>Friendly name: Goomba
+To make it spawn a Star Medal when defeated, give it a CoinCollect (aka Star Medal) child</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>CoinRedStarter</InGameName>
+    <ModelName />
+    <ShortDescription>Red Ring
+To give makes this spawn Red Coins, give it five CoinRed children</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>BlockNoteSuperWide</InGameName>
+    <ModelName />
+    <ShortDescription>To give this a destination, give it a child BlockNoteSuperWide with argument 1 set to 1.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Kinopio</InGameName>
+    <ModelName />
+    <ShortDescription>Toad
+If you set a path, it will walk/run along it.
+args can set color, animation and item</ShortDescription>
+    <LongDescription>Toad
+If you set a path, it will walk/run along it.
+
+args[0] = color: 
+≤1 - Red
+2 - Blue
+3 - Yellow
+4 - Green
+≥5 - Purple
+
+args[1] = Animation: 
+≤0, ≥3 - Standing
+1 - Jumping
+2 - Scared
+3 - Green
+
+args[7] = item:
+≤0 - None
+1 - 1-Up Mushroom
+&gt;2 - None, but stills plays throwing animation when approached</LongDescription>
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>TrampleSwitch</InGameName>
+    <ModelName />
+    <ShortDescription>P Switch
+When pressed it permanently switches on the switch specified in SwitchA.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>TreeA</InGameName>
+    <ModelName />
+    <ShortDescription>Friendly name: Bubbly Tree
+args[0]=Item when climbed
+args[2]=Item when bumped</ShortDescription>
+    <LongDescription>Friendly name: Bubbly Tree
+args[0]=Item when climbed:
+&lt;1, &gt;6 - Nothing
+1 - 1-Up Mushroom
+2 - Fire Flower (status dependant)
+3 - Super Leaf (status dependant)
+4 - Super Star
+5 - Poison Mushroom
+6 - Boomerang Flower (status dependant)
+
+args[2]=Item when bumped (Appears when Mario rolls into the tree's stump):
+-1 - Nothing
+0 - ?
+1 - 5 Coins
+2+ - ?</LongDescription>
+    <Author>Hiccup</Author>
+  </Objects>
 </ObjDB>

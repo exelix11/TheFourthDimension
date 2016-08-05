@@ -99,7 +99,6 @@ namespace The4Dimension
         Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
         public List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
-        Dictionary<string, string> ModelResolver = new Dictionary<string, string>(); //Converts names like BlockBrickCoins to BlockBrick.obj, will be replaced with an object database
         public DataSet ObjDatabase = new DataSet("ObjDB");
         public List<string> ObjDatabaseNames = new List<string>(); //For quickly getting the right index in the database
         public Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
