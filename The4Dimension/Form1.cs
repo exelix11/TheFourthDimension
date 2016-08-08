@@ -17,6 +17,7 @@ using System.IO;
 using LibEveryFileExplorer.Files.SimpleFileSystem;
 using ExtensionMethods;
 using System.Net;
+using The4Dimension.ObjectDB;
 
 namespace The4Dimension
 {
@@ -96,7 +97,7 @@ namespace The4Dimension
         }
 
         public Dictionary<string, byte[]> SzsFiles = null;
-        Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
+        public Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
         public List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
         public DataSet ObjDatabase = new DataSet("ObjDB");
@@ -125,6 +126,23 @@ namespace The4Dimension
             if (LoadedFile != "") LoadFile(LoadedFile);
             else SetUiLock(false, false);
             gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path: " + Properties.Settings.Default.GamePath;
+            //new GameObjectDumper(LevelNameNum.Keys.ToArray(), this).Show(); 
+        }
+
+        void UnloadLevel()
+        {
+            render.UnloadLevel();
+            SzsFiles = null;
+            AllInfos = new Dictionary<string, AllInfoSection>();
+            AllRailInfos = new List<Rail>();
+            higestID = new Dictionary<string, int>();
+            Undo = new CustomStack<UndoAction>();
+            comboBox1.Items.Clear();
+            ObjectsListBox.Items.Clear();
+            propertyGrid1.SelectedObject = null;
+            //if (MessageBox.Show("Keep clipboard ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) clipboard = new List<ClipBoardItem>();
+            LoadedFile = "";
+            SetUiLock(false, false);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -162,6 +180,7 @@ namespace The4Dimension
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            UnloadLevel();
             comboBox1.Items.Add("AllRailInfos");
             higestID.Add("AllRailInfos", 0);
             render.AddKey("AllRailInfos");
@@ -187,14 +206,12 @@ namespace The4Dimension
                 OtherLevelDataMenu.Enabled = Lock;
                 saveAsSZSToolStripMenuItem.Enabled = Lock;
             }
-            newToolStripMenuItem.Enabled = !Lock;
-            openToolStripMenuItem.Enabled = !Lock;
-            openFromLevelNameWXXToolStripMenuItem.Enabled = !Lock;
         }
 
         #region FileLoading
-        void LoadFile(string FilePath) //Checks the file type and then loads the file
+        public void LoadFile(string FilePath) //Checks the file type and then loads the file
         {
+            UnloadLevel();
             if (Path.GetExtension(FilePath).ToLower() == ".xml")
             {
                 LoadedFile = FilePath;
@@ -711,13 +728,13 @@ namespace The4Dimension
                 if (Undo.Count > 0) Undo.Pop().Undo();
                 return;
             }
-            if (comboBox1.Text == "AllRailInfos" || ObjectsListBox.SelectedIndex == -1) return;
+            if (ObjectsListBox.SelectedIndex == -1) return;
             if (e.KeyCode == Keys.Space) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
-            else if (e.KeyCode == Keys.Oemplus) { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
             else if (e.KeyCode == Keys.D && e.Control) button2_Click(null, null); //Duplicate
             else if (e.KeyCode == Keys.Delete) button3_Click(null, null); //Delete obj
             else if (e.KeyCode == Keys.F && e.Control) findToolStripMenuItem.ShowDropDown();
-            else if (e.KeyCode == Keys.R && e.Control) //Round selected object position to a multiple of 100
+            else if (comboBox1.Text != "AllRailInfos" && e.KeyCode == Keys.Oemplus) { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj            
+            else if (comboBox1.Text != "AllRailInfos" && e.KeyCode == Keys.R && e.Control) //Round selected object position to a multiple of 100
             {
                 if (RenderIsDragging) return;
                 string type = comboBox1.Text;
@@ -762,7 +779,7 @@ namespace The4Dimension
                 AllRailInfos[ObjectsListBox.SelectedIndex].Points[(int)DraggingArgs[1]].Z = -(float)NewPos.Y;
                 UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
             }
-            else
+            else if ((string)DraggingArgs[0] != "AllRailInfos")
             {
                 ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue = NewPos.X.ToString();
                 ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue = NewPos.Z.ToString();
@@ -788,7 +805,7 @@ namespace The4Dimension
                 };
                 Undo.Push(new UndoAction("Moved " + ObjectsListBox.SelectedItem.ToString() + "'s point[" + DraggingArgs[1].ToString() + "] : ", ObjectsListBox.SelectedIndex.ToString(), (int)DraggingArgs[1], StartPos, act));
             }
-            else
+            else if ((string)DraggingArgs[0] != "AllRailInfos")
             {
                 Action<string, int, Vector3D> act;
                 act = (string type, int id, Vector3D pos) =>
@@ -830,6 +847,7 @@ namespace The4Dimension
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
             ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
+            if ((string)DraggingArgs[0] != "AllRailInfos")
             StartPos = new Vector3D(float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
                float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue),
                float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue));
