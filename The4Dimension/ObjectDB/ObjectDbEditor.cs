@@ -36,11 +36,21 @@ namespace The4Dimension
 
         private void button2_Click(object sender, EventArgs e)
         {
-            foreach (int i in listBox1.SelectedIndices)
+            int[] indexes = GetSelectedIndexes();
+            if (indexes[0] == -1) return;
+            foreach (int i in indexes)
             {
                 objs.RemoveAt(i);
                 listBox1.Items.RemoveAt(i);
             }
+        }
+
+        int[] GetSelectedIndexes()
+        {
+            if (listBox1.SelectedItems.Count == 0) return new int[] { -1 };
+            int[] res = new int[listBox1.SelectedItems.Count];
+            for (int i = 0; i < listBox1.SelectedItems.Count; i++) res[i] = listBox1.SelectedIndices[i];
+            return res.Reverse().ToArray(); //From the last to the first
         }
 
         private void button1_Click(object sender, EventArgs e)

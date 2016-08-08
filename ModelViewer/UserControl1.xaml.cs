@@ -178,7 +178,7 @@ namespace ModelViewer
         {
             if (Positions[Type].Count <= index) return;
             Vector3D pos = Positions[Type][index];
-            ModelView.Camera.LookAt(new Point3D(pos.X, pos.Y, pos.Z), 1000);
+            ModelView.Camera.LookAt(new Point3D(pos.X, pos.Y, pos.Z), 500, 1000);
         }
 
         public void SetCameraDirection(int x, int y, int z)
@@ -266,6 +266,22 @@ namespace ModelViewer
             }
 
             return null;
+        }
+
+        public void UnloadLevel()
+        {
+            ModelView.Children.Remove(ModelViewer);
+            ModelViewer.Children.Clear();
+            //ImportedModels = new Dictionary<string, Model3D>();
+            Models = new Dictionary<string, List<ModelVisual3D>>();
+            Positions = new Dictionary<string, List<Vector3D>>();
+            ModelViewer = new SortingVisual3D();
+            ModelViewer.SortingFrequency = 0.5;
+            ModelView.Children.Add(ModelViewer);
+            AddKey("TmpChildrenObjs");
+            AddKey("SelectedRail");
+            AddKey("TmpAreaChildrenObjs");
+            ModelView.Camera.LookAt(new Point3D(0,0,0), 50, 1000);
         }
     }
 }

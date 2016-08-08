@@ -216,7 +216,7 @@ namespace The4Dimension
         }
     }
 
-    class AllInfoSection
+    public class AllInfoSection
     {
         public bool IsHidden = false;
         public List<LevelObj> Objs = new List<LevelObj>();
