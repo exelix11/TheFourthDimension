@@ -155,7 +155,7 @@ namespace The4Dimension
         int _no;
         string _type;
 
-        public Rail(bool Adding = false)
+        public Rail(bool Adding = false, Vector3D? BasePosition = null)
         {
             _LayerName = "共通";
             _closed = "FALSE";
@@ -163,6 +163,15 @@ namespace The4Dimension
             _type = "Bezier";
             if (Adding) _points.Add(new Point());
             if (Adding) _points.Add(new Point(1));
+            if (BasePosition != null)
+            {
+                _points[0].X = (float)((Vector3D)BasePosition).X;
+                _points[0].Y = (float)((Vector3D)BasePosition).Z;
+                _points[0].Z = -(float)((Vector3D)BasePosition).Y;
+                _points[1].X = (float)((Vector3D)BasePosition).X;
+                _points[1].Y = (float)((Vector3D)BasePosition).Z;
+                _points[1].Z = -(float)((Vector3D)BasePosition).Y;
+            }
         }
 
         public override string ToString()

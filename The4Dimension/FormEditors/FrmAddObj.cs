@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Media.Media3D;
 
 namespace The4Dimension
 {
@@ -16,14 +17,16 @@ namespace The4Dimension
         string LayerName;
         string[] CCNT;
         string[] ObjDb;
+        Vector3D objPos;
 
-        public FrmAddObj(string[] _CCNT, string[] _ObjDb, string text)
+        public FrmAddObj(string[] _CCNT, string[] _ObjDb, string text, Vector3D SpawnPos)
         {
             InitializeComponent();
             LayerName = text;
             CCNT = _CCNT;
             ObjDb = _ObjDb;
             comboBox1.Sorted = true;
+            objPos = SpawnPos;
         }
 
         void LoadObjList(string[] array)
@@ -91,9 +94,9 @@ namespace The4Dimension
             obj.Prop.Add("dir_x", new Node("0", "D2"));
             obj.Prop.Add("dir_y", new Node("0", "D2"));
             obj.Prop.Add("dir_z", new Node("0", "D2"));
-            obj.Prop.Add("pos_x", new Node("0", "D2"));
-            obj.Prop.Add("pos_y", new Node("0", "D2"));
-            obj.Prop.Add("pos_z", new Node("0", "D2"));
+            obj.Prop.Add("pos_x", new Node(objPos.X.ToString(), "D2"));
+            obj.Prop.Add("pos_y", new Node((objPos.Z).ToString(), "D2"));
+            obj.Prop.Add("pos_z", new Node((-objPos.Y).ToString(), "D2"));
             obj.Prop.Add("scale_x", new Node("1", "D2"));
             obj.Prop.Add("scale_y", new Node("1", "D2"));
             obj.Prop.Add("scale_z", new Node("1", "D2"));

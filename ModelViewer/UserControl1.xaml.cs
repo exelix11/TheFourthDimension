@@ -1,6 +1,7 @@
 ﻿using HelixToolkit.Wpf;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,49 @@ namespace ModelViewer
         public Dictionary<string, List<Vector3D>> Positions = new Dictionary<string, List<Vector3D>>();
         ModelImporter Importer = new ModelImporter();
         SortingVisual3D ModelViewer = new SortingVisual3D();
+        Vector3D CameraTarget = new Vector3D(0, 0, 0);
+
+        public double CameraInertiaFactor
+        {
+            get { return ModelView.CameraInertiaFactor; }
+            set { ModelView.CameraInertiaFactor = value; }
+        }
+
+        public bool ShowFps
+        {
+            get { return ModelView.ShowFrameRate; }
+            set { ModelView.ShowFrameRate = value; }
+        }
+
+        public bool ShowTriangleCount
+        {
+            get { return ModelView.ShowTriangleCountInfo; }
+            set { ModelView.ShowTriangleCountInfo = value; }
+        }
+
+        public bool ShowDebugInfo
+        {
+            get { return ModelView.ShowCameraInfo; }
+            set { ModelView.ShowCameraInfo = value; }
+        }
+
+        public CameraMode CamMode
+        {
+            get { return ModelView.CameraMode; }
+            set { ModelView.CameraMode = value; }
+        }
+
+        public double ZoomSensitivity
+        {
+            get { return ModelView.ZoomSensitivity; }
+            set { ModelView.ZoomSensitivity = value; }
+        }
+
+        public double RotationSensitivity
+        {
+            get { return ModelView.RotationSensitivity; }
+            set { ModelView.RotationSensitivity = value; }
+        }
 
         public UserControl1()
         {
@@ -33,6 +77,7 @@ namespace ModelViewer
             AddKey("TmpChildrenObjs");
             AddKey("SelectedRail");
             AddKey("TmpAreaChildrenObjs");
+            CameraTarget = new Vector3D(0, 0, 0);
         }
 
         public void Clean()
@@ -174,11 +219,18 @@ namespace ModelViewer
             }
         }
 
+        public void LookAt(Vector3D p)
+        {
+            ModelView.Camera.LookAt(p.ToPoint3D(), 500, 1000);
+            CameraTarget = p;
+        }
+
         public void CameraToObj(string Type, int index)
         {
             if (Positions[Type].Count <= index) return;
             Vector3D pos = Positions[Type][index];
             ModelView.Camera.LookAt(new Point3D(pos.X, pos.Y, pos.Z), 500, 1000);
+            CameraTarget = new Vector3D(pos.X, pos.Y, pos.Z);
         }
 
         public void SetCameraDirection(int x, int y, int z)
@@ -233,6 +285,7 @@ namespace ModelViewer
                 ImportedModels.Add(path, Model);
             }
             else Model = ImportedModels[path];
+            Model.Transform = new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1, 0, 0), 90));
             Models[Type][index].Content = Model;
             ModelView.UpdateLayout();
         }
@@ -245,7 +298,7 @@ namespace ModelViewer
             if (result == null) return res;
             foreach (string k in Models.Keys)
             {
-                if (k != "TmpChildrenObjs" && k != "TmpAreaChildrenObjs" && Models[k].Contains(result))
+                if (k != "TmpAreaChildrenObjs" && Models[k].Contains(result))
                 {
                     res[0] = k;
                     res[1] = Models[k].IndexOf(result);
@@ -268,6 +321,15 @@ namespace ModelViewer
             return null;
         }
 
+        public double TooCloseCheck() {return Math.Abs(CameraTarget.X) - Math.Abs(ModelView.Camera.Position.X) ; }
+
+        public Vector3D GetPositionInView()
+        {
+            FrameworkElement pnlClient = this.Content as FrameworkElement;
+            Point3D p = (Point3D)ModelView.Viewport.UnProject(new Point(pnlClient.ActualWidth / 2, pnlClient.ActualHeight / 2), ModelView.Camera.Position, ModelView.Camera.LookDirection);
+            return new Vector3D(Math.Truncate(p.X), Math.Truncate(p.Y), Math.Truncate(p.Z));
+        }
+
         public void UnloadLevel()
         {
             ModelView.Children.Remove(ModelViewer);
@@ -282,6 +344,7 @@ namespace ModelViewer
             AddKey("SelectedRail");
             AddKey("TmpAreaChildrenObjs");
             ModelView.Camera.LookAt(new Point3D(0,0,0), 50, 1000);
+            CameraTarget = new Vector3D(0, 0, 0);
         }
     }
 }

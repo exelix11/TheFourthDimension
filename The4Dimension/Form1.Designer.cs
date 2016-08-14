@@ -54,6 +54,8 @@
             this.bymlConverterToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.bymlXmlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.xmlBymlToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
+            this.preferencesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.otherToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.creatorClassNameTableEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.stagesBgmEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -102,6 +104,20 @@
             this.button5 = new System.Windows.Forms.Button();
             this.button4 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
+            this.ZoomCheckWarning = new System.Windows.Forms.Timer(this.components);
+            this.label3 = new System.Windows.Forms.Label();
+            this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.cbCameraMode = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.ChbDebugInfo = new System.Windows.Forms.CheckBox();
+            this.ChbTriCount = new System.Windows.Forms.CheckBox();
+            this.ChbFps = new System.Windows.Forms.CheckBox();
+            this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.ZoomSenUpDown = new System.Windows.Forms.NumericUpDown();
+            this.RotSenUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -109,6 +125,10 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.DeleteMenuStrip.SuspendLayout();
+            this.SettingsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -230,7 +250,9 @@
             this.openToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator2,
-            this.bymlConverterToolStripMenuItem1});
+            this.bymlConverterToolStripMenuItem1,
+            this.toolStripSeparator8,
+            this.preferencesToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -320,6 +342,18 @@
             this.xmlBymlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
             this.xmlBymlToolStripMenuItem1.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem1.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator8
+            // 
+            this.toolStripSeparator8.Name = "toolStripSeparator8";
+            this.toolStripSeparator8.Size = new System.Drawing.Size(233, 6);
+            // 
+            // preferencesToolStripMenuItem
+            // 
+            this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
+            this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.preferencesToolStripMenuItem.Text = "3D view settings";
+            this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
             // 
             // otherToolStripMenuItem
             // 
@@ -774,11 +808,186 @@
             this.label2.Text = "Credits";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
+            // ZoomCheckWarning
+            // 
+            this.ZoomCheckWarning.Interval = 2000;
+            this.ZoomCheckWarning.Tick += new System.EventHandler(this.ZoomCheckWarning_Tick);
+            // 
+            // label3
+            // 
+            this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(242, 555);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(0, 13);
+            this.label3.TabIndex = 9;
+            // 
+            // SettingsPanel
+            // 
+            this.SettingsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.SettingsPanel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SettingsPanel.Controls.Add(this.RotSenUpDown);
+            this.SettingsPanel.Controls.Add(this.label7);
+            this.SettingsPanel.Controls.Add(this.ZoomSenUpDown);
+            this.SettingsPanel.Controls.Add(this.label6);
+            this.SettingsPanel.Controls.Add(this.cbCameraMode);
+            this.SettingsPanel.Controls.Add(this.label5);
+            this.SettingsPanel.Controls.Add(this.ChbDebugInfo);
+            this.SettingsPanel.Controls.Add(this.ChbTriCount);
+            this.SettingsPanel.Controls.Add(this.ChbFps);
+            this.SettingsPanel.Controls.Add(this.CamInertiaUpDown);
+            this.SettingsPanel.Controls.Add(this.label4);
+            this.SettingsPanel.Location = new System.Drawing.Point(447, 111);
+            this.SettingsPanel.Name = "SettingsPanel";
+            this.SettingsPanel.Size = new System.Drawing.Size(213, 306);
+            this.SettingsPanel.TabIndex = 10;
+            this.SettingsPanel.Visible = false;
+            this.SettingsPanel.Leave += new System.EventHandler(this.SettingsPanel_LostFocus);
+            // 
+            // cbCameraMode
+            // 
+            this.cbCameraMode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
+            this.cbCameraMode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cbCameraMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCameraMode.FormattingEnabled = true;
+            this.cbCameraMode.Items.AddRange(new object[] {
+            "Inspect (Default)",
+            "WalkAround (Whitehole)"});
+            this.cbCameraMode.Location = new System.Drawing.Point(37, 95);
+            this.cbCameraMode.Name = "cbCameraMode";
+            this.cbCameraMode.Size = new System.Drawing.Size(136, 21);
+            this.cbCameraMode.TabIndex = 7;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(68, 79);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(75, 13);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Camera mode:";
+            // 
+            // ChbDebugInfo
+            // 
+            this.ChbDebugInfo.AutoSize = true;
+            this.ChbDebugInfo.Location = new System.Drawing.Point(6, 286);
+            this.ChbDebugInfo.Name = "ChbDebugInfo";
+            this.ChbDebugInfo.Size = new System.Drawing.Size(144, 17);
+            this.ChbDebugInfo.TabIndex = 4;
+            this.ChbDebugInfo.Text = "Show camera debug info";
+            this.ChbDebugInfo.UseVisualStyleBackColor = true;
+            // 
+            // ChbTriCount
+            // 
+            this.ChbTriCount.AutoSize = true;
+            this.ChbTriCount.Location = new System.Drawing.Point(6, 263);
+            this.ChbTriCount.Name = "ChbTriCount";
+            this.ChbTriCount.Size = new System.Drawing.Size(120, 17);
+            this.ChbTriCount.TabIndex = 3;
+            this.ChbTriCount.Text = "Show triangle count";
+            this.ChbTriCount.UseVisualStyleBackColor = true;
+            // 
+            // ChbFps
+            // 
+            this.ChbFps.AutoSize = true;
+            this.ChbFps.Location = new System.Drawing.Point(6, 240);
+            this.ChbFps.Name = "ChbFps";
+            this.ChbFps.Size = new System.Drawing.Size(76, 17);
+            this.ChbFps.TabIndex = 2;
+            this.ChbFps.Text = "Show FPS";
+            this.ChbFps.UseVisualStyleBackColor = true;
+            // 
+            // CamInertiaUpDown
+            // 
+            this.CamInertiaUpDown.DecimalPlaces = 2;
+            this.CamInertiaUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.CamInertiaUpDown.Location = new System.Drawing.Point(68, 51);
+            this.CamInertiaUpDown.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            131072});
+            this.CamInertiaUpDown.Name = "CamInertiaUpDown";
+            this.CamInertiaUpDown.Size = new System.Drawing.Size(75, 20);
+            this.CamInertiaUpDown.TabIndex = 1;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 9);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(204, 39);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Camera inertia factor:\r\n(This controls how much the camera slips)\r\nDefault: 0,92";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(61, 123);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(82, 26);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "Zoom sensitivity\r\nDefault: 2";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // ZoomSenUpDown
+            // 
+            this.ZoomSenUpDown.DecimalPlaces = 2;
+            this.ZoomSenUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.ZoomSenUpDown.Location = new System.Drawing.Point(64, 152);
+            this.ZoomSenUpDown.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.ZoomSenUpDown.Name = "ZoomSenUpDown";
+            this.ZoomSenUpDown.Size = new System.Drawing.Size(75, 20);
+            this.ZoomSenUpDown.TabIndex = 9;
+            // 
+            // RotSenUpDown
+            // 
+            this.RotSenUpDown.DecimalPlaces = 2;
+            this.RotSenUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.RotSenUpDown.Location = new System.Drawing.Point(64, 209);
+            this.RotSenUpDown.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.RotSenUpDown.Name = "RotSenUpDown";
+            this.RotSenUpDown.Size = new System.Drawing.Size(75, 20);
+            this.RotSenUpDown.TabIndex = 11;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(55, 180);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(95, 26);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Rotation sensitivity\r\nDefault: 1";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(832, 568);
+            this.Controls.Add(this.SettingsPanel);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.elementHost1);
@@ -798,6 +1007,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.DeleteMenuStrip.ResumeLayout(false);
+            this.SettingsPanel.ResumeLayout(false);
+            this.SettingsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -877,6 +1091,22 @@
         private System.Windows.Forms.ToolStripMenuItem oggToBcstmConverterToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downloadLatestObjectDatabaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyRail;
+        private System.Windows.Forms.Timer ZoomCheckWarning;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Panel SettingsPanel;
+        private System.Windows.Forms.NumericUpDown CamInertiaUpDown;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
+        private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
+        private System.Windows.Forms.CheckBox ChbDebugInfo;
+        private System.Windows.Forms.CheckBox ChbTriCount;
+        private System.Windows.Forms.CheckBox ChbFps;
+        public System.Windows.Forms.ComboBox cbCameraMode;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown RotSenUpDown;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown ZoomSenUpDown;
+        private System.Windows.Forms.Label label6;
     }
 }
 

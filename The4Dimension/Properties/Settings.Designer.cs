@@ -46,5 +46,101 @@ namespace The4Dimension.Properties {
                 this["OnlyKnwonObjs"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.92")]
+        public double CameraInertia {
+            get {
+                return ((double)(this["CameraInertia"]));
+            }
+            set {
+                this["CameraInertia"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowFps {
+            get {
+                return ((bool)(this["ShowFps"]));
+            }
+            set {
+                this["ShowFps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowTriCount {
+            get {
+                return ((bool)(this["ShowTriCount"]));
+            }
+            set {
+                this["ShowTriCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowDbgInfo {
+            get {
+                return ((bool)(this["ShowDbgInfo"]));
+            }
+            set {
+                this["ShowDbgInfo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool FirstStartup {
+            get {
+                return ((bool)(this["FirstStartup"]));
+            }
+            set {
+                this["FirstStartup"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int CameraMode {
+            get {
+                return ((int)(this["CameraMode"]));
+            }
+            set {
+                this["CameraMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public double ZoomSen {
+            get {
+                return ((double)(this["ZoomSen"]));
+            }
+            set {
+                this["ZoomSen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double RotSen {
+            get {
+                return ((double)(this["RotSen"]));
+            }
+            set {
+                this["RotSen"] = value;
+            }
+        }
     }
 }

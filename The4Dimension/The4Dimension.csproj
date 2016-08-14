@@ -78,6 +78,7 @@
       <HintPath>..\packages\FCTB.2.16.11.0\lib\FastColoredTextBox.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HelixToolkit.Wpf, Version=2015.1.700.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d" />
     <Reference Include="LibEveryFileExplorer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>EFEDlls\LibEveryFileExplorer.dll</HintPath>

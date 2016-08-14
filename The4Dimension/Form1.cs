@@ -28,7 +28,6 @@ namespace The4Dimension
         public Dictionary<string, string> LevelNameNum = new Dictionary<string, string>(); //WX-X, stageName
         int APP_VER = Int32.Parse(Application.ProductVersion.Replace(".", ""));
         string LoadedFile = "";
-        bool IsFocus = true;
 
         public Form1(string FileLoad = "")
         {
@@ -78,6 +77,13 @@ namespace The4Dimension
                 render.MouseLeftButtonUp += render_MouseLeftButtonUp;
                 render.KeyDown += render_KeyDown;
                 render.KeyUp += render_KeyUP;
+                render.CameraInertiaFactor = Properties.Settings.Default.CameraInertia;
+                render.ShowFps = Properties.Settings.Default.ShowFps;
+                render.ShowTriangleCount = Properties.Settings.Default.ShowTriCount;
+                render.ShowDebugInfo = Properties.Settings.Default.ShowDbgInfo;
+                render.CamMode = Properties.Settings.Default.CameraMode == 0 ? HelixToolkit.Wpf.CameraMode.Inspect : HelixToolkit.Wpf.CameraMode.WalkAround;
+                render.ZoomSensitivity = Properties.Settings.Default.ZoomSen;
+                render.RotationSensitivity = Properties.Settings.Default.RotSen;
 
                 Focus();
                 if (FileLoad != "")
@@ -106,6 +112,7 @@ namespace The4Dimension
         public CustomStack<UndoAction> Undo = new CustomStack<UndoAction>();
         public static List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
         public static Encoding DefEnc = Encoding.GetEncoding("Shift-JIS");
+        List<LevelObj> dummy;
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -196,6 +203,8 @@ namespace The4Dimension
             saveAsBymlToolStripMenuItem1.Enabled = Lock;
             UndoMenu.Enabled = Lock;
             findToolStripMenuItem.Enabled = Lock;
+            label3.Text = "";
+            if (Lock) ZoomCheckWarning.Start(); else ZoomCheckWarning.Stop();
             if (!SZS)
             {
                 OtherLevelDataMenu.Enabled = false;
@@ -387,7 +396,12 @@ namespace The4Dimension
             if (AllInfos.ContainsKey("CameraAreaInfo")) HideLayer("CameraAreaInfo");
             checkBox1.Checked = true;
             checkBox1.CheckedChanged += checkBox1_CheckedChanged;
-            comboBox1.Text = comboBox1.Items[0].ToString();
+            if (comboBox1.Items.Contains("ObjInfo")) comboBox1.Text = "ObjInfo"; else comboBox1.Text = comboBox1.Items[0].ToString();
+            if (ObjectsListBox.Items.Count > 0)
+            {
+                ObjectsListBox.SelectedIndex = 0;
+                render.CameraToObj(comboBox1.Text, 0);
+            }
         }
 
         void LoadRailsModels(List<Rail> source)
@@ -702,8 +716,8 @@ namespace The4Dimension
                     render.SelectRail(AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
                 }
             }
-            if (e.Key == Key.Space && comboBox1.Text != "AllRailInfos") render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
-            else if (e.Key == Key.OemPlus && comboBox1.Text != "AllRailInfos") { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
+            if (e.Key == Key.Space ) render.CameraToObj(comboBox1.Text, ObjectsListBox.SelectedIndex);
+            else if (e.Key == Key.OemPlus ) { if (Btn_AddObj.Enabled == true) BtnAddObj_Click(null, null); } //Add obj
             else if (e.Key == Key.D) button2_Click(null, null); //Duplicate
             else if (e.Key == Key.Delete) button3_Click(null, null); //Delete obj
             else if (e.Key == Key.F) findToolStripMenuItem.ShowDropDown();
@@ -779,6 +793,13 @@ namespace The4Dimension
                 AllRailInfos[ObjectsListBox.SelectedIndex].Points[(int)DraggingArgs[1]].Z = -(float)NewPos.Y;
                 UpdateRailpos(ObjectsListBox.SelectedIndex, AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray());
             }
+            else if ((string)DraggingArgs[0] == "TmpChildrenObjs")
+            {
+                ((Node)((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue = NewPos.X.ToString();
+                ((Node)((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue = NewPos.Z.ToString();
+                ((Node)((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue = (-NewPos.Y).ToString();
+                UpdateOBJPos((int)DraggingArgs[1], ref dummy, "TmpChildrenObjs");
+            }
             else if ((string)DraggingArgs[0] != "AllRailInfos")
             {
                 ((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue = NewPos.X.ToString();
@@ -804,6 +825,21 @@ namespace The4Dimension
                     propertyGrid1.Refresh();
                 };
                 Undo.Push(new UndoAction("Moved " + ObjectsListBox.SelectedItem.ToString() + "'s point[" + DraggingArgs[1].ToString() + "] : ", ObjectsListBox.SelectedIndex.ToString(), (int)DraggingArgs[1], StartPos, act));
+            }
+            else if ((string)DraggingArgs[0] == "TmpChildrenObjs")
+            {
+                Action<string, int,int, Vector3D> act;
+                act = (string type, int id, int idInList, Vector3D pos) =>
+                {
+                    comboBox1.Text = type;
+                    ObjectsListBox.SelectedIndex = id;
+                    ((Node)((C0List)AllInfos[type].Objs[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_x"]).StringValue = pos.X.ToString();
+                    ((Node)((C0List)AllInfos[type].Objs[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_y"]).StringValue = pos.Y.ToString();
+                    ((Node)((C0List)AllInfos[type].Objs[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_z"]).StringValue = pos.Z.ToString();
+                    //UpdateOBJPos(idInList, ref dummy, "TmpChildrenObjs");
+                    propertyGrid1.Refresh();
+                };
+                Undo.Push(new UndoAction("Moved children object of: " + AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString(), comboBox1.Text, new int[] { ObjectsListBox.SelectedIndex, (int)DraggingArgs[1] }, StartPos, act));
             }
             else if ((string)DraggingArgs[0] != "AllRailInfos")
             {
@@ -844,13 +880,36 @@ namespace The4Dimension
                 StartPos = AllRailInfos[ObjectsListBox.SelectedIndex].GetPointArray()[(int)DraggingArgs[1]].ToVect();
                 return;
             }
-            comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
-            ObjectsListBox.ClearSelected();
-            ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
-            if ((string)DraggingArgs[0] != "AllRailInfos")
-            StartPos = new Vector3D(float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
-               float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue),
-               float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue));
+            else if ((string)DraggingArgs[0] == "TmpChildrenObjs")
+            {
+                StartPos = new Vector3D(
+                     float.Parse(((Node)((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
+                      float.Parse(((Node)((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue),
+                      float.Parse(((Node)((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue));
+            }
+            else
+            {
+                comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)DraggingArgs[0]);
+                ObjectsListBox.ClearSelected();
+                ObjectsListBox.SelectedIndex = (int)DraggingArgs[1];
+                if ((string)DraggingArgs[0] != "AllRailInfos")
+                    StartPos = new Vector3D(float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_x"]).StringValue),
+                       float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_y"]).StringValue),
+                       float.Parse(((Node)AllInfos[(string)DraggingArgs[0]].Objs[(int)DraggingArgs[1]].Prop["pos_z"]).StringValue));
+            }
+        }
+
+        private void ZoomCheckWarning_Tick(object sender, EventArgs e)
+        {
+            //Maybe not the best way to accomplish this, but it works...
+            double d = Math.Abs(render.TooCloseCheck());
+            if (d <= 0.1) label3.Text = "You are zooming in too much, the camera may glitch, zoom out to fix.";
+            else if (d > 1000000)
+            {
+                if (ObjectsListBox.SelectedIndex == -1) label3.Text = "You are too far from the level, select an object and press space.";
+                else label3.Text = "You are too far from the selected object, press space.";
+            }
+            else label3.Text = "";
         }
 
         #region Hiding layers
@@ -1188,13 +1247,11 @@ namespace The4Dimension
 
         private void From_Activated(object sender, EventArgs e) //Resume sorting
         {
-            IsFocus = true;
             render.SetSortFrequency(0.5);
         }
 
         private void Form_Deactivate(object sender, EventArgs e) //Stop sorting
         {
-            IsFocus = false;
             render.SetSortFrequency(0);
         }
 
@@ -1324,6 +1381,7 @@ namespace The4Dimension
             }
         }
 
+        bool warningShow = false;
         private void propertyGridChange(object s, PropertyValueChangedEventArgs e)
         {
             if (ObjectsListBox.SelectedIndex < 0) { MessageBox.Show("No object selected in the list"); return; }
@@ -1346,7 +1404,11 @@ namespace The4Dimension
                 string name = e.ChangedItem.Parent.Value is Node ? e.ChangedItem.Parent.Label : e.ChangedItem.Label;
                 if (name == "name" || name == "l_id")
                 {
-                    MessageBox.Show("You shouldn't mess up with the name or the l_id property of the objects, you should add a new object instead and copy the position from this object to the new one.\r\nYou can undo this action from the undo button", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    if (!warningShow)
+                    {
+                        MessageBox.Show("You shouldn't mess up with the name or the l_id property of the objects, you should add a new object instead and copy the position from this object to the new one.\r\nYou can undo this action from the undo button", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        warningShow = true;
+                    }
                     string path = GetModelname(((Node)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop[name]).StringValue);
                     if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
                     if (name == "name") render.ChangeModel(comboBox1.Text, ObjectsListBox.SelectedIndex, path);
@@ -1415,6 +1477,10 @@ namespace The4Dimension
 
         public void UpdateOBJPos(int id, ref List<LevelObj> Source, string Type)
         {
+            if (Type == "TmpChildrenObjs")
+            {
+                Source = ((C0List)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List;
+            }
             Single X, Y, Z, ScaleX, ScaleY, ScaleZ, RotX, RotY, RotZ;
             X = Single.Parse(((Node)Source[id].Prop["pos_x"]).StringValue);
             Y = Single.Parse(((Node)Source[id].Prop["pos_y"]).StringValue);
@@ -1594,16 +1660,19 @@ namespace The4Dimension
 
         private void BtnAddObj_Click(object sender, EventArgs e)//Add new object
         {
+            Vector3D pos = render.GetPositionInView();
             if (comboBox1.Text == "AllRailInfos")
             {
-                AddRail(new Rail(true));
+                AddRail(new Rail(true, pos));
+                render.LookAt(pos);
             }
             else
             {
-                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable.Keys.ToArray(), ObjDatabaseNames.ToArray(), comboBox1.Text);
+                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable.Keys.ToArray(), ObjDatabaseNames.ToArray(), comboBox1.Text,pos );
                 frm.ShowDialog();
                 if (frm.Value == null) return;
                 AddObj(frm.Value, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
+                render.LookAt(pos);
             }
         }
 
@@ -1894,8 +1963,17 @@ namespace The4Dimension
                 if (index < 0 || propertyGrid1.SelectedObject == null) AddObj(itm.Objs[0], ref AllInfos[type].Objs, type, true);
                 else
                 {
-                    if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
-                    ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(itm.Objs[0].Clone());
+                    string name = itm.Objs[0].ToString();
+                    if (name == "ObjectChildArea" || name == "SwitchKeepOnArea" || name == "SwitchOnArea")
+                    {
+                        if (!AllInfos[type].Objs[index].Prop.ContainsKey("ChildrenArea")) AllInfos[type].Objs[index].Prop.Add("ChildrenArea", new C0List());
+                        ((C0List)AllInfos[type].Objs[index].Prop["ChildrenArea"]).List.Add(itm.Objs[0].Clone());
+                    }
+                    else 
+                    {
+                        if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
+                        ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(itm.Objs[0].Clone());
+                    }
                 }
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.ObjectArray)
@@ -1903,8 +1981,20 @@ namespace The4Dimension
                 if (index < 0 || propertyGrid1.SelectedObject == null) foreach (LevelObj o in itm.Objs) AddObj(o, ref AllInfos[type].Objs, type, true);
                 else
                 {
-                    if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
-                    foreach (LevelObj o in itm.Objs) ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(o.Clone());
+                    foreach (LevelObj o in itm.Objs)
+                    {
+                        string name = o.ToString();
+                        if (name == "ObjectChildArea" || name == "SwitchKeepOnArea" || name == "SwitchOnArea")
+                        {
+                            if (!AllInfos[type].Objs[index].Prop.ContainsKey("ChildrenArea")) AllInfos[type].Objs[index].Prop.Add("ChildrenArea", new C0List());
+                            ((C0List)AllInfos[type].Objs[index].Prop["ChildrenArea"]).List.Add(o.Clone());
+                        }
+                        else
+                        {
+                            if (!AllInfos[type].Objs[index].Prop.ContainsKey("GenerateChildren")) AllInfos[type].Objs[index].Prop.Add("GenerateChildren", new C0List());
+                            ((C0List)AllInfos[type].Objs[index].Prop["GenerateChildren"]).List.Add(o.Clone());
+                        }
+                    }
                 }
             }
             propertyGrid1.Refresh();
@@ -2303,6 +2393,40 @@ namespace The4Dimension
 
 
         #endregion
-        
+
+        #region Settings
+        private void SettingsPanel_LostFocus(object sender, EventArgs e)
+        {
+            SettingsPanel.Visible = false;
+            Properties.Settings.Default.CameraInertia = (double)CamInertiaUpDown.Value;
+            render.CameraInertiaFactor = (double)CamInertiaUpDown.Value;
+            Properties.Settings.Default.ShowFps = ChbFps.Checked;
+            render.ShowFps = ChbFps.Checked;
+            Properties.Settings.Default.ShowTriCount = ChbTriCount.Checked;
+            render.ShowTriangleCount = ChbTriCount.Checked;
+            Properties.Settings.Default.ShowDbgInfo = ChbDebugInfo.Checked;
+            render.ShowDebugInfo = ChbDebugInfo.Checked;
+            Properties.Settings.Default.CameraMode = cbCameraMode.SelectedIndex;
+            render.CamMode = cbCameraMode.SelectedIndex == 0 ? HelixToolkit.Wpf.CameraMode.Inspect : HelixToolkit.Wpf.CameraMode.WalkAround;
+            Properties.Settings.Default.ZoomSen = (double)ZoomSenUpDown.Value;
+            render.ZoomSensitivity = (double)ZoomSenUpDown.Value;
+            Properties.Settings.Default.RotSen = (double)RotSenUpDown.Value;
+            render.RotationSensitivity = (double)RotSenUpDown.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void preferencesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsPanel.Visible = true;
+            CamInertiaUpDown.Value = (decimal)render.CameraInertiaFactor;
+            ChbFps.Checked = render.ShowFps;
+            ChbTriCount.Checked = render.ShowTriangleCount;
+            ChbDebugInfo.Checked = render.ShowDebugInfo;
+            cbCameraMode.SelectedIndex = render.CamMode == HelixToolkit.Wpf.CameraMode.Inspect ? 0 : 1;
+            ZoomSenUpDown.Value = (decimal)render.ZoomSensitivity;
+            RotSenUpDown.Value = (decimal)render.RotationSensitivity;
+            SettingsPanel.Focus();
+        }
+        #endregion
     }
 }
