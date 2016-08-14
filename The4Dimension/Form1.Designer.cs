@@ -107,6 +107,10 @@
             this.ZoomCheckWarning = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.RotSenUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.ZoomSenUpDown = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             this.cbCameraMode = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.ChbDebugInfo = new System.Windows.Forms.CheckBox();
@@ -114,10 +118,6 @@
             this.ChbFps = new System.Windows.Forms.CheckBox();
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.ZoomSenUpDown = new System.Windows.Forms.NumericUpDown();
-            this.RotSenUpDown = new System.Windows.Forms.NumericUpDown();
-            this.label7 = new System.Windows.Forms.Label();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -126,9 +126,9 @@
             this.splitContainer1.SuspendLayout();
             this.DeleteMenuStrip.SuspendLayout();
             this.SettingsPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -292,26 +292,26 @@
             // saveAsSZSToolStripMenuItem
             // 
             this.saveAsSZSToolStripMenuItem.Name = "saveAsSZSToolStripMenuItem";
-            this.saveAsSZSToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.saveAsSZSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsSZSToolStripMenuItem.Text = "Save as Szs";
             this.saveAsSZSToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(139, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
             // 
             // saveAsBymlToolStripMenuItem1
             // 
             this.saveAsBymlToolStripMenuItem1.Name = "saveAsBymlToolStripMenuItem1";
-            this.saveAsBymlToolStripMenuItem1.Size = new System.Drawing.Size(142, 22);
+            this.saveAsBymlToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.saveAsBymlToolStripMenuItem1.Text = "Save as Byml";
             this.saveAsBymlToolStripMenuItem1.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem1_Click);
             // 
             // saveAsXmlToolStripMenuItem
             // 
             this.saveAsXmlToolStripMenuItem.Name = "saveAsXmlToolStripMenuItem";
-            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
+            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.saveAsXmlToolStripMenuItem.Text = "Save as Xml";
             this.saveAsXmlToolStripMenuItem.Click += new System.EventHandler(this.saveAsXmlToolStripMenuItem_Click);
             // 
@@ -332,14 +332,14 @@
             // bymlXmlToolStripMenuItem1
             // 
             this.bymlXmlToolStripMenuItem1.Name = "bymlXmlToolStripMenuItem1";
-            this.bymlXmlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
+            this.bymlXmlToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.bymlXmlToolStripMenuItem1.Text = "Byml -> Xml";
             this.bymlXmlToolStripMenuItem1.Click += new System.EventHandler(this.bymlXmlToolStripMenuItem_Click);
             // 
             // xmlBymlToolStripMenuItem1
             // 
             this.xmlBymlToolStripMenuItem1.Name = "xmlBymlToolStripMenuItem1";
-            this.xmlBymlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
+            this.xmlBymlToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.xmlBymlToolStripMenuItem1.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem1.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
             // 
@@ -418,7 +418,7 @@
             // changeToolStripMenuItem
             // 
             this.changeToolStripMenuItem.Name = "changeToolStripMenuItem";
-            this.changeToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.changeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.changeToolStripMenuItem.Text = "Change";
             this.changeToolStripMenuItem.Click += new System.EventHandler(this.changeToolStripMenuItem_Click_1);
             // 
@@ -548,6 +548,7 @@
             this.tipsToolStripMenuItem.Name = "tipsToolStripMenuItem";
             this.tipsToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.tipsToolStripMenuItem.Text = "Tips";
+            this.tipsToolStripMenuItem.Visible = false;
             this.tipsToolStripMenuItem.Click += new System.EventHandler(this.tipsToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
@@ -844,6 +845,62 @@
             this.SettingsPanel.Visible = false;
             this.SettingsPanel.Leave += new System.EventHandler(this.SettingsPanel_LostFocus);
             // 
+            // RotSenUpDown
+            // 
+            this.RotSenUpDown.DecimalPlaces = 2;
+            this.RotSenUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.RotSenUpDown.Location = new System.Drawing.Point(64, 209);
+            this.RotSenUpDown.Maximum = new decimal(new int[] {
+            2,
+            0,
+            0,
+            0});
+            this.RotSenUpDown.Name = "RotSenUpDown";
+            this.RotSenUpDown.Size = new System.Drawing.Size(75, 20);
+            this.RotSenUpDown.TabIndex = 11;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(55, 180);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(95, 26);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "Rotation sensitivity\r\nDefault: 1";
+            this.label7.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
+            // ZoomSenUpDown
+            // 
+            this.ZoomSenUpDown.DecimalPlaces = 2;
+            this.ZoomSenUpDown.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            131072});
+            this.ZoomSenUpDown.Location = new System.Drawing.Point(64, 152);
+            this.ZoomSenUpDown.Maximum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.ZoomSenUpDown.Name = "ZoomSenUpDown";
+            this.ZoomSenUpDown.Size = new System.Drawing.Size(75, 20);
+            this.ZoomSenUpDown.TabIndex = 9;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(61, 123);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(82, 26);
+            this.label6.TabIndex = 8;
+            this.label6.Text = "Zoom sensitivity\r\nDefault: 2";
+            this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            // 
             // cbCameraMode
             // 
             this.cbCameraMode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest;
@@ -925,62 +982,6 @@
             this.label4.Text = "Camera inertia factor:\r\n(This controls how much the camera slips)\r\nDefault: 0,92";
             this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(61, 123);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(82, 26);
-            this.label6.TabIndex = 8;
-            this.label6.Text = "Zoom sensitivity\r\nDefault: 2";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // ZoomSenUpDown
-            // 
-            this.ZoomSenUpDown.DecimalPlaces = 2;
-            this.ZoomSenUpDown.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.ZoomSenUpDown.Location = new System.Drawing.Point(64, 152);
-            this.ZoomSenUpDown.Maximum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.ZoomSenUpDown.Name = "ZoomSenUpDown";
-            this.ZoomSenUpDown.Size = new System.Drawing.Size(75, 20);
-            this.ZoomSenUpDown.TabIndex = 9;
-            // 
-            // RotSenUpDown
-            // 
-            this.RotSenUpDown.DecimalPlaces = 2;
-            this.RotSenUpDown.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.RotSenUpDown.Location = new System.Drawing.Point(64, 209);
-            this.RotSenUpDown.Maximum = new decimal(new int[] {
-            2,
-            0,
-            0,
-            0});
-            this.RotSenUpDown.Name = "RotSenUpDown";
-            this.RotSenUpDown.Size = new System.Drawing.Size(75, 20);
-            this.RotSenUpDown.TabIndex = 11;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(55, 180);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(95, 26);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "Rotation sensitivity\r\nDefault: 1";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1009,9 +1010,9 @@
             this.DeleteMenuStrip.ResumeLayout(false);
             this.SettingsPanel.ResumeLayout(false);
             this.SettingsPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
