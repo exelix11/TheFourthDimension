@@ -178,13 +178,34 @@ namespace The4Dimension
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.FullObject)
             {
-                if (!Value.Prop.ContainsKey("GenerateChildren")) Value.Prop.Add("GenerateChildren", new C0List());
-                ((C0List)Value.Prop["GenerateChildren"]).List.Add(itm.Objs[0].Clone());
+                string name = itm.Objs[0].ToString();
+                if (name == "ObjectChildArea" || name == "SwitchKeepOnArea" || name == "SwitchOnArea")
+                {
+                    if (!Value.Prop.ContainsKey("ChildrenArea")) Value.Prop.Add("ChildrenArea", new C0List());
+                    ((C0List)Value.Prop["ChildrenArea"]).List.Add(itm.Objs[0].Clone());
+                }
+                else
+                {
+                    if (!Value.Prop.ContainsKey("GenerateChildren")) Value.Prop.Add("GenerateChildren", new C0List());
+                    ((C0List)Value.Prop["GenerateChildren"]).List.Add(itm.Objs[0].Clone());
+                }
             }
             else if (itm.Type == ClipBoardItem.ClipboardType.ObjectArray)
             {
-                if (!Value.Prop.ContainsKey("GenerateChildren")) Value.Prop.Add("GenerateChildren", new C0List());                
-                foreach (LevelObj o in itm.Objs) ((C0List)Value.Prop["GenerateChildren"]).List.Add(o.Clone());
+                foreach (LevelObj o in itm.Objs)
+                {
+                    string name = o.ToString();
+                    if (name == "ObjectChildArea" || name == "SwitchKeepOnArea" || name == "SwitchOnArea")
+                    {
+                        if (!Value.Prop.ContainsKey("ChildrenArea")) Value.Prop.Add("ChildrenArea", new C0List());
+                        ((C0List)Value.Prop["ChildrenArea"]).List.Add(o.Clone());
+                    }
+                    else
+                    {
+                        if (!Value.Prop.ContainsKey("GenerateChildren")) Value.Prop.Add("GenerateChildren", new C0List());
+                        ((C0List)Value.Prop["GenerateChildren"]).List.Add(o.Clone());
+                    }
+                }
             }
             propertyGrid1.Refresh();
         }

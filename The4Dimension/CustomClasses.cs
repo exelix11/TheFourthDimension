@@ -80,6 +80,7 @@ namespace The4Dimension
         string propName = null;
         private Action<string, int, string, object> PropAddAction = null;
         private Action<string, int, Vector3D> MoveAction = null;
+        private Action<string, int,int, Vector3D> UndoChildrenMoveAction = null;
 
         public void Undo()
         {
@@ -90,6 +91,7 @@ namespace The4Dimension
             else if (ObjAddAction != null) ObjAddAction.Invoke(type, index, objToAdd);
             else if (PropAddAction != null) PropAddAction.Invoke(type, index, propName, objToAdd);
             else if (ObjMultiAddAction != null) ObjMultiAddAction.Invoke(type, indexes, objToAdd);
+            else if (UndoChildrenMoveAction != null) UndoChildrenMoveAction.Invoke(type, indexes[0], indexes[1], (Vector3D)objToAdd);
             else MoveAction.Invoke(type, index, (Vector3D)objToAdd);
             if (form1.ObjectsListBox.Items.Count > index) form1.ObjectsListBox.SelectedIndex = index;
         }
@@ -142,6 +144,15 @@ namespace The4Dimension
             objToAdd = prop;
             propName = label;
             PropAddAction = action;
+        }
+
+        public UndoAction(string name, string _type, int[] _index, Vector3D vec, Action<string, int, int, Vector3D> action) //Childrenobjectmove
+        {
+            actionName = name;
+            type = _type;
+            indexes = _index;
+            objToAdd = vec;
+            UndoChildrenMoveAction = action;
         }
     }
 

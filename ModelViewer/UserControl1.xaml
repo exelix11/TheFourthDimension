@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-            <HelixToolkit:HelixViewport3D x:Name="ModelView" ZoomExtentsWhenLoaded="True" ZoomSensitivity="2">
+            <HelixToolkit:HelixViewport3D x:Name="ModelView" ZoomExtentsWhenLoaded="True" ZoomSensitivity="2" ShowTriangleCountInfo="True" ShowFrameRate="True" LeftRightRotationSensitivity="3" UpDownRotationSensitivity="3">
     <!-- Remember to add light to the scene -->
     <HelixToolkit:SunLight/>
     
