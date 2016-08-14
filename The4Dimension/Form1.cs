@@ -687,7 +687,7 @@ namespace The4Dimension
             if ((ModifierKeys & Keys.Control) == Keys.Control || RenderIsDragging) return;
             object[] indexes = render.GetOBJ(sender, e); //indexes[0] string, [1] int
             if (indexes[0] == null) return; //this means indexes[0] = -1
-            if ((string)indexes[0] == "SelectedRail") return;
+            if ((string)indexes[0] == "SelectedRail" || (string)indexes[0] == "TmpChildrenObjs" || (string)indexes[0] == "TmpAreaChildrenObjs") return;
             comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
             ObjectsListBox.ClearSelected();
             ObjectsListBox.SelectedIndex = (int)indexes[1];
