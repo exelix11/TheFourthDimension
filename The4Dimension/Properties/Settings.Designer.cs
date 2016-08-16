@@ -142,5 +142,17 @@ namespace The4Dimension.Properties {
                 this["RotSen"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoMoveCam {
+            get {
+                return ((bool)(this["AutoMoveCam"]));
+            }
+            set {
+                this["AutoMoveCam"] = value;
+            }
+        }
     }
 }

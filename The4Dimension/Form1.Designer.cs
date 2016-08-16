@@ -90,8 +90,6 @@
             this.Btn_CopyObjs = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.btn_cameraCode = new System.Windows.Forms.Button();
-            this.DeleteMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.deleteEveryObjectInTheListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.Btn_addType = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.ObjectsListBox = new System.Windows.Forms.ListBox();
@@ -107,6 +105,7 @@
             this.ZoomCheckWarning = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
             this.RotSenUpDown = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.ZoomSenUpDown = new System.Windows.Forms.NumericUpDown();
@@ -124,7 +123,6 @@
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.DeleteMenuStrip.SuspendLayout();
             this.SettingsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).BeginInit();
@@ -292,26 +290,26 @@
             // saveAsSZSToolStripMenuItem
             // 
             this.saveAsSZSToolStripMenuItem.Name = "saveAsSZSToolStripMenuItem";
-            this.saveAsSZSToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsSZSToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveAsSZSToolStripMenuItem.Text = "Save as Szs";
             this.saveAsSZSToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(139, 6);
             // 
             // saveAsBymlToolStripMenuItem1
             // 
             this.saveAsBymlToolStripMenuItem1.Name = "saveAsBymlToolStripMenuItem1";
-            this.saveAsBymlToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.saveAsBymlToolStripMenuItem1.Size = new System.Drawing.Size(142, 22);
             this.saveAsBymlToolStripMenuItem1.Text = "Save as Byml";
             this.saveAsBymlToolStripMenuItem1.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem1_Click);
             // 
             // saveAsXmlToolStripMenuItem
             // 
             this.saveAsXmlToolStripMenuItem.Name = "saveAsXmlToolStripMenuItem";
-            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsXmlToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveAsXmlToolStripMenuItem.Text = "Save as Xml";
             this.saveAsXmlToolStripMenuItem.Click += new System.EventHandler(this.saveAsXmlToolStripMenuItem_Click);
             // 
@@ -332,14 +330,14 @@
             // bymlXmlToolStripMenuItem1
             // 
             this.bymlXmlToolStripMenuItem1.Name = "bymlXmlToolStripMenuItem1";
-            this.bymlXmlToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.bymlXmlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
             this.bymlXmlToolStripMenuItem1.Text = "Byml -> Xml";
             this.bymlXmlToolStripMenuItem1.Click += new System.EventHandler(this.bymlXmlToolStripMenuItem_Click);
             // 
             // xmlBymlToolStripMenuItem1
             // 
             this.xmlBymlToolStripMenuItem1.Name = "xmlBymlToolStripMenuItem1";
-            this.xmlBymlToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.xmlBymlToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
             this.xmlBymlToolStripMenuItem1.Text = "Xml -> Byml";
             this.xmlBymlToolStripMenuItem1.Click += new System.EventHandler(this.xmlBymlToolStripMenuItem_Click);
             // 
@@ -418,7 +416,7 @@
             // changeToolStripMenuItem
             // 
             this.changeToolStripMenuItem.Name = "changeToolStripMenuItem";
-            this.changeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.changeToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.changeToolStripMenuItem.Text = "Change";
             this.changeToolStripMenuItem.Click += new System.EventHandler(this.changeToolStripMenuItem_Click_1);
             // 
@@ -647,7 +645,6 @@
             // btn_cameraCode
             // 
             this.btn_cameraCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_cameraCode.ContextMenuStrip = this.DeleteMenuStrip;
             this.btn_cameraCode.Location = new System.Drawing.Point(103, 186);
             this.btn_cameraCode.Name = "btn_cameraCode";
             this.btn_cameraCode.Size = new System.Drawing.Size(135, 26);
@@ -656,20 +653,6 @@
             this.btn_cameraCode.UseVisualStyleBackColor = true;
             this.btn_cameraCode.Visible = false;
             this.btn_cameraCode.Click += new System.EventHandler(this.CameraCode_click);
-            // 
-            // DeleteMenuStrip
-            // 
-            this.DeleteMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteEveryObjectInTheListToolStripMenuItem});
-            this.DeleteMenuStrip.Name = "DeleteMenuStrip";
-            this.DeleteMenuStrip.Size = new System.Drawing.Size(226, 26);
-            // 
-            // deleteEveryObjectInTheListToolStripMenuItem
-            // 
-            this.deleteEveryObjectInTheListToolStripMenuItem.Name = "deleteEveryObjectInTheListToolStripMenuItem";
-            this.deleteEveryObjectInTheListToolStripMenuItem.Size = new System.Drawing.Size(225, 22);
-            this.deleteEveryObjectInTheListToolStripMenuItem.Text = "Delete every object in the list";
-            this.deleteEveryObjectInTheListToolStripMenuItem.Click += new System.EventHandler(this.deleteEveryObjectInTheListToolStripMenuItem_Click);
             // 
             // Btn_addType
             // 
@@ -743,7 +726,6 @@
             // btn_delObj
             // 
             this.btn_delObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_delObj.ContextMenuStrip = this.DeleteMenuStrip;
             this.btn_delObj.Location = new System.Drawing.Point(137, 214);
             this.btn_delObj.Name = "btn_delObj";
             this.btn_delObj.Size = new System.Drawing.Size(101, 23);
@@ -827,6 +809,7 @@
             // 
             this.SettingsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.SettingsPanel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SettingsPanel.Controls.Add(this.checkBox3);
             this.SettingsPanel.Controls.Add(this.RotSenUpDown);
             this.SettingsPanel.Controls.Add(this.label7);
             this.SettingsPanel.Controls.Add(this.ZoomSenUpDown);
@@ -840,10 +823,19 @@
             this.SettingsPanel.Controls.Add(this.label4);
             this.SettingsPanel.Location = new System.Drawing.Point(447, 111);
             this.SettingsPanel.Name = "SettingsPanel";
-            this.SettingsPanel.Size = new System.Drawing.Size(213, 306);
+            this.SettingsPanel.Size = new System.Drawing.Size(213, 342);
             this.SettingsPanel.TabIndex = 10;
             this.SettingsPanel.Visible = false;
             this.SettingsPanel.Leave += new System.EventHandler(this.SettingsPanel_LostFocus);
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.Location = new System.Drawing.Point(6, 309);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(201, 31);
+            this.checkBox3.TabIndex = 12;
+            this.checkBox3.Text = "When adding a new object, automatically move the camera to it";
+            this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // RotSenUpDown
             // 
@@ -1007,7 +999,6 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.DeleteMenuStrip.ResumeLayout(false);
             this.SettingsPanel.ResumeLayout(false);
             this.SettingsPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).EndInit();
@@ -1063,8 +1054,6 @@
         private System.Windows.Forms.ToolStripMenuItem switchKillToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem switchDeadOnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem objectByViewIdToolStripMenuItem;
-        private System.Windows.Forms.ContextMenuStrip DeleteMenuStrip;
-        private System.Windows.Forms.ToolStripMenuItem deleteEveryObjectInTheListToolStripMenuItem;
         private System.Windows.Forms.Button Btn_addType;
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
@@ -1108,6 +1097,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown ZoomSenUpDown;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox checkBox3;
     }
 }
 

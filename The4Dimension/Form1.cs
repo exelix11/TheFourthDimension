@@ -28,9 +28,11 @@ namespace The4Dimension
         public Dictionary<string, string> LevelNameNum = new Dictionary<string, string>(); //WX-X, stageName
         int APP_VER = Int32.Parse(Application.ProductVersion.Replace(".", ""));
         string LoadedFile = "";
+        bool AutoMoveCam = true;
 
         public Form1(string FileLoad = "")
         {
+            //ObjectDb testdb = ObjectDb.FromXml(File.ReadAllText(@"testdb.xml"));            
             try
             {
                 InitializeComponent();
@@ -84,6 +86,7 @@ namespace The4Dimension
                 render.CamMode = Properties.Settings.Default.CameraMode == 0 ? HelixToolkit.Wpf.CameraMode.Inspect : HelixToolkit.Wpf.CameraMode.WalkAround;
                 render.ZoomSensitivity = Properties.Settings.Default.ZoomSen;
                 render.RotationSensitivity = Properties.Settings.Default.RotSen;
+                AutoMoveCam = Properties.Settings.Default.AutoMoveCam;
 
                 Focus();
                 if (FileLoad != "")
@@ -1100,7 +1103,7 @@ namespace The4Dimension
                 " Ctrl + F : Open the search menu\r\n\r\n" +
                 "In the Objects list:\r\n" +
                 " Click once on an object to select it\r\n"+
-                " Double click an object to select it and move the camera to it"+
+                " Double click an object to select it and move the camera to it\r\n"+
                 "In the 3D view:\r\n" +
                 " Ctrl + drag : Move object\r\n" +
                 " Ctrl + Alt + drag : Move object snapping every 100 units\r\n" +
@@ -1151,32 +1154,6 @@ namespace The4Dimension
         private void gbatempThreadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Process.Start("http://gbatemp.net/threads/wip-the-fourth-dimension-a-super-mario-3d-land-level-editor.424001/");
-        }
-
-        private void deleteEveryObjectInTheListToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Action<string, int, object> action;
-            if (comboBox1.Text == "AllRailInfos")
-            {
-                Rail[] tmp = AllRailInfos.ToArray();
-                action = (string type, int at, object rail) =>
-                {
-                    Rail[] rails = (Rail[])rail;
-                    foreach (Rail r in rails) AddRail(r, -1, true);
-                };
-                Undo.Push(new UndoAction("Removed every rail", "AllRailInfos", -1, tmp, action));
-            }
-            else
-            {
-                LevelObj[] tmp = AllInfos[comboBox1.Text].Objs.ToArray();
-                action = (string type, int at, object data) =>
-                {
-                    LevelObj[] objs = (LevelObj[])data;
-                    foreach (LevelObj o in objs) AddObj(o, ref AllInfos[type].Objs, type, false, -1, true);
-                };
-                Undo.Push(new UndoAction("Removed every object in " + comboBox1.Text, comboBox1.Text, -1, tmp, action));
-            }
-            while (ObjectsListBox.Items.Count != 0) { ObjectsListBox.ClearSelected(); ObjectsListBox.SelectedIndex = 0; DelSelectedObj(true); }
         }
 
         private void Form1_closing(object sender, FormClosingEventArgs e)
@@ -1664,7 +1641,7 @@ namespace The4Dimension
             if (comboBox1.Text == "AllRailInfos")
             {
                 AddRail(new Rail(true, pos));
-                render.LookAt(pos);
+                if (AutoMoveCam) render.LookAt(pos);
             }
             else
             {
@@ -1672,7 +1649,7 @@ namespace The4Dimension
                 frm.ShowDialog();
                 if (frm.Value == null) return;
                 AddObj(frm.Value, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
-                render.LookAt(pos);
+                if (AutoMoveCam) render.LookAt(pos);
             }
         }
 
@@ -2412,6 +2389,8 @@ namespace The4Dimension
             render.ZoomSensitivity = (double)ZoomSenUpDown.Value;
             Properties.Settings.Default.RotSen = (double)RotSenUpDown.Value;
             render.RotationSensitivity = (double)RotSenUpDown.Value;
+            Properties.Settings.Default.AutoMoveCam = checkBox3.Checked;
+            AutoMoveCam = checkBox3.Checked;
             Properties.Settings.Default.Save();
         }
 
@@ -2425,6 +2404,7 @@ namespace The4Dimension
             cbCameraMode.SelectedIndex = render.CamMode == HelixToolkit.Wpf.CameraMode.Inspect ? 0 : 1;
             ZoomSenUpDown.Value = (decimal)render.ZoomSensitivity;
             RotSenUpDown.Value = (decimal)render.RotationSensitivity;
+            checkBox3.Checked = AutoMoveCam;
             SettingsPanel.Focus();
         }
         #endregion

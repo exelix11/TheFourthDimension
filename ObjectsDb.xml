@@ -1,10 +1,38 @@
 <ObjDB>
   <Infos>
-    <AppVer>500</AppVer>
+    <AppVer>600</AppVer>
   </Infos>
+  <Objects>
+    <InGameName>Bird*</InGameName>
+    <ModelName>Bird.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author />
+  </Objects>
   <Objects>
     <InGameName>BlockBrick*</InGameName>
     <ModelName>BlockBrick.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>BlockNoteSuperWide</InGameName>
+    <ModelName />
+    <ShortDescription>To give this a destination, give it a child BlockNoteSuperWide with argument 1 set to 1.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>BlockNoteWide</InGameName>
+    <ModelName />
+    <ShortDescription>The dimensions of this object are 200x100x200</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>BlockQuestion*</InGameName>
+    <ModelName>BlockQuestion.obj</ModelName>
     <ShortDescription />
     <LongDescription />
     <Author>exelix11</Author>
@@ -17,65 +45,55 @@
     <Author>exelix11</Author>
   </Objects>
   <Objects>
-    <InGameName>WoodBox*</InGameName>
-    <ModelName>WoodBox.obj</ModelName>
-    <ShortDescription />
+    <InGameName>Bubble</InGameName>
+    <ModelName>Bubble.obj</ModelName>
+    <ShortDescription>A lava fireball
+arg[0] = max y (relative to it's position)</ShortDescription>
     <LongDescription />
     <Author>exelix11</Author>
   </Objects>
   <Objects>
-    <InGameName>BlockQuestion*</InGameName>
-    <ModelName>BlockQuestion.obj</ModelName>
-    <ShortDescription />
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>FlowerBlue*</InGameName>
-    <ModelName>FlowerBlue.obj</ModelName>
-    <ShortDescription />
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>Bird*</InGameName>
-    <ModelName>Bird.obj</ModelName>
-    <ShortDescription />
-    <LongDescription />
-    <Author />
-  </Objects>
-  <Objects>
-    <InGameName>TimerClock*</InGameName>
-    <ModelName>TimerClock.obj</ModelName>
-    <ShortDescription />
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>ViewCtrlArea</InGameName>
+    <InGameName>Bunbun</InGameName>
     <ModelName />
-    <ShortDescription>This zone controls visibility of certain objects
-arg[0] = value , set this value to the ViewId property of other objects to make them visible when the player is in this area</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
+    <ShortDescription>Activates SwitchA when it finishes its cutscene.
+Appears with cutscene when SwitchAppear is activated.</ShortDescription>
+    <LongDescription>Activates SwitchA when it finishes its cutscene. This is used to cancel the effect of the PlayerControlOffArea.
+Appears with cutscene when SwitchAppear is activated. If SwitchAppear is set to -1, it appears on level load.</LongDescription>
+    <Author>Hiccup</Author>
   </Objects>
   <Objects>
-    <InGameName>WarpCube</InGameName>
-    <ModelName>WarpCube.obj</ModelName>
-    <ShortDescription>Warps the player to another point in the stage.
-add a WarpCubeOutOnly object in the GenerateChildren property</ShortDescription>
+    <InGameName>CandlestandObserver</InGameName>
+    <ModelName />
+    <ShortDescription>Switches on the flag specified in SwitchA when all child Candlestand objects are lit</ShortDescription>
     <LongDescription />
-    <Author>exelix11</Author>
+    <Author>Hiccup</Author>
   </Objects>
   <Objects>
-    <InGameName>LiftRailMove</InGameName>
-    <ModelName>LiftRailMove.obj</ModelName>
-    <ShortDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
-Args can control the speed ?</ShortDescription>
-    <LongDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
-Args can control the speed ?
-
-arg[7]: unknown, sometimes is 0</LongDescription>
+    <InGameName>CoinGathering</InGameName>
+    <ModelName />
+    <ShortDescription>Used to make coins appear with an effect when a flag is turned on. Give it child "Coin"/s with their "SwitchAppear"s all set to the flag that will be turned on.
+Args[1] = CoinGathering Time</ShortDescription>
+    <LongDescription>Used to make coins appear with an effect when a flag is turned on. Give it child "Coin"/s with their "SwitchAppear"s all set to the flag that will be turned on.
+Args[1] = The amount of time the coin appears for after being activated in a CoinGathering setup. -1 is permanently.
+</LongDescription>
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>CoinRedStarter</InGameName>
+    <ModelName />
+    <ShortDescription>Red Ring
+To give makes this spawn Red Coins, give it five CoinRed children</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Dokan</InGameName>
+    <ModelName>Dokan.obj</ModelName>
+    <ShortDescription>A green pipe
+Add a DokanOutOnly object in the place where mario should spawn.</ShortDescription>
+    <LongDescription>A green pipe
+Add a DokanOutOnly object in the place where mario should spawn.
+Args can control if camera moves to the DokanOutOnly or just appears there ?</LongDescription>
     <Author>exelix11</Author>
   </Objects>
   <Objects>
@@ -87,15 +105,16 @@ arg[0] = max y (relative to it's position), if not set or -1 is 500</ShortDescri
     <Author>exelix11</Author>
   </Objects>
   <Objects>
-    <InGameName>LiftRailMove3x3</InGameName>
-    <ModelName>LiftRailMove3x3.obj</ModelName>
-    <ShortDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
-Args can control the speed ?</ShortDescription>
-    <LongDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
-Args can control the speed ?
+    <InGameName>EnemyCounter</InGameName>
+    <ModelName />
+    <ShortDescription>Spawns a powerup (at the location of the last defeated enemy) when the specified number of the child enemies(Arg[0]) are defeated. The powerup spawned depends on the enemy.</ShortDescription>
+    <LongDescription>Spawns a powerup (at the location of the last defeated enemy) when the specified number of the child enemies are defeated. The powerup spawned depends on the enemy. Possibilities:
+Fire Piranha Plant - Fire Flower
+Big Tail Goomba, Tail Boo - Super Leaf
+Boomerang Bro. - Boomerang Flower
 
-arg[7]: unknown, sometimes is 0</LongDescription>
-    <Author>exelix11</Author>
+Args[0] = Number to defeat</LongDescription>
+    <Author>Hiccup</Author>
   </Objects>
   <Objects>
     <InGameName>FireBar4m</InGameName>
@@ -114,81 +133,9 @@ arg[1] = speed, if &gt;0 it goes counterclockwise</ShortDescription>
     <Author>exelix11</Author>
   </Objects>
   <Objects>
-    <InGameName>HammerBros</InGameName>
-    <ModelName>HammerBros.obj</ModelName>
-    <ShortDescription>Add in the GenerateChildren property a HammerBrosMovePoint for each point it will jump</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>Bubble</InGameName>
-    <ModelName>Bubble.obj</ModelName>
-    <ShortDescription>A lava fireball
-arg[0] = max y (relative to it's position)</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>KoopaFloor6x6M</InGameName>
-    <ModelName>KoopaFloor6x6M.obj</ModelName>
-    <ShortDescription>Elevator found in bowser's castle of world 1
-arg[0] = max y (relative to it's position)</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>LavaGeyser4M</InGameName>
-    <ModelName>LavaGeyser4M.obj</ModelName>
-    <ShortDescription>arg[2] = max y (relative to it's position)</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>LavaGeyser16M</InGameName>
-    <ModelName>LavaGeyser4M.obj</ModelName>
-    <ShortDescription>arg[2] = max y (relative to it's position)</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>KoopaFirstGearA</InGameName>
-    <ModelName>KoopaFirstGearA.obj</ModelName>
-    <ShortDescription>A rotating gear.
-arg[1] = speed, if &gt; 0 it goes counterclockwise</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>KoopaFirstGearB</InGameName>
-    <ModelName>KoopaFirstGearB.obj</ModelName>
-    <ShortDescription>A rotating gear.
-arg[1] = speed, if &gt; 0 it goes counterclockwise</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>Pukupuku</InGameName>
-    <ModelName>Pukupuku.obj</ModelName>
-    <ShortDescription>a Cheep Cheep.
-Add a rail to the stage and copy it inside this object</ShortDescription>
-    <LongDescription />
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>Dokan</InGameName>
-    <ModelName>Dokan.obj</ModelName>
-    <ShortDescription>A green pipe
-Add a DokanOutOnly object in the place where mario should spawn.</ShortDescription>
-    <LongDescription>A green pipe
-Add a DokanOutOnly object in the place where mario should spawn.
-Args can control if camera moves to the DokanOutOnly or just appears there ?</LongDescription>
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>PoleGoal</InGameName>
-    <ModelName>PoleGoal.obj</ModelName>
-    <ShortDescription>Can be only one copy of this object in the stage.
-arg[0] = if 0 the smb level completed theme plays</ShortDescription>
+    <InGameName>FlowerBlue*</InGameName>
+    <ModelName>FlowerBlue.obj</ModelName>
+    <ShortDescription />
     <LongDescription />
     <Author>exelix11</Author>
   </Objects>
@@ -204,27 +151,6 @@ arg[1]: 1: Drybone, other values Goomba</LongDescription>
     <Author>exelix11</Author>
   </Objects>
   <Objects>
-    <InGameName>NeedleBarCore</InGameName>
-    <ModelName />
-    <ShortDescription>Rotating bar(s) of NeedleBlocks, arg[0] how many blocks per bar, arg[1] how many bars, arg[2] rotating speed </ShortDescription>
-    <LongDescription>Rotating bar(s) of NeedleBlocks
-arg[0] how many blocks per bar
- since every block is 100 units arg[0] * 100 is the length of the bar
-arg[1] how many bars
-arg[2] rotating speed 
-</LongDescription>
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
-    <InGameName>WarpPorter</InGameName>
-    <ModelName />
-    <ShortDescription>Purple warp box, has a timer that warps the player back, the player is spawned from the children WarpPorter.</ShortDescription>
-    <LongDescription>Purple warp box, a timer that warps the player back, the default timer is 10 seconds.
-Add another WarpPorter as a children, that will spawn the player
-</LongDescription>
-    <Author>exelix11</Author>
-  </Objects>
-  <Objects>
     <InGameName>GrassCoin</InGameName>
     <ModelName>Grass.obj</ModelName>
     <ShortDescription>Spawns a coin</ShortDescription>
@@ -232,99 +158,16 @@ Add another WarpPorter as a children, that will spawn the player
     <Author>exelix11</Author>
   </Objects>
   <Objects>
-    <InGameName>PackunFlowerDokan</InGameName>
-    <ModelName />
-    <ShortDescription>Piranha Plant for Pipe.
-If defeated, it will activate SwitchDeadOn.</ShortDescription>
+    <InGameName>HammerBros</InGameName>
+    <ModelName>HammerBros.obj</ModelName>
+    <ShortDescription>Add in the GenerateChildren property a HammerBrosMovePoint for each point it will jump</ShortDescription>
     <LongDescription />
-    <Author>Hiccup</Author>
+    <Author>exelix11</Author>
   </Objects>
   <Objects>
     <InGameName>KinokoOneUpMysteryBoxPresent</InGameName>
     <ModelName />
     <ShortDescription>Spawns a "loose" 1-Up Mushroom. Has an animation and effect when spawned via SwitchAppear.</ShortDescription>
-    <LongDescription />
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>Bunbun</InGameName>
-    <ModelName />
-    <ShortDescription>Activates SwitchA when it finishes its cutscene.
-Appears with cutscene when SwitchAppear is activated.</ShortDescription>
-    <LongDescription>Activates SwitchA when it finishes its cutscene. This is used to cancel the effect of the PlayerControlOffArea.
-Appears with cutscene when SwitchAppear is activated. If SwitchAppear is set to -1, it appears on level load.</LongDescription>
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>PlayerControlOffArea</InGameName>
-    <ModelName />
-    <ShortDescription>If the Mario enters this area, they cannot be controlled until the flag associated with the area's SwitchKill is turned on.</ShortDescription>
-    <LongDescription />
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>BlockNoteWide</InGameName>
-    <ModelName />
-    <ShortDescription>The dimensions of this object are 200x100x200</ShortDescription>
-    <LongDescription />
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>NoteObj</InGameName>
-    <ModelName />
-    <ShortDescription>Spawns Rainbow Notes along the specified path when SwitchA is turned on</ShortDescription>
-    <LongDescription />
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>CoinGathering</InGameName>
-    <ModelName />
-    <ShortDescription>Used to make coins appear with an effect when a flag is turned on. Give it child "Coin"/s with their "SwitchAppear"s all set to the flag that will be turned on.
-Args[1] = CoinGathering Time</ShortDescription>
-    <LongDescription>Used to make coins appear with an effect when a flag is turned on. Give it child "Coin"/s with their "SwitchAppear"s all set to the flag that will be turned on.
-Args[1] = The amount of time the coin appears for after being activated in a CoinGathering setup. -1 is permanently.
-</LongDescription>
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>CandlestandObserver</InGameName>
-    <ModelName />
-    <ShortDescription>Switches on the flag specified in SwitchA when all child Candlestand objects are lit</ShortDescription>
-    <LongDescription />
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>EnemyCounter</InGameName>
-    <ModelName />
-    <ShortDescription>Spawns a powerup (at the location of the last defeated enemy) when the specified number of the child enemies(Arg[0]) are defeated. The powerup spawned depends on the enemy.</ShortDescription>
-    <LongDescription>Spawns a powerup (at the location of the last defeated enemy) when the specified number of the child enemies are defeated. The powerup spawned depends on the enemy. Possibilities:
-Fire Piranha Plant - Fire Flower
-Big Tail Goomba, Tail Boo - Super Leaf
-Boomerang Bro. - Boomerang Flower
-
-Args[0] = Number to defeat</LongDescription>
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>Kuribo</InGameName>
-    <ModelName />
-    <ShortDescription>Friendly name: Goomba
-To make it spawn a Star Medal when defeated, give it a CoinCollect (aka Star Medal) child</ShortDescription>
-    <LongDescription />
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>CoinRedStarter</InGameName>
-    <ModelName />
-    <ShortDescription>Red Ring
-To give makes this spawn Red Coins, give it five CoinRed children</ShortDescription>
-    <LongDescription />
-    <Author>Hiccup</Author>
-  </Objects>
-  <Objects>
-    <InGameName>BlockNoteSuperWide</InGameName>
-    <ModelName />
-    <ShortDescription>To give this a destination, give it a child BlockNoteSuperWide with argument 1 set to 1.</ShortDescription>
     <LongDescription />
     <Author>Hiccup</Author>
   </Objects>
@@ -357,6 +200,131 @@ args[7] = item:
     <Author>Hiccup</Author>
   </Objects>
   <Objects>
+    <InGameName>KoopaFirstGearA</InGameName>
+    <ModelName>KoopaFirstGearA.obj</ModelName>
+    <ShortDescription>A rotating gear.
+arg[1] = speed, if &gt; 0 it goes counterclockwise</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>KoopaFirstGearB</InGameName>
+    <ModelName>KoopaFirstGearB.obj</ModelName>
+    <ShortDescription>A rotating gear.
+arg[1] = speed, if &gt; 0 it goes counterclockwise</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>KoopaFloor6x6M</InGameName>
+    <ModelName>KoopaFloor6x6M.obj</ModelName>
+    <ShortDescription>Elevator found in bowser's castle of world 1
+arg[0] = max y (relative to it's position)</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Kuribo</InGameName>
+    <ModelName />
+    <ShortDescription>Friendly name: Goomba
+To make it spawn a Star Medal when defeated, give it a CoinCollect (aka Star Medal) child</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LavaGeyser16M</InGameName>
+    <ModelName>LavaGeyser4M.obj</ModelName>
+    <ShortDescription>arg[2] = max y (relative to it's position)</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LavaGeyser4M</InGameName>
+    <ModelName>LavaGeyser4M.obj</ModelName>
+    <ShortDescription>arg[2] = max y (relative to it's position)</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LiftRailMove</InGameName>
+    <ModelName>LiftRailMove.obj</ModelName>
+    <ShortDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?</ShortDescription>
+    <LongDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?
+
+arg[7]: unknown, sometimes is 0</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>LiftRailMove3x3</InGameName>
+    <ModelName>LiftRailMove3x3.obj</ModelName>
+    <ShortDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?</ShortDescription>
+    <LongDescription>This object follows a rail, add a rail in the level, then copy it inside this object.
+Args can control the speed ?
+
+arg[7]: unknown, sometimes is 0</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>NeedleBarCore</InGameName>
+    <ModelName />
+    <ShortDescription>Rotating bar(s) of NeedleBlocks, arg[0] how many blocks per bar, arg[1] how many bars, arg[2] rotating speed </ShortDescription>
+    <LongDescription>Rotating bar(s) of NeedleBlocks
+arg[0] how many blocks per bar
+ since every block is 100 units arg[0] * 100 is the length of the bar
+arg[1] how many bars
+arg[2] rotating speed 
+</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>NoteObj</InGameName>
+    <ModelName />
+    <ShortDescription>Spawns Rainbow Notes along the specified path when SwitchA is turned on</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>PackunFlowerDokan</InGameName>
+    <ModelName />
+    <ShortDescription>Piranha Plant for Pipe.
+If defeated, it will activate SwitchDeadOn.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>PlayerControlOffArea</InGameName>
+    <ModelName />
+    <ShortDescription>If the Mario enters this area, they cannot be controlled until the flag associated with the area's SwitchKill is turned on.</ShortDescription>
+    <LongDescription />
+    <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>PoleGoal</InGameName>
+    <ModelName>PoleGoal.obj</ModelName>
+    <ShortDescription>Can be only one copy of this object in the stage.
+arg[0] = if 0 the smb level completed theme plays</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>Pukupuku</InGameName>
+    <ModelName>Pukupuku.obj</ModelName>
+    <ShortDescription>a Cheep Cheep.
+Add a rail to the stage and copy it inside this object</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>TimerClock*</InGameName>
+    <ModelName>TimerClock.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
     <InGameName>TrampleSwitch</InGameName>
     <ModelName />
     <ShortDescription>P Switch
@@ -386,5 +354,37 @@ args[2]=Item when bumped (Appears when Mario rolls into the tree's stump):
 1 - 5 Coins
 2+ - ?</LongDescription>
     <Author>Hiccup</Author>
+  </Objects>
+  <Objects>
+    <InGameName>ViewCtrlArea</InGameName>
+    <ModelName />
+    <ShortDescription>This zone controls visibility of certain objects
+arg[0] = value , set this value to the ViewId property of other objects to make them visible when the player is in this area</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>WarpCube</InGameName>
+    <ModelName>WarpCube.obj</ModelName>
+    <ShortDescription>Warps the player to another point in the stage.
+add a WarpCubeOutOnly object in the GenerateChildren property</ShortDescription>
+    <LongDescription />
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>WarpPorter</InGameName>
+    <ModelName />
+    <ShortDescription>Purple warp box, has a timer that warps the player back, the player is spawned from the children WarpPorter.</ShortDescription>
+    <LongDescription>Purple warp box, a timer that warps the player back, the default timer is 10 seconds.
+Add another WarpPorter as a children, that will spawn the player
+</LongDescription>
+    <Author>exelix11</Author>
+  </Objects>
+  <Objects>
+    <InGameName>WoodBox*</InGameName>
+    <ModelName>WoodBox.obj</ModelName>
+    <ShortDescription />
+    <LongDescription />
+    <Author>exelix11</Author>
   </Objects>
 </ObjDB>
