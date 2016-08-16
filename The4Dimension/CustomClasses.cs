@@ -12,7 +12,7 @@ using System.Xml;
 
 namespace The4Dimension
 {
-    
+
     class CustomStringWriter : System.IO.StringWriter
     {
         private readonly Encoding encoding;
@@ -80,7 +80,7 @@ namespace The4Dimension
         string propName = null;
         private Action<string, int, string, object> PropAddAction = null;
         private Action<string, int, Vector3D> MoveAction = null;
-        private Action<string, int,int, Vector3D> UndoChildrenMoveAction = null;
+        private Action<string, int, int, Vector3D> UndoChildrenMoveAction = null;
 
         public void Undo()
         {
@@ -364,6 +364,104 @@ namespace The4Dimension
             return false;
         }
     }
+
+    /*New object database format (whitehole-like), not ready yet
+    public class ObjectDb
+    {
+        public Dictionary<int, string> Categories = new Dictionary<int, string>();
+        public Dictionary<string, ObjectDbEntry> Entries = new Dictionary<string, ObjectDbEntry>();
+        public int timestamp;
+
+        public static ObjectDb FromXml(string xml)
+        {
+            ObjectDb res = new ObjectDb();
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(xml);
+            XmlNode n = doc.SelectSingleNode("/database");
+            res.timestamp = int.Parse(n.Attributes["timestamp"].InnerText);
+            foreach (XmlNode node in n.ChildNodes)
+            {
+                if (node.Name == "categories")
+                {
+                    foreach (XmlNode subn in node.ChildNodes)
+                    {
+                        res.Categories.Add(int.Parse(subn.Attributes["id"].InnerText), subn.InnerText);
+                    }
+                }
+                else if (node.Name == "object")
+                {
+                    res.Entries.Add(node.Attributes["id"].InnerText, ObjectDbEntry.FromXml(node.ChildNodes));
+                }                
+            }
+            return res;
+        }
+
+        public class ObjectDbEntry
+        {
+            public string name, notes, files;
+            public int Known, Complete, Category;
+            public List<ObjectDbField> Fields = new List<ObjectDbField>();
+
+            public static ObjectDbEntry FromXml(XmlNodeList nodes)
+            {
+                ObjectDbEntry res = new ObjectDbEntry();
+                foreach (XmlNode n in nodes)
+                {
+                    switch (n.Name)
+                    {
+                        case "name":
+                            res.name = n.InnerText;
+                            break;
+                        case "flags":
+                            res.Known = int.Parse(n.Attributes["known"].InnerText);
+                            res.Complete = int.Parse(n.Attributes["complete"].InnerText);
+                            break;
+                        case "category":
+                            res.Category = int.Parse(n.Attributes["id"].InnerText);
+                            break;
+                        case "notes":
+                            res.notes = n.InnerText;
+                            break;
+                        case "files":
+                            res.files = n.InnerText;
+                            break;
+                        case "field":
+                            res.Fields.Add(ObjectDbField.FromXml(n));
+                            break;
+                    }
+                }
+                return res;
+            }
+
+            public void Serialize()
+            {
+
+            }
+        }
+
+        public class ObjectDbField
+        {
+            public int id;
+            public string type = "int";
+            public string name, values, notes;
+
+            public void Serialize()
+            {
+
+            }
+
+            public static ObjectDbField FromXml(XmlNode n)
+            {
+                ObjectDbField res = new ObjectDbField();
+                res.id = int.Parse(n.Attributes["id"].InnerText);
+                res.type = n.Attributes["type"].InnerText;
+                res.name = n.Attributes["name"].InnerText;
+                res.values = n.Attributes["values"].InnerText;
+                res.notes = n.Attributes["notes"].InnerText;
+                return res;
+            }
+        }
+    }*/
 }
 
 namespace ExtensionMethods
