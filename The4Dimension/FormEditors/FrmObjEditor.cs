@@ -13,37 +13,47 @@ namespace The4Dimension
     public partial class FrmObjEditor : Form
     {
         public LevelObj Value { get; set; }
-        DataSet ObjDb;
-        List<string> objdbNames;
+        ObjectDb ObjectDatabase;
 
-        public FrmObjEditor(Dictionary<string, object> Lev)
+        public FrmObjEditor(Dictionary<string, object> Lev, ObjectDb Db)
         {
             InitializeComponent();
             Value = new LevelObj();
             Value.Prop = Lev;
             this.Text = "Edit object: " + Value.ToString();
             Form1 owner = (Form1)Application.OpenForms["Form1"];
-            objdbNames = owner.ObjDatabaseNames;
-            ObjDb = owner.ObjDatabase;
+            ObjectDatabase = Db;
         }
 
         private void FrmObjEditor_Load(object sender, EventArgs e)
         {
             propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(Value.Prop);
-        }
+        }       
 
         void UpdateHint()
         {
-            int index = objdbNames.IndexOf(Value.ToString());
-            if (index == -1)
+            if (ObjectDatabase.Entries.ContainsKey(Value.ToString()))
             {
-                lblDescription.Text = "This object is not in the database";
-                lblDescription.Tag = -1;
+                lblDescription.Text = ObjectDatabase.Entries[Value.ToString()].notes;
+                if (ObjectDatabase.Entries[Value.ToString()].Known == 0)
+                {
+                    lblDescription.Text = "This object is not documented";
+                    lblDescription.Tag = -1;
+                }
+                else
+                {
+                    if (ObjectDatabase.Entries[Value.ToString()].Complete == 0)
+                    {
+                        lblDescription.Text += "\r\nThis object entry is not completed";
+                    }
+                    lblDescription.Tag = 1;
+                    lblDescription.Text += "\r\n(Click for more)";
+                }
             }
             else
             {
-                lblDescription.Text = (string)ObjDb.Tables[1].Rows[index][2];
-                lblDescription.Tag = index;
+                lblDescription.Text = "This object is not in the database";
+                lblDescription.Tag = -1;
             }
         }
 
@@ -228,7 +238,7 @@ namespace The4Dimension
 
         private void lblDescription_Click(object sender, EventArgs e)
         {
-            if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjDb.Tables[1].Rows[(int)lblDescription.Tag].ItemArray).Show();
+            if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjectDatabase.Entries[Value.ToString()], Value.ToString()).Show();
         }
     }
 }

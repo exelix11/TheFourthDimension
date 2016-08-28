@@ -35,5 +35,14 @@
     <Setting Name="AutoMoveCam" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="DownloadDbLink" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://neomariogalaxy.bplaced.net/board/thefourthdimension/objectdb.php</Value>
+    </Setting>
+    <Setting Name="CheckUpdates" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="DownloadDb" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -86,6 +86,7 @@
             this.objectsDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.StatusLbl = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.Btn_CopyObjs = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
@@ -105,7 +106,14 @@
             this.ZoomCheckWarning = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.SettingsPanel = new System.Windows.Forms.Panel();
-            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.ChbStartupUpdate = new System.Windows.Forms.CheckBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.tbUrl = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.ChbStartupDb = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.ChbAddCameraMove = new System.Windows.Forms.CheckBox();
             this.RotSenUpDown = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.ZoomSenUpDown = new System.Windows.Forms.NumericUpDown();
@@ -117,6 +125,7 @@
             this.ChbFps = new System.Windows.Forms.CheckBox();
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
+            this.StartupChecks = new System.ComponentModel.BackgroundWorker();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -138,7 +147,7 @@
             this.propertyGrid1.HelpVisible = false;
             this.propertyGrid1.Location = new System.Drawing.Point(4, 3);
             this.propertyGrid1.Name = "propertyGrid1";
-            this.propertyGrid1.Size = new System.Drawing.Size(234, 201);
+            this.propertyGrid1.Size = new System.Drawing.Size(234, 207);
             this.propertyGrid1.TabIndex = 0;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGridChange);
             // 
@@ -220,7 +229,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.elementHost1.Location = new System.Drawing.Point(244, 36);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(583, 529);
+            this.elementHost1.Size = new System.Drawing.Size(539, 536);
             this.elementHost1.TabIndex = 3;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = null;
@@ -233,10 +242,11 @@
             this.UndoMenu,
             this.OtherLevelDataMenu,
             this.findToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.StatusLbl});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(832, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(788, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -350,7 +360,7 @@
             // 
             this.preferencesToolStripMenuItem.Name = "preferencesToolStripMenuItem";
             this.preferencesToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.preferencesToolStripMenuItem.Text = "3D view settings";
+            this.preferencesToolStripMenuItem.Text = "Settings";
             this.preferencesToolStripMenuItem.Click += new System.EventHandler(this.preferencesToolStripMenuItem_Click);
             // 
             // otherToolStripMenuItem
@@ -566,6 +576,7 @@
             this.objectsDatabaseToolStripMenuItem.Name = "objectsDatabaseToolStripMenuItem";
             this.objectsDatabaseToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.objectsDatabaseToolStripMenuItem.Text = "Objects database editor";
+            this.objectsDatabaseToolStripMenuItem.Visible = false;
             this.objectsDatabaseToolStripMenuItem.Click += new System.EventHandler(this.objectsDatabaseToolStripMenuItem_Click);
             // 
             // toolStripSeparator4
@@ -579,6 +590,12 @@
             this.gbatempThreadToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.gbatempThreadToolStripMenuItem.Text = "Gbatemp thread";
             this.gbatempThreadToolStripMenuItem.Click += new System.EventHandler(this.gbatempThreadToolStripMenuItem_Click);
+            // 
+            // StatusLbl
+            // 
+            this.StatusLbl.ForeColor = System.Drawing.Color.Red;
+            this.StatusLbl.Name = "StatusLbl";
+            this.StatusLbl.Size = new System.Drawing.Size(12, 20);
             // 
             // splitContainer1
             // 
@@ -611,14 +628,14 @@
             this.splitContainer1.Panel2.Controls.Add(this.button5);
             this.splitContainer1.Panel2.Controls.Add(this.button4);
             this.splitContainer1.Panel2.Controls.Add(this.propertyGrid1);
-            this.splitContainer1.Size = new System.Drawing.Size(244, 529);
-            this.splitContainer1.SplitterDistance = 240;
+            this.splitContainer1.Size = new System.Drawing.Size(244, 536);
+            this.splitContainer1.SplitterDistance = 241;
             this.splitContainer1.TabIndex = 7;
             // 
             // Btn_CopyObjs
             // 
             this.Btn_CopyObjs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Btn_CopyObjs.Location = new System.Drawing.Point(35, 214);
+            this.Btn_CopyObjs.Location = new System.Drawing.Point(35, 215);
             this.Btn_CopyObjs.Name = "Btn_CopyObjs";
             this.Btn_CopyObjs.Size = new System.Drawing.Size(96, 23);
             this.Btn_CopyObjs.TabIndex = 12;
@@ -633,7 +650,7 @@
             this.checkBox2.AutoSize = true;
             this.checkBox2.Checked = true;
             this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2.Location = new System.Drawing.Point(3, 192);
+            this.checkBox2.Location = new System.Drawing.Point(3, 193);
             this.checkBox2.Name = "checkBox2";
             this.checkBox2.Size = new System.Drawing.Size(227, 17);
             this.checkBox2.TabIndex = 9;
@@ -645,7 +662,7 @@
             // btn_cameraCode
             // 
             this.btn_cameraCode.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_cameraCode.Location = new System.Drawing.Point(103, 186);
+            this.btn_cameraCode.Location = new System.Drawing.Point(103, 187);
             this.btn_cameraCode.Name = "btn_cameraCode";
             this.btn_cameraCode.Size = new System.Drawing.Size(135, 26);
             this.btn_cameraCode.TabIndex = 11;
@@ -668,7 +685,7 @@
             // 
             this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(4, 191);
+            this.checkBox1.Location = new System.Drawing.Point(4, 192);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(92, 17);
             this.checkBox1.TabIndex = 9;
@@ -684,7 +701,7 @@
             this.ObjectsListBox.Location = new System.Drawing.Point(7, 30);
             this.ObjectsListBox.Name = "ObjectsListBox";
             this.ObjectsListBox.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
-            this.ObjectsListBox.Size = new System.Drawing.Size(229, 160);
+            this.ObjectsListBox.Size = new System.Drawing.Size(229, 147);
             this.ObjectsListBox.TabIndex = 8;
             this.ObjectsListBox.SelectedIndexChanged += new System.EventHandler(this.ObjectsListBox_SelectedIndexChanged);
             this.ObjectsListBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Listbox_keyDown);
@@ -715,7 +732,7 @@
             // Btn_AddObj
             // 
             this.Btn_AddObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Btn_AddObj.Location = new System.Drawing.Point(3, 214);
+            this.Btn_AddObj.Location = new System.Drawing.Point(3, 215);
             this.Btn_AddObj.Name = "Btn_AddObj";
             this.Btn_AddObj.Size = new System.Drawing.Size(29, 23);
             this.Btn_AddObj.TabIndex = 5;
@@ -726,7 +743,7 @@
             // btn_delObj
             // 
             this.btn_delObj.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_delObj.Location = new System.Drawing.Point(137, 214);
+            this.btn_delObj.Location = new System.Drawing.Point(137, 215);
             this.btn_delObj.Name = "btn_delObj";
             this.btn_delObj.Size = new System.Drawing.Size(101, 23);
             this.btn_delObj.TabIndex = 4;
@@ -737,7 +754,7 @@
             // Btn_Duplicate
             // 
             this.Btn_Duplicate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Btn_Duplicate.Location = new System.Drawing.Point(35, 214);
+            this.Btn_Duplicate.Location = new System.Drawing.Point(35, 215);
             this.Btn_Duplicate.Name = "Btn_Duplicate";
             this.Btn_Duplicate.Size = new System.Drawing.Size(96, 23);
             this.Btn_Duplicate.TabIndex = 3;
@@ -748,7 +765,7 @@
             // lblDescription
             // 
             this.lblDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblDescription.Location = new System.Drawing.Point(3, 207);
+            this.lblDescription.Location = new System.Drawing.Point(3, 213);
             this.lblDescription.Name = "lblDescription";
             this.lblDescription.Size = new System.Drawing.Size(235, 49);
             this.lblDescription.TabIndex = 9;
@@ -760,7 +777,7 @@
             // button5
             // 
             this.button5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button5.Location = new System.Drawing.Point(84, 259);
+            this.button5.Location = new System.Drawing.Point(84, 265);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(152, 23);
             this.button5.TabIndex = 2;
@@ -771,7 +788,7 @@
             // button4
             // 
             this.button4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.button4.Location = new System.Drawing.Point(3, 259);
+            this.button4.Location = new System.Drawing.Point(3, 265);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 1;
@@ -784,7 +801,7 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.label2.Location = new System.Drawing.Point(793, 555);
+            this.label2.Location = new System.Drawing.Point(749, 562);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(39, 13);
             this.label2.TabIndex = 8;
@@ -800,7 +817,7 @@
             // 
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(242, 555);
+            this.label3.Location = new System.Drawing.Point(242, 562);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(0, 13);
             this.label3.TabIndex = 9;
@@ -809,7 +826,14 @@
             // 
             this.SettingsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.SettingsPanel.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.SettingsPanel.Controls.Add(this.checkBox3);
+            this.SettingsPanel.Controls.Add(this.ChbStartupUpdate);
+            this.SettingsPanel.Controls.Add(this.label11);
+            this.SettingsPanel.Controls.Add(this.tbUrl);
+            this.SettingsPanel.Controls.Add(this.label10);
+            this.SettingsPanel.Controls.Add(this.ChbStartupDb);
+            this.SettingsPanel.Controls.Add(this.label9);
+            this.SettingsPanel.Controls.Add(this.label8);
+            this.SettingsPanel.Controls.Add(this.ChbAddCameraMove);
             this.SettingsPanel.Controls.Add(this.RotSenUpDown);
             this.SettingsPanel.Controls.Add(this.label7);
             this.SettingsPanel.Controls.Add(this.ZoomSenUpDown);
@@ -821,21 +845,88 @@
             this.SettingsPanel.Controls.Add(this.ChbFps);
             this.SettingsPanel.Controls.Add(this.CamInertiaUpDown);
             this.SettingsPanel.Controls.Add(this.label4);
-            this.SettingsPanel.Location = new System.Drawing.Point(447, 111);
+            this.SettingsPanel.Location = new System.Drawing.Point(316, 120);
             this.SettingsPanel.Name = "SettingsPanel";
-            this.SettingsPanel.Size = new System.Drawing.Size(213, 342);
-            this.SettingsPanel.TabIndex = 10;
+            this.SettingsPanel.Size = new System.Drawing.Size(399, 367);
+            this.SettingsPanel.TabIndex = 11;
             this.SettingsPanel.Visible = false;
             this.SettingsPanel.Leave += new System.EventHandler(this.SettingsPanel_LostFocus);
             // 
-            // checkBox3
+            // ChbStartupUpdate
             // 
-            this.checkBox3.Location = new System.Drawing.Point(6, 309);
-            this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(201, 31);
-            this.checkBox3.TabIndex = 12;
-            this.checkBox3.Text = "When adding a new object, automatically move the camera to it";
-            this.checkBox3.UseVisualStyleBackColor = true;
+            this.ChbStartupUpdate.AutoSize = true;
+            this.ChbStartupUpdate.Location = new System.Drawing.Point(21, 256);
+            this.ChbStartupUpdate.Name = "ChbStartupUpdate";
+            this.ChbStartupUpdate.Size = new System.Drawing.Size(163, 17);
+            this.ChbStartupUpdate.TabIndex = 19;
+            this.ChbStartupUpdate.Text = "Check for updates on startup";
+            this.ChbStartupUpdate.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(22, 317);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(347, 39);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "this is both for startup update and manual update from help -> download \r\nlatest " +
+    "objectsDb\r\nif this is empty the database will be downloaded from the github repo" +
+    "";
+            // 
+            // tbUrl
+            // 
+            this.tbUrl.Location = new System.Drawing.Point(141, 295);
+            this.tbUrl.Name = "tbUrl";
+            this.tbUrl.Size = new System.Drawing.Size(250, 20);
+            this.tbUrl.TabIndex = 17;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(11, 298);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(124, 13);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "Database download link:";
+            // 
+            // ChbStartupDb
+            // 
+            this.ChbStartupDb.AutoSize = true;
+            this.ChbStartupDb.Location = new System.Drawing.Point(21, 278);
+            this.ChbStartupDb.Name = "ChbStartupDb";
+            this.ChbStartupDb.Size = new System.Drawing.Size(299, 17);
+            this.ChbStartupDb.TabIndex = 15;
+            this.ChbStartupDb.Text = "Automatically download latest objects database on startup";
+            this.ChbStartupDb.UseVisualStyleBackColor = true;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(3, 240);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(92, 13);
+            this.label9.TabIndex = 14;
+            this.label9.Text = "Editor settings:";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(3, 6);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(105, 13);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "3D view settings:";
+            // 
+            // ChbAddCameraMove
+            // 
+            this.ChbAddCameraMove.Location = new System.Drawing.Point(187, 209);
+            this.ChbAddCameraMove.Name = "ChbAddCameraMove";
+            this.ChbAddCameraMove.Size = new System.Drawing.Size(201, 31);
+            this.ChbAddCameraMove.TabIndex = 12;
+            this.ChbAddCameraMove.Text = "When adding a new object, automatically move the camera to it";
+            this.ChbAddCameraMove.UseVisualStyleBackColor = true;
             // 
             // RotSenUpDown
             // 
@@ -845,7 +936,7 @@
             0,
             0,
             65536});
-            this.RotSenUpDown.Location = new System.Drawing.Point(64, 209);
+            this.RotSenUpDown.Location = new System.Drawing.Point(313, 107);
             this.RotSenUpDown.Maximum = new decimal(new int[] {
             2,
             0,
@@ -858,12 +949,11 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(55, 180);
+            this.label7.Location = new System.Drawing.Point(26, 101);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(95, 26);
             this.label7.TabIndex = 10;
             this.label7.Text = "Rotation sensitivity\r\nDefault: 1";
-            this.label7.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // ZoomSenUpDown
             // 
@@ -873,7 +963,7 @@
             0,
             0,
             131072});
-            this.ZoomSenUpDown.Location = new System.Drawing.Point(64, 152);
+            this.ZoomSenUpDown.Location = new System.Drawing.Point(313, 70);
             this.ZoomSenUpDown.Maximum = new decimal(new int[] {
             5,
             0,
@@ -886,12 +976,11 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(61, 123);
+            this.label6.Location = new System.Drawing.Point(26, 70);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(82, 26);
+            this.label6.Size = new System.Drawing.Size(85, 26);
             this.label6.TabIndex = 8;
-            this.label6.Text = "Zoom sensitivity\r\nDefault: 2";
-            this.label6.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label6.Text = "Zoom sensitivity \r\nDefault: 2";
             // 
             // cbCameraMode
             // 
@@ -902,7 +991,7 @@
             this.cbCameraMode.Items.AddRange(new object[] {
             "Inspect (Default)",
             "WalkAround (Whitehole)"});
-            this.cbCameraMode.Location = new System.Drawing.Point(37, 95);
+            this.cbCameraMode.Location = new System.Drawing.Point(252, 142);
             this.cbCameraMode.Name = "cbCameraMode";
             this.cbCameraMode.Size = new System.Drawing.Size(136, 21);
             this.cbCameraMode.TabIndex = 7;
@@ -910,7 +999,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(68, 79);
+            this.label5.Location = new System.Drawing.Point(26, 145);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(75, 13);
             this.label5.TabIndex = 5;
@@ -919,7 +1008,7 @@
             // ChbDebugInfo
             // 
             this.ChbDebugInfo.AutoSize = true;
-            this.ChbDebugInfo.Location = new System.Drawing.Point(6, 286);
+            this.ChbDebugInfo.Location = new System.Drawing.Point(187, 186);
             this.ChbDebugInfo.Name = "ChbDebugInfo";
             this.ChbDebugInfo.Size = new System.Drawing.Size(144, 17);
             this.ChbDebugInfo.TabIndex = 4;
@@ -929,7 +1018,7 @@
             // ChbTriCount
             // 
             this.ChbTriCount.AutoSize = true;
-            this.ChbTriCount.Location = new System.Drawing.Point(6, 263);
+            this.ChbTriCount.Location = new System.Drawing.Point(22, 209);
             this.ChbTriCount.Name = "ChbTriCount";
             this.ChbTriCount.Size = new System.Drawing.Size(120, 17);
             this.ChbTriCount.TabIndex = 3;
@@ -939,7 +1028,7 @@
             // ChbFps
             // 
             this.ChbFps.AutoSize = true;
-            this.ChbFps.Location = new System.Drawing.Point(6, 240);
+            this.ChbFps.Location = new System.Drawing.Point(22, 186);
             this.ChbFps.Name = "ChbFps";
             this.ChbFps.Size = new System.Drawing.Size(76, 17);
             this.ChbFps.TabIndex = 2;
@@ -954,7 +1043,7 @@
             0,
             0,
             131072});
-            this.CamInertiaUpDown.Location = new System.Drawing.Point(68, 51);
+            this.CamInertiaUpDown.Location = new System.Drawing.Point(313, 34);
             this.CamInertiaUpDown.Maximum = new decimal(new int[] {
             99,
             0,
@@ -967,24 +1056,30 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 9);
+            this.label4.Location = new System.Drawing.Point(19, 34);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(204, 39);
+            this.label4.Size = new System.Drawing.Size(271, 26);
             this.label4.TabIndex = 0;
-            this.label4.Text = "Camera inertia factor:\r\n(This controls how much the camera slips)\r\nDefault: 0,92";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.label4.Text = "Camera inertia factor:\r\n (This controls how much the camera slips) Default: 0,92";
+            // 
+            // StartupChecks
+            // 
+            this.StartupChecks.WorkerReportsProgress = true;
+            this.StartupChecks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.StartupChecks_DoWork);
+            this.StartupChecks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.StartupChecks_Completed);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(832, 568);
+            this.ClientSize = new System.Drawing.Size(788, 575);
             this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.elementHost1);
             this.Controls.Add(this.menuStrip1);
+            this.MinimumSize = new System.Drawing.Size(701, 470);
             this.Name = "Form1";
             this.Text = "The Fourth Dimension - by Exelix11";
             this.Activated += new System.EventHandler(this.From_Activated);
@@ -1083,21 +1178,30 @@
         private System.Windows.Forms.ToolStripMenuItem ClipBoardMenu_CopyRail;
         private System.Windows.Forms.Timer ZoomCheckWarning;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Panel SettingsPanel;
-        private System.Windows.Forms.NumericUpDown CamInertiaUpDown;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
         private System.Windows.Forms.ToolStripMenuItem preferencesToolStripMenuItem;
-        private System.Windows.Forms.CheckBox ChbDebugInfo;
-        private System.Windows.Forms.CheckBox ChbTriCount;
-        private System.Windows.Forms.CheckBox ChbFps;
-        public System.Windows.Forms.ComboBox cbCameraMode;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Panel SettingsPanel;
+        private System.Windows.Forms.CheckBox ChbStartupUpdate;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox tbUrl;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox ChbStartupDb;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox ChbAddCameraMove;
         private System.Windows.Forms.NumericUpDown RotSenUpDown;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown ZoomSenUpDown;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckBox checkBox3;
+        public System.Windows.Forms.ComboBox cbCameraMode;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox ChbDebugInfo;
+        private System.Windows.Forms.CheckBox ChbTriCount;
+        private System.Windows.Forms.CheckBox ChbFps;
+        private System.Windows.Forms.NumericUpDown CamInertiaUpDown;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ToolStripMenuItem StatusLbl;
+        private System.ComponentModel.BackgroundWorker StartupChecks;
     }
 }
 

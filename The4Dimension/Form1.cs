@@ -21,6 +21,11 @@ using The4Dimension.ObjectDB;
 
 namespace The4Dimension
 {
+    /*
+     TODO:
+     ObjectDbEditor.cs
+    */
+
     public partial class Form1 : Form
     {
         public static string ObjectDbLink = "https://raw.githubusercontent.com/exelix11/TheFourthDimension/master/ObjectsDb.xml";
@@ -29,10 +34,10 @@ namespace The4Dimension
         int APP_VER = Int32.Parse(Application.ProductVersion.Replace(".", ""));
         string LoadedFile = "";
         bool AutoMoveCam = true;
-
+        public static int ReleaseId = 7;
+        
         public Form1(string FileLoad = "")
         {
-            //ObjectDb testdb = ObjectDb.FromXml(File.ReadAllText(@"testdb.xml"));            
             try
             {
                 InitializeComponent();
@@ -109,12 +114,11 @@ namespace The4Dimension
         public Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
         public List<Rail> AllRailInfos = new List<Rail>();
         Dictionary<string, int> higestID = new Dictionary<string, int>();
-        public DataSet ObjDatabase = new DataSet("ObjDB");
-        public List<string> ObjDatabaseNames = new List<string>(); //For quickly getting the right index in the database
         public Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
         public CustomStack<UndoAction> Undo = new CustomStack<UndoAction>();
         public static List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
         public static Encoding DefEnc = Encoding.GetEncoding("Shift-JIS");
+        public ObjectDb ObjectDatabase = null;
         List<LevelObj> dummy;
 
         private void Form1_Load(object sender, EventArgs e)
@@ -131,12 +135,18 @@ namespace The4Dimension
                 }
                 else Application.Exit();
             }
-            LoadObjectDatabase();
+            if (!Properties.Settings.Default.DownloadDb) LoadObjectDatabase();
             LoadCreatorClassNameTable();
             if (LoadedFile != "") LoadFile(LoadedFile);
             else SetUiLock(false, false);
             gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path: " + Properties.Settings.Default.GamePath;
-            //new GameObjectDumper(LevelNameNum.Keys.ToArray(), this).Show(); 
+            if (Properties.Settings.Default.CheckUpdates || Properties.Settings.Default.DownloadDb) StartupChecks.RunWorkerAsync();
+            if (Properties.Settings.Default.CheckUpdates)
+            {
+                StatusLbl.Text = "Checking updates";
+                if (Properties.Settings.Default.DownloadDb) StatusLbl.Text += " and downloading database..."; else StatusLbl.Text += "...";
+            }
+            else if (Properties.Settings.Default.DownloadDb) StatusLbl.Text = "Downloading database...";
         }
 
         void UnloadLevel()
@@ -201,7 +211,7 @@ namespace The4Dimension
         void SetUiLock(bool SZS, bool Lock)
         {
             splitContainer1.Enabled = Lock;
-            elementHost1.Enabled = Lock;
+            //elementHost1.Enabled = Lock;
             saveAsXmlToolStripMenuItem.Enabled = Lock;
             saveAsBymlToolStripMenuItem1.Enabled = Lock;
             UndoMenu.Enabled = Lock;
@@ -292,36 +302,14 @@ namespace The4Dimension
 
         public void LoadObjectDatabase()
         {
-            ObjDatabase.Clear();
-            ObjDatabaseNames.Clear();
-            if (!File.Exists(@"ObjectsDb.xml"))
+            ObjectDatabase = null;
+            if (!File.Exists(@"objectdb.xml"))
             {
-                DataTable info = new DataTable("Infos");
-                info.Columns.Add("AppVer");
-                info.Rows.Add(APP_VER);
-                DataTable tb = new DataTable("Objects");
-                tb.Columns.Add("InGameName");
-                tb.Columns.Add("ModelName");
-                tb.Columns.Add("ShortDescription");
-                tb.Columns.Add("LongDescription");
-                tb.Columns.Add("Author");
-                ObjDatabase.Tables.Add(info);
-                ObjDatabase.Tables.Add(tb);
                 MessageBox.Show("The object database wasn't found, some objects may not appear, and you won't be able to get informations about how to use objects, you can download the database from Help -> Download latest object database");
                 return;
             } else
             {
-                XmlReader xml = XmlReader.Create(@"ObjectsDb.xml");
-                ObjDatabase.ReadXml(xml);
-                if (Int32.Parse(((string)ObjDatabase.Tables[0].Rows[0][0]).Replace(".", "")) > APP_VER)
-                {
-                    MessageBox.Show("This object database was made with a newer version of the editor, some data may not work in this version.\r\nYou should update your editor to the latest version");
-                }
-                for (int i = 0; i < ObjDatabase.Tables[1].Rows.Count; i++)
-                {
-                    string tmpName = (string)ObjDatabase.Tables[1].Rows[i][0];
-                    ObjDatabaseNames.Add(tmpName);
-                }
+                ObjectDatabase = ObjectDb.FromXml(File.ReadAllText(@"objectdb.xml"));
             }
         }
 
@@ -338,7 +326,6 @@ namespace The4Dimension
                 {
                     if (Properties.Settings.Default.GamePath.Trim() == "") MessageBox.Show("to add objects to the game, and get list of every objects in the editor you need CreatorClassNameTable.szs in the same folder as this program, this file is placed inside GameRomFS:SystemData\\CreatorClassNameTable.szs");
                     else MessageBox.Show(Properties.Settings.Default.GamePath + "\\SystemData\\CreatorClassNameTable.szs not found.\r\nProbably your Romfs dump is incomplete or was modified.\r\nWithout this file you can only duplicate or delete objects.");
-                    //Btn_AddObj.Enabled = false;
                     creatorClassNameTableEditorToolStripMenuItem.Enabled = false;
                     return;
                 }
@@ -479,21 +466,11 @@ namespace The4Dimension
 
         string GetModelname(string ObjName)
         {
-            foreach (DataRow row in ObjDatabase.Tables[1].Rows) 
+            switch (ObjName.ToLower())
             {
-                if (((string)row.ItemArray[0]).EndsWith("*"))
-                {
-                    string name = ((string)row.ItemArray[0]);
-                    name = name.Substring(0, name.Length - 1);
-                    if (ObjName.ToLower().StartsWith(name.ToLower())) return "models\\" + (string)row.ItemArray[1];
-                }
-                else
-                if (ObjName.Trim() != "" && ObjName.ToLower() == ((string)row.ItemArray[0]).ToLower())
-                {
-                    if ((string)row.ItemArray[1] != "") return "models\\" + (string)row.ItemArray[1];
-                }
+                default:
+                    return "models\\" + ObjName + ".obj";
             }
-            return "models\\" + ObjName + ".obj";
         }
 
         void ProcessAllInfos(XmlNodeList xml)
@@ -974,7 +951,7 @@ namespace The4Dimension
                 Btn_CopyObjs.Visible = false;
                 Btn_Duplicate.Visible = true;
                 btn_delObj.Text = "Delete object";
-                UpdateHint();
+                if (ObjectDatabase != null) UpdateHint();
             }
             if (comboBox1.Text == "AreaObjInfo")
             {
@@ -1039,16 +1016,28 @@ namespace The4Dimension
                 lblDescription.Tag = -1;
                 return;
             }
-            int index = ObjDatabaseNames.IndexOf(ObjectsListBox.SelectedItem.ToString());
-            if (index == -1)
+            if (ObjectDatabase.Entries.ContainsKey(ObjectsListBox.SelectedItem.ToString()))
             {
-                lblDescription.Text = "This object is not in the database";
-                lblDescription.Tag = -1;
+                lblDescription.Text = ObjectDatabase.Entries[ObjectsListBox.SelectedItem.ToString()].notes;
+                if (ObjectDatabase.Entries[ObjectsListBox.SelectedItem.ToString()].Known == 0)
+                {
+                    lblDescription.Text = "This object is not documented";
+                    lblDescription.Tag = -1;
+                }
+                else
+                {
+                    if (ObjectDatabase.Entries[ObjectsListBox.SelectedItem.ToString()].Complete == 0)
+                    {
+                        lblDescription.Text += "\r\nThis object entry is not completed";
+                    }
+                    lblDescription.Tag = 1;
+                    lblDescription.Text += "\r\n(Click for more)";
+                }
             }
             else
             {
-                lblDescription.Text = (string)ObjDatabase.Tables[1].Rows[index][2];
-                lblDescription.Tag = index;
+                lblDescription.Text = "This object is not in the database";
+                lblDescription.Tag = -1;
             }
         }
 
@@ -1249,14 +1238,14 @@ namespace The4Dimension
 
         private void objectsDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ObjectDbEditor d = new ObjectDbEditor(ObjDatabase);
-            d.ShowDialog();
-            LoadObjectDatabase();
+            //ObjectDbEditor d = new ObjectDbEditor(ObjectDatabase.Entries[ObjectsListBox.SelectedItem.ToString()]);
+           // d.ShowDialog();
+            //LoadObjectDatabase();
         }
 
         private void lblDescription_Click(object sender, EventArgs e)
         {
-            if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjDatabase.Tables[1].Rows[(int)lblDescription.Tag].ItemArray).Show();
+            if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjectDatabase.Entries[ObjectsListBox.SelectedItem.ToString()], ObjectsListBox.SelectedItem.ToString()).Show();
         }
 
         private void oggToBcstmConverterToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1266,28 +1255,26 @@ namespace The4Dimension
 
         private void downloadLatestObjectDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (File.Exists("ObjectsDb.xml"))
+            if (File.Exists("objectdb.xml"))
             {
                 if (MessageBox.Show("An object database file already exists, if you download a new one it will be replaced, if you edited it your changes will be lost, do you want to continue ?", "Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
-                File.Copy("ObjectsDb.xml", "ObjectsDb.xml.old");
-                File.Delete("ObjectsDb.xml");
+                File.Copy("objectdb.xml", "objectdb.xml.bak");
+                File.Delete("objectdb.xml");
             }
             try
             {
-                WebClient w = new WebClient();
-                w.DownloadFile(ObjectDbLink, "ObjectsDb.xml");
-                w.Dispose();
+                new WebClient().DownloadFile(Properties.Settings.Default.DownloadDbLink == "" ? ObjectDbLink : Properties.Settings.Default.DownloadDbLink, "objectdb.xml");
                 LoadObjectDatabase();
-                File.Delete("ObjectsDb.xml.old");
+                File.Delete("objectdb.xml.bak");
                 MessageBox.Show("Done !");
             }
             catch (Exception ex)
             {
                 MessageBox.Show("There was an error, the file wasn't downloaded: \r\n" + ex.Message);
-                if (File.Exists("ObjectsDb.xml.old"))
+                if (File.Exists("objectdb.xml.bak"))
                 {
-                    File.Copy("ObjectsDb.xml.old", "ObjectsDb.xml");
-                    File.Delete("ObjectsDb.xml.old");
+                    File.Copy("objectdb.xml.bak", "objectdb.xml");
+                    File.Delete("objectdb.xml.bak");
                     MessageBox.Show("The backup was restored");
                 }
                 return;
@@ -1645,7 +1632,7 @@ namespace The4Dimension
             }
             else
             {
-                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable.Keys.ToArray(), ObjDatabaseNames.ToArray(), comboBox1.Text,pos );
+                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable.Keys.ToArray(), ObjectDatabase.Entries.Keys.ToArray(), comboBox1.Text,pos );
                 frm.ShowDialog();
                 if (frm.Value == null) return;
                 AddObj(frm.Value, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
@@ -2389,8 +2376,11 @@ namespace The4Dimension
             render.ZoomSensitivity = (double)ZoomSenUpDown.Value;
             Properties.Settings.Default.RotSen = (double)RotSenUpDown.Value;
             render.RotationSensitivity = (double)RotSenUpDown.Value;
-            Properties.Settings.Default.AutoMoveCam = checkBox3.Checked;
-            AutoMoveCam = checkBox3.Checked;
+            Properties.Settings.Default.AutoMoveCam = ChbAddCameraMove.Checked;
+            AutoMoveCam = ChbAddCameraMove.Checked;
+            Properties.Settings.Default.CheckUpdates = ChbStartupUpdate.Checked;
+            Properties.Settings.Default.DownloadDb = ChbStartupDb.Checked;
+            Properties.Settings.Default.DownloadDbLink = tbUrl.Text;
             Properties.Settings.Default.Save();
         }
 
@@ -2404,9 +2394,53 @@ namespace The4Dimension
             cbCameraMode.SelectedIndex = render.CamMode == HelixToolkit.Wpf.CameraMode.Inspect ? 0 : 1;
             ZoomSenUpDown.Value = (decimal)render.ZoomSensitivity;
             RotSenUpDown.Value = (decimal)render.RotationSensitivity;
-            checkBox3.Checked = AutoMoveCam;
+            ChbAddCameraMove.Checked = AutoMoveCam;
+            ChbStartupUpdate.Checked = Properties.Settings.Default.CheckUpdates;
+            ChbStartupDb.Checked = Properties.Settings.Default.DownloadDb;
+            tbUrl.Text = Properties.Settings.Default.DownloadDbLink;
             SettingsPanel.Focus();
         }
         #endregion
+
+        private async void StartupChecks_DoWork(object sender, DoWorkEventArgs e)
+        {
+            string state = "";
+            try
+            {               
+                if (Properties.Settings.Default.DownloadDb)
+                {
+                    state = "downloading object database";
+                    if (File.Exists("objectdb.xml.bak")) File.Delete("objectdb.xml.bak");
+                    if (File.Exists("objectdb.xml")) File.Move("objectdb.xml", "objectdb.xml.bak");
+                    new WebClient().DownloadFile(Properties.Settings.Default.DownloadDbLink == "" ? ObjectDbLink : Properties.Settings.Default.DownloadDbLink, "objectdb.xml");
+                    if (!File.Exists("objectdb.xml"))
+                    {
+                        MessageBox.Show("There was an error downloading the object database");
+                        if (File.Exists("objectdb.xml.bak")) File.Move("objectdb.xml.bak", "objectdb.xml");
+                    }
+                }
+                if (Properties.Settings.Default.CheckUpdates)
+                {
+                    state = "checking updates";
+                    var githubClient = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("TheFourthDimension"));
+                    var ver = await githubClient.Repository.Release.GetAll("exelix11", "TheFourthDimension");
+                    if (ver.Count > ReleaseId)
+                    {
+                        if (MessageBox.Show("There is a new version of the editor, do you want to open the github page ?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                            System.Diagnostics.Process.Start("https://github.com/exelix11/TheFourthDimension/releases");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("There was an error" + state + ": " + ex.Message);
+                if (File.Exists("objectdb.xml.bak") && !File.Exists("objectdb.xml")) File.Move("objectdb.xml.bak", "objectdb.xml");
+            }
+        }
+
+        private void StartupChecks_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            StatusLbl.Text = "";
+        }
     }
 }
