@@ -154,5 +154,41 @@ namespace The4Dimension.Properties {
                 this["AutoMoveCam"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://neomariogalaxy.bplaced.net/board/thefourthdimension/objectdb.php")]
+        public string DownloadDbLink {
+            get {
+                return ((string)(this["DownloadDbLink"]));
+            }
+            set {
+                this["DownloadDbLink"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckUpdates {
+            get {
+                return ((bool)(this["CheckUpdates"]));
+            }
+            set {
+                this["CheckUpdates"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DownloadDb {
+            get {
+                return ((bool)(this["DownloadDb"]));
+            }
+            set {
+                this["DownloadDb"] = value;
+            }
+        }
     }
 }

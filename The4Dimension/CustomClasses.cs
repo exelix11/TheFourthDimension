@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Windows.Media.Media3D;
 using System.IO;
 using System.Xml;
+using System.Diagnostics;
 
 namespace The4Dimension
 {
@@ -365,7 +366,6 @@ namespace The4Dimension
         }
     }
 
-    /*New object database format (whitehole-like), not ready yet
     public class ObjectDb
     {
         public Dictionary<int, string> Categories = new Dictionary<int, string>();
@@ -391,9 +391,52 @@ namespace The4Dimension
                 else if (node.Name == "object")
                 {
                     res.Entries.Add(node.Attributes["id"].InnerText, ObjectDbEntry.FromXml(node.ChildNodes));
-                }                
+                }
             }
             return res;
+        }
+
+        public string GetXml(bool updateTimestamp = true)
+        {
+            return ASCIIEncoding.UTF8.GetString(GetXmlBytes(updateTimestamp));
+        }
+
+        public byte[] GetXmlBytes(bool updateTimestamp = true)
+        {
+            if (updateTimestamp)
+            {
+                TimeSpan ts = DateTime.Now.Subtract(new DateTime(1970, 1, 1, 0, 0, 0));
+                timestamp = (int)ts.TotalSeconds;
+            }
+            using (var stream = new MemoryStream())
+            {
+                using (var xr = XmlWriter.Create(stream, new XmlWriterSettings() { Indent = true, Encoding = ASCIIEncoding.UTF8 }))
+                {
+                    xr.WriteStartDocument();
+                    xr.WriteStartElement("database");
+                    xr.WriteAttributeString("timestamp", timestamp.ToString());
+                    xr.WriteStartElement("categories");
+                    foreach (int i in Categories.Keys.ToArray())
+                    {
+                        xr.WriteStartElement("category");
+                        xr.WriteAttributeString("id", i.ToString());
+                        xr.WriteString(Categories[i]);
+                        xr.WriteEndElement();
+                    }
+                    xr.WriteEndElement();
+                    foreach (string id in Entries.Keys.ToArray())
+                    {
+                        xr.WriteStartElement("object");
+                        xr.WriteAttributeString("id", id);
+                        Entries[id].WriteXml(xr);
+                        xr.WriteEndElement();
+                        xr.WriteRaw("\r\n".ToCharArray(), 0, 1);
+                    }
+                    xr.WriteEndElement();
+                    xr.Close();
+                }
+                return stream.ToArray();
+            }
         }
 
         public class ObjectDbEntry
@@ -433,35 +476,57 @@ namespace The4Dimension
                 return res;
             }
 
-            public void Serialize()
+            public void WriteXml(XmlWriter xr)
             {
+                xr.WriteStartElement("name");
+                xr.WriteString(name);
+                xr.WriteEndElement();
+                xr.WriteStartElement("flags");
+                xr.WriteAttributeString("known", Known.ToString());
+                xr.WriteAttributeString("complete", Complete.ToString());
+                xr.WriteEndElement();
+                xr.WriteStartElement("category");
+                xr.WriteAttributeString("id", Category.ToString());
+                xr.WriteEndElement();
+                xr.WriteStartElement("notes");
+                xr.WriteString(notes);
+                xr.WriteEndElement();
+                xr.WriteStartElement("files");
+                xr.WriteString(files);
+                xr.WriteEndElement();
+                foreach (ObjectDbField f in Fields) f.WriteXml(xr);
+            }
 
+            public class ObjectDbField
+            {
+                public int id;
+                public string type = "int";
+                public string name, values, notes;
+
+                public void WriteXml(XmlWriter xr)
+                {
+                    xr.WriteStartElement("field");
+                    xr.WriteAttributeString("id", id.ToString());
+                    xr.WriteAttributeString("type", type);
+                    xr.WriteAttributeString("name", name);
+                    xr.WriteAttributeString("values", values);
+                    xr.WriteAttributeString("notes", notes);
+                    xr.WriteEndElement();
+                }
+
+                public static ObjectDbField FromXml(XmlNode n)
+                {
+                    ObjectDbField res = new ObjectDbField();
+                    res.id = int.Parse(n.Attributes["id"].InnerText);
+                    res.type = n.Attributes["type"].InnerText;
+                    res.name = n.Attributes["name"].InnerText;
+                    res.values = n.Attributes["values"].InnerText;
+                    res.notes = n.Attributes["notes"].InnerText;
+                    return res;
+                }
             }
         }
-
-        public class ObjectDbField
-        {
-            public int id;
-            public string type = "int";
-            public string name, values, notes;
-
-            public void Serialize()
-            {
-
-            }
-
-            public static ObjectDbField FromXml(XmlNode n)
-            {
-                ObjectDbField res = new ObjectDbField();
-                res.id = int.Parse(n.Attributes["id"].InnerText);
-                res.type = n.Attributes["type"].InnerText;
-                res.name = n.Attributes["name"].InnerText;
-                res.values = n.Attributes["values"].InnerText;
-                res.notes = n.Attributes["notes"].InnerText;
-                return res;
-            }
-        }
-    }*/
+    }
 }
 
 namespace ExtensionMethods
