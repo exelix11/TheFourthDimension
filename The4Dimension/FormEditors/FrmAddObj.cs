@@ -19,14 +19,20 @@ namespace The4Dimension
         string[] ObjDb;
         Vector3D objPos;
 
-        public FrmAddObj(string[] _CCNT, string[] _ObjDb, string text, Vector3D SpawnPos)
+        public FrmAddObj(string[] _CCNT, ObjectDb db, string text, Vector3D SpawnPos)
         {
             InitializeComponent();
             LayerName = text;
-            CCNT = _CCNT;
-            ObjDb = _ObjDb;
+            CCNT = _CCNT;           
             comboBox1.Sorted = true;
             objPos = SpawnPos;
+            if (db != null)
+            {
+                List<string> objdb = new List<string>();
+                objdb.AddRange(from n in db.Entries.Keys.ToArray() where db.Entries[n].Category != 255 && db.Entries[n].Known == 1 select n);
+                ObjDb = objdb.ToArray();
+            }
+            ObjDb = null;
         }
 
         void LoadObjList(string[] array)
@@ -115,6 +121,11 @@ namespace The4Dimension
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
+            if (ObjDb == null)
+            {
+                LoadObjList(CCNT);
+                return;
+            }
             LoadObjList(checkBox1.Checked ? ObjDb : CCNT);
             Properties.Settings.Default.OnlyKnwonObjs = checkBox1.Checked;
             Properties.Settings.Default.Save();

@@ -575,8 +575,7 @@
             // 
             this.objectsDatabaseToolStripMenuItem.Name = "objectsDatabaseToolStripMenuItem";
             this.objectsDatabaseToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.objectsDatabaseToolStripMenuItem.Text = "Objects database editor";
-            this.objectsDatabaseToolStripMenuItem.Visible = false;
+            this.objectsDatabaseToolStripMenuItem.Text = "View object database";
             this.objectsDatabaseToolStripMenuItem.Click += new System.EventHandler(this.objectsDatabaseToolStripMenuItem_Click);
             // 
             // toolStripSeparator4

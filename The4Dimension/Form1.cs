@@ -140,7 +140,11 @@ namespace The4Dimension
             if (LoadedFile != "") LoadFile(LoadedFile);
             else SetUiLock(false, false);
             gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path: " + Properties.Settings.Default.GamePath;
-            if (Properties.Settings.Default.CheckUpdates || Properties.Settings.Default.DownloadDb) StartupChecks.RunWorkerAsync();
+            if (Properties.Settings.Default.CheckUpdates || Properties.Settings.Default.DownloadDb)
+            {
+                downloadLatestObjectDatabaseToolStripMenuItem.Enabled = true;
+                StartupChecks.RunWorkerAsync();
+            }
             if (Properties.Settings.Default.CheckUpdates)
             {
                 StatusLbl.Text = "Checking updates";
@@ -413,7 +417,7 @@ namespace The4Dimension
         {
             for (int i = 0; i < Source.Count; i++)
             {
-                string Path = GetModelname(((Node)Source[i].Prop["name"]).StringValue.ToLower());
+                string Path = GetModelname(Source[i].ToString());
                 if (!System.IO.File.Exists(Path)) Path = PlaceHolderMod;
                 Single X, Y, Z, ScaleX, ScaleY, ScaleZ, RotX, RotY, RotZ;
                 X = Single.Parse(((Node)Source[i].Prop["pos_x"]).StringValue);
@@ -442,7 +446,7 @@ namespace The4Dimension
                     string Path;
                     if (area) Path = "models\\UnkYellow.obj"; else
                     {
-                        Path = GetModelname(((Node)o.Prop["name"]).StringValue.ToLower());
+                        Path = GetModelname(o.ToString());
                         if (!System.IO.File.Exists(Path)) Path = "models\\UnkRed.obj";
                     }
                     Single X, Y, Z, ScaleX, ScaleY, ScaleZ, RotX, RotY, RotZ;
@@ -466,11 +470,94 @@ namespace The4Dimension
 
         string GetModelname(string ObjName)
         {
-            switch (ObjName.ToLower())
+            #region BigNameSwitch
+            switch (ObjName)
             {
+                case "BlockQuestionBoomerangFlower":
+                case "BlockQuestionCoin":
+                case "BlockQuestionCoin10":
+                case "BlockQuestionCoinInfinity":
+                case "BlockQuestionCoinRandom10":
+                case "BlockQuestionFireFlower":
+                case "BlockQuestionOneUp":
+                case "BlockQuestionPoison":
+                case "BlockQuestionPopCoin5":
+                case "BlockQuestionPopCoin5High":
+                case "BlockQuestionPopCoinRandom5":
+                case "BlockQuestionPropeller":
+                case "BlockQuestionSuperLeaf":
+                case "BlockQuestionSuperStar":
+                    return "models\\BlockQuestion.obj";
+                case "BlockQuestionLongBoomerangFlower":
+                case "BlockQuestionLongCoin":
+                case "BlockQuestionLongCoin10":
+                case "BlockQuestionLongFireFlower":
+                case "BlockQuestionLongSuperLeaf":
+                case "BlockQuestionLongSuperStar":
+                    return "models\\BlockQuestionLong.obj";
+                case "BlockQuestionFlyingCoin":
+                case "BlockQuestionFlyingCoin10":
+                case "BlockQuestionFlyingFireFlower":
+                case "BlockQuestionFlyingOneUp":
+                case "BlockQuestionFlyingSuperLeaf":
+                case "BlockQuestionFlyingSuperStar":
+                    return "models\\BlockQuestionFlying.obj";
+                case "BlockBrick":
+                case "BlockBrickBoomerangFlower":
+                case "BlockBrickCoin":
+                case "BlockBrickCoin10":
+                case "BlockBrickCoinRandom10":
+                case "BlockBrickFireFlower":
+                case "BlockBrickOneUp":
+                case "BlockBrickPopCoin5":
+                case "BlockBrickPopCoin5High":
+                case "BlockBrickPopCoinRandom5":
+                case "BlockBrickSuperLeaf":
+                case "BlockBrickSuperStar":
+                case "BlockBrickWithCoin":
+                    return "models\\BlockBrick.obj";
+                case "BirdOneUp":
+                case "BirdPopCoin":
+                    return "models\\Bird.obj";
+                case "CoinRailMove":
+                    return "models\\Coin.obj";
+                case "WoodBox":
+                case "WoodBoxBoomerangFlower":
+                case "WoodBoxFireFlower":
+                case "WoodBoxKickKoura":
+                case "WoodBoxKinokoSuperFast":
+                case "WoodBoxOneUp":
+                case "WoodBoxOneUpFast":
+                case "WoodBoxPopCoin":
+                case "WoodBoxSuperLeaf":
+                case "WoodBoxSuperStar":
+                    return "models\\WoodBox.obj";
+                case "TimerClock100":
+                    return "models\\TimerClock.obj";
+                case "TimerClock10":
+                    return "models\\TimerClockSmall.obj";
+                case "FlowerBlue":
+                case "FlowerBlueCoin":
+                case "FlowerBlueCoinx3":
+                case "FlowerBlueKinokoOneUp":
+                    return "models\\FlowerBlue.obj";
+                case "FlowerHibiscus":
+                case "FlowerHibiscusCoin":
+                case "FlowerHibiscusCoinx3":
+                    return "models\\FlowerHibiscus.obj";
+                case "FlowerYellow":
+                case "FlowerYellowCoin":
+                case "FlowerYellowCoinx3":
+                case "FlowerYellowKinokoOneUp":
+                    return "models\\FlowerYellow.obj";
+                case "FlowerYellowTwoTone":
+                case "FlowerYellowTwoToneCoin":
+                case "FlowerYellowTwoToneCoinx3":
+                    return "models\\FlowerYellowTwoTone.obj";
                 default:
                     return "models\\" + ObjName + ".obj";
             }
+            #endregion
         }
 
         void ProcessAllInfos(XmlNodeList xml)
@@ -1238,8 +1325,19 @@ namespace The4Dimension
 
         private void objectsDatabaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //ObjectDbEditor d = new ObjectDbEditor(ObjectDatabase.Entries[ObjectsListBox.SelectedItem.ToString()]);
-           // d.ShowDialog();
+            if (ObjectDatabase == null)
+            {
+                MessageBox.Show("The database was not loaded, this is normal if it's being downloaded, wait until it's done");
+                return;
+            }
+            Form f = Application.OpenForms["ObjectDbEditor"];
+            if (f != null)
+            {
+                f.Focus();
+                return;
+            }
+            ObjectDbEditor d = new ObjectDbEditor(ObjectDatabase);
+            d.Show();
             //LoadObjectDatabase();
         }
 
@@ -1373,7 +1471,7 @@ namespace The4Dimension
                         MessageBox.Show("You shouldn't mess up with the name or the l_id property of the objects, you should add a new object instead and copy the position from this object to the new one.\r\nYou can undo this action from the undo button", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         warningShow = true;
                     }
-                    string path = GetModelname(((Node)AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].Prop[name]).StringValue);
+                    string path = GetModelname(AllInfos[comboBox1.Text].Objs[ObjectsListBox.SelectedIndex].ToString());
                     if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
                     if (name == "name") render.ChangeModel(comboBox1.Text, ObjectsListBox.SelectedIndex, path);
                 }
@@ -1388,7 +1486,7 @@ namespace The4Dimension
                     UpdateOBJPos(id, ref AllInfos[type].Objs, type);
                     if (propName == "name")
                     {
-                        string path = GetModelname(((Node)AllInfos[type].Objs[id].Prop[propName]).StringValue);
+                        string path = GetModelname(AllInfos[type].Objs[id].ToString());
                         if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
                         if (name == "name") render.ChangeModel(type, id, path);
                         ObjectsListBox.Items[id] = AllInfos[type].Objs[id].ToString();
@@ -1632,7 +1730,7 @@ namespace The4Dimension
             }
             else
             {
-                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable.Keys.ToArray(), ObjectDatabase.Entries.Keys.ToArray(), comboBox1.Text,pos );
+                FrmAddObj frm = new FrmAddObj(CreatorClassNameTable.Keys.ToArray(), ObjectDatabase, comboBox1.Text,pos );
                 frm.ShowDialog();
                 if (frm.Value == null) return;
                 AddObj(frm.Value, ref AllInfos[comboBox1.Text].Objs, comboBox1.Text);
@@ -2441,6 +2539,7 @@ namespace The4Dimension
         private void StartupChecks_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
             StatusLbl.Text = "";
+            downloadLatestObjectDatabaseToolStripMenuItem.Enabled = true;
         }
     }
 }

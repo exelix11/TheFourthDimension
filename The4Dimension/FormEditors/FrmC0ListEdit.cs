@@ -33,7 +33,7 @@ namespace The4Dimension.FormEditors
 
         private void button1_Click(object sender, EventArgs e)
         {
-            FrmAddObj frm = new FrmAddObj(owner.CreatorClassNameTable.Keys.ToArray(), owner.ObjectDatabase.Entries.Keys.ToArray(), "", new System.Windows.Media.Media3D.Vector3D(0,0,0));
+            FrmAddObj frm = new FrmAddObj(owner.CreatorClassNameTable.Keys.ToArray(), owner.ObjectDatabase, "", new System.Windows.Media.Media3D.Vector3D(0,0,0));
             frm.ShowDialog();
             if (frm.Value == null) return;
             Value.List.Add(frm.Value);
