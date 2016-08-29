@@ -15,14 +15,14 @@ namespace The4Dimension
         public LevelObj Value { get; set; }
         ObjectDb ObjectDatabase;
 
-        public FrmObjEditor(Dictionary<string, object> Lev, ObjectDb Db)
+        public FrmObjEditor(Dictionary<string, object> Lev)
         {
             InitializeComponent();
             Value = new LevelObj();
             Value.Prop = Lev;
             this.Text = "Edit object: " + Value.ToString();
             Form1 owner = (Form1)Application.OpenForms["Form1"];
-            ObjectDatabase = Db;
+            ObjectDatabase = owner.ObjectDatabase;
         }
 
         private void FrmObjEditor_Load(object sender, EventArgs e)
@@ -32,6 +32,7 @@ namespace The4Dimension
 
         void UpdateHint()
         {
+            if (ObjectDatabase == null) return;
             if (ObjectDatabase.Entries.ContainsKey(Value.ToString()))
             {
                 lblDescription.Text = ObjectDatabase.Entries[Value.ToString()].notes;
