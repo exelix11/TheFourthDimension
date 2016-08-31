@@ -142,6 +142,7 @@ namespace The4Dimension
             gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path: " + Properties.Settings.Default.GamePath;
             if (Properties.Settings.Default.CheckUpdates || Properties.Settings.Default.DownloadDb)
             {
+                StatusLbl.Visible = true;
                 downloadLatestObjectDatabaseToolStripMenuItem.Enabled = true;
                 StartupChecks.RunWorkerAsync();
             }
@@ -470,94 +471,8 @@ namespace The4Dimension
 
         string GetModelname(string ObjName)
         {
-            #region BigNameSwitch
-            switch (ObjName)
-            {
-                case "BlockQuestionBoomerangFlower":
-                case "BlockQuestionCoin":
-                case "BlockQuestionCoin10":
-                case "BlockQuestionCoinInfinity":
-                case "BlockQuestionCoinRandom10":
-                case "BlockQuestionFireFlower":
-                case "BlockQuestionOneUp":
-                case "BlockQuestionPoison":
-                case "BlockQuestionPopCoin5":
-                case "BlockQuestionPopCoin5High":
-                case "BlockQuestionPopCoinRandom5":
-                case "BlockQuestionPropeller":
-                case "BlockQuestionSuperLeaf":
-                case "BlockQuestionSuperStar":
-                    return "models\\BlockQuestion.obj";
-                case "BlockQuestionLongBoomerangFlower":
-                case "BlockQuestionLongCoin":
-                case "BlockQuestionLongCoin10":
-                case "BlockQuestionLongFireFlower":
-                case "BlockQuestionLongSuperLeaf":
-                case "BlockQuestionLongSuperStar":
-                    return "models\\BlockQuestionLong.obj";
-                case "BlockQuestionFlyingCoin":
-                case "BlockQuestionFlyingCoin10":
-                case "BlockQuestionFlyingFireFlower":
-                case "BlockQuestionFlyingOneUp":
-                case "BlockQuestionFlyingSuperLeaf":
-                case "BlockQuestionFlyingSuperStar":
-                    return "models\\BlockQuestionFlying.obj";
-                case "BlockBrick":
-                case "BlockBrickBoomerangFlower":
-                case "BlockBrickCoin":
-                case "BlockBrickCoin10":
-                case "BlockBrickCoinRandom10":
-                case "BlockBrickFireFlower":
-                case "BlockBrickOneUp":
-                case "BlockBrickPopCoin5":
-                case "BlockBrickPopCoin5High":
-                case "BlockBrickPopCoinRandom5":
-                case "BlockBrickSuperLeaf":
-                case "BlockBrickSuperStar":
-                case "BlockBrickWithCoin":
-                    return "models\\BlockBrick.obj";
-                case "BirdOneUp":
-                case "BirdPopCoin":
-                    return "models\\Bird.obj";
-                case "CoinRailMove":
-                    return "models\\Coin.obj";
-                case "WoodBox":
-                case "WoodBoxBoomerangFlower":
-                case "WoodBoxFireFlower":
-                case "WoodBoxKickKoura":
-                case "WoodBoxKinokoSuperFast":
-                case "WoodBoxOneUp":
-                case "WoodBoxOneUpFast":
-                case "WoodBoxPopCoin":
-                case "WoodBoxSuperLeaf":
-                case "WoodBoxSuperStar":
-                    return "models\\WoodBox.obj";
-                case "TimerClock100":
-                    return "models\\TimerClock.obj";
-                case "TimerClock10":
-                    return "models\\TimerClockSmall.obj";
-                case "FlowerBlue":
-                case "FlowerBlueCoin":
-                case "FlowerBlueCoinx3":
-                case "FlowerBlueKinokoOneUp":
-                    return "models\\FlowerBlue.obj";
-                case "FlowerHibiscus":
-                case "FlowerHibiscusCoin":
-                case "FlowerHibiscusCoinx3":
-                    return "models\\FlowerHibiscus.obj";
-                case "FlowerYellow":
-                case "FlowerYellowCoin":
-                case "FlowerYellowCoinx3":
-                case "FlowerYellowKinokoOneUp":
-                    return "models\\FlowerYellow.obj";
-                case "FlowerYellowTwoTone":
-                case "FlowerYellowTwoToneCoin":
-                case "FlowerYellowTwoToneCoinx3":
-                    return "models\\FlowerYellowTwoTone.obj";
-                default:
-                    return "models\\" + ObjName + ".obj";
-            }
-            #endregion
+            if (ObjectDatabase.IdToModel.ContainsKey(ObjName)) return "models\\" + ObjectDatabase.IdToModel[ObjName] + ".obj";
+            else return "models\\" + ObjName + ".obj";
         }
 
         void ProcessAllInfos(XmlNodeList xml)
@@ -1356,6 +1271,7 @@ namespace The4Dimension
             if (File.Exists("objectdb.xml"))
             {
                 if (MessageBox.Show("An object database file already exists, if you download a new one it will be replaced, if you edited it your changes will be lost, do you want to continue ?", "Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
+                if (File.Exists("objectdb.xml.bak")) File.Delete("objectdb.xml.bak");
                 File.Copy("objectdb.xml", "objectdb.xml.bak");
                 File.Delete("objectdb.xml");
             }
@@ -2498,6 +2414,11 @@ namespace The4Dimension
             tbUrl.Text = Properties.Settings.Default.DownloadDbLink;
             SettingsPanel.Focus();
         }
+
+        private void btn_url_Default_Click(object sender, EventArgs e)
+        {
+            tbUrl.Text = "http://neomariogalaxy.bplaced.net/board/objectdb/3dl_download.php";
+        }
         #endregion
 
         private async void StartupChecks_DoWork(object sender, DoWorkEventArgs e)
@@ -2539,6 +2460,7 @@ namespace The4Dimension
         private void StartupChecks_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
             StatusLbl.Text = "";
+            StatusLbl.Visible = false;
             downloadLatestObjectDatabaseToolStripMenuItem.Enabled = true;
         }
     }

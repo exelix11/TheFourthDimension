@@ -106,6 +106,7 @@
             this.ZoomCheckWarning = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.btn_url_Default = new System.Windows.Forms.Button();
             this.ChbStartupUpdate = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
             this.tbUrl = new System.Windows.Forms.TextBox();
@@ -595,6 +596,7 @@
             this.StatusLbl.ForeColor = System.Drawing.Color.Red;
             this.StatusLbl.Name = "StatusLbl";
             this.StatusLbl.Size = new System.Drawing.Size(12, 20);
+            this.StatusLbl.Visible = false;
             // 
             // splitContainer1
             // 
@@ -825,6 +827,7 @@
             // 
             this.SettingsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.SettingsPanel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SettingsPanel.Controls.Add(this.btn_url_Default);
             this.SettingsPanel.Controls.Add(this.ChbStartupUpdate);
             this.SettingsPanel.Controls.Add(this.label11);
             this.SettingsPanel.Controls.Add(this.tbUrl);
@@ -851,6 +854,16 @@
             this.SettingsPanel.Visible = false;
             this.SettingsPanel.Leave += new System.EventHandler(this.SettingsPanel_LostFocus);
             // 
+            // btn_url_Default
+            // 
+            this.btn_url_Default.Location = new System.Drawing.Point(339, 293);
+            this.btn_url_Default.Name = "btn_url_Default";
+            this.btn_url_Default.Size = new System.Drawing.Size(57, 23);
+            this.btn_url_Default.TabIndex = 20;
+            this.btn_url_Default.Text = "Default";
+            this.btn_url_Default.UseVisualStyleBackColor = true;
+            this.btn_url_Default.Click += new System.EventHandler(this.btn_url_Default_Click);
+            // 
             // ChbStartupUpdate
             // 
             this.ChbStartupUpdate.AutoSize = true;
@@ -876,7 +889,7 @@
             // 
             this.tbUrl.Location = new System.Drawing.Point(141, 295);
             this.tbUrl.Name = "tbUrl";
-            this.tbUrl.Size = new System.Drawing.Size(250, 20);
+            this.tbUrl.Size = new System.Drawing.Size(192, 20);
             this.tbUrl.TabIndex = 17;
             // 
             // label10
@@ -1201,6 +1214,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ToolStripMenuItem StatusLbl;
         private System.ComponentModel.BackgroundWorker StartupChecks;
+        private System.Windows.Forms.Button btn_url_Default;
     }
 }
 
