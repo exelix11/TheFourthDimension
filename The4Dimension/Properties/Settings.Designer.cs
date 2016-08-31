@@ -157,7 +157,7 @@ namespace The4Dimension.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://neomariogalaxy.bplaced.net/board/thefourthdimension/objectdb.php")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://neomariogalaxy.bplaced.net/board/objectdb/3dl_download.php")]
         public string DownloadDbLink {
             get {
                 return ((string)(this["DownloadDbLink"]));

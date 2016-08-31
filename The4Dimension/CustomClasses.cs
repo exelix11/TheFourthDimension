@@ -370,6 +370,7 @@ namespace The4Dimension
     {
         public Dictionary<int, string> Categories = new Dictionary<int, string>();
         public Dictionary<string, ObjectDbEntry> Entries = new Dictionary<string, ObjectDbEntry>();
+        public Dictionary<string, string> IdToModel = new Dictionary<string, string>();
         public int timestamp;
 
         public static ObjectDb FromXml(string xml)
@@ -390,7 +391,9 @@ namespace The4Dimension
                 }
                 else if (node.Name == "object")
                 {
-                    res.Entries.Add(node.Attributes["id"].InnerText, ObjectDbEntry.FromXml(node.ChildNodes));
+                    ObjectDbEntry tmp = ObjectDbEntry.FromXml(node.ChildNodes);
+                    res.Entries.Add(node.Attributes["id"].InnerText, tmp);
+                    if (tmp.model.Trim() != "") res.IdToModel.Add(node.Attributes["id"].InnerText, tmp.model);
                 }
             }
             return res;
@@ -441,7 +444,7 @@ namespace The4Dimension
 
         public class ObjectDbEntry
         {
-            public string name, notes, files;
+            public string name, notes, files,model = "" , type = "";
             public int Known, Complete, Category;
             public List<ObjectDbField> Fields = new List<ObjectDbField>();
 
@@ -454,6 +457,12 @@ namespace The4Dimension
                     {
                         case "name":
                             res.name = n.InnerText;
+                            break;
+                        case "type":
+                            res.type = n.InnerText;
+                            break;
+                        case "model":
+                            res.model = n.InnerText;
                             break;
                         case "flags":
                             res.Known = int.Parse(n.Attributes["known"].InnerText);
@@ -480,6 +489,12 @@ namespace The4Dimension
             {
                 xr.WriteStartElement("name");
                 xr.WriteString(name);
+                xr.WriteEndElement();
+                xr.WriteStartElement("type");
+                xr.WriteString(type);
+                xr.WriteEndElement();
+                xr.WriteStartElement("model");
+                xr.WriteString(model);
                 xr.WriteEndElement();
                 xr.WriteStartElement("flags");
                 xr.WriteAttributeString("known", Known.ToString());
