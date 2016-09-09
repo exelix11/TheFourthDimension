@@ -471,7 +471,7 @@ namespace The4Dimension
 
         string GetModelname(string ObjName)
         {
-            if (ObjectDatabase.IdToModel.ContainsKey(ObjName)) return "models\\" + ObjectDatabase.IdToModel[ObjName] + ".obj";
+            if (ObjectDatabase != null && ObjectDatabase.IdToModel.ContainsKey(ObjName)) return "models\\" + ObjectDatabase.IdToModel[ObjName] + ".obj";
             else return "models\\" + ObjName + ".obj";
         }
 
@@ -1287,6 +1287,7 @@ namespace The4Dimension
                 MessageBox.Show("There was an error, the file wasn't downloaded: \r\n" + ex.Message);
                 if (File.Exists("objectdb.xml.bak"))
                 {
+                    if (File.Exists("objectdb.xml")) File.Delete("objectdb.xml");
                     File.Copy("objectdb.xml.bak", "objectdb.xml");
                     File.Delete("objectdb.xml.bak");
                     MessageBox.Show("The backup was restored");
@@ -2417,7 +2418,7 @@ namespace The4Dimension
 
         private void btn_url_Default_Click(object sender, EventArgs e)
         {
-            tbUrl.Text = "http://neomariogalaxy.bplaced.net/board/objectdb/3dl_download.php";
+            tbUrl.Text = "http://neomariogalaxy.bplaced.net/objectdb/3dl_download.php";
         }
         #endregion
 
@@ -2462,6 +2463,7 @@ namespace The4Dimension
             StatusLbl.Text = "";
             StatusLbl.Visible = false;
             downloadLatestObjectDatabaseToolStripMenuItem.Enabled = true;
+            if (ObjectDatabase == null) LoadObjectDatabase();
         }
     }
 }
