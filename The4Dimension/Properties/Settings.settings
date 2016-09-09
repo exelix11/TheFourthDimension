@@ -36,7 +36,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DownloadDbLink" Type="System.String" Scope="User">
-      <Value Profile="(Default)">http://neomariogalaxy.bplaced.net/board/objectdb/3dl_download.php</Value>
+      <Value Profile="(Default)">http://neomariogalaxy.bplaced.net/objectdb/3dl_download.php</Value>
     </Setting>
     <Setting Name="CheckUpdates" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
