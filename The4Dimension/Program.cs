@@ -48,7 +48,7 @@ namespace The4Dimension
         {
             Application.Run(new Form1(arg));
             return;
-            if (File.Exists("SkipTutorial.txt"))
+            /*if (File.Exists("SkipTutorial.txt"))
                 Application.Run(new Form1(arg));//Just to be sure
             else if (Properties.Settings.Default.FirstStartup)
             {
@@ -66,7 +66,7 @@ namespace The4Dimension
             else
             {
                 Application.Run(new Form1(arg));
-            }
+            }*/
         }
 
         static void PatchCCNT(string[] Args)

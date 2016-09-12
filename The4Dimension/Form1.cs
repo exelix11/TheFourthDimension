@@ -18,6 +18,7 @@ using LibEveryFileExplorer.Files.SimpleFileSystem;
 using ExtensionMethods;
 using System.Net;
 using The4Dimension.ObjectDB;
+using The4Dimension.FormEditors;
 
 namespace The4Dimension
 {
@@ -34,6 +35,7 @@ namespace The4Dimension
         int APP_VER = Int32.Parse(Application.ProductVersion.Replace(".", ""));
         string LoadedFile = "";
         bool AutoMoveCam = true;
+        bool AddObjectOrigin = false;
         public static int ReleaseId = 7;
         
         public Form1(string FileLoad = "")
@@ -92,6 +94,7 @@ namespace The4Dimension
                 render.ZoomSensitivity = Properties.Settings.Default.ZoomSen;
                 render.RotationSensitivity = Properties.Settings.Default.RotSen;
                 AutoMoveCam = Properties.Settings.Default.AutoMoveCam;
+                AddObjectOrigin = Properties.Settings.Default.AddObjectOrigin;
 
                 Focus();
                 if (FileLoad != "")
@@ -113,13 +116,14 @@ namespace The4Dimension
         public Dictionary<string, byte[]> SzsFiles = null;
         public Dictionary<string, AllInfoSection> AllInfos = new Dictionary<string, AllInfoSection>();
         public List<Rail> AllRailInfos = new List<Rail>();
-        Dictionary<string, int> higestID = new Dictionary<string, int>();
+        public Dictionary<string, int> higestID = new Dictionary<string, int>();
         public Dictionary<string, string> CreatorClassNameTable = new Dictionary<string, string>();
         public CustomStack<UndoAction> Undo = new CustomStack<UndoAction>();
         public static List<ClipBoardItem> clipboard = new List<ClipBoardItem>();
         public static Encoding DefEnc = Encoding.GetEncoding("Shift-JIS");
         public ObjectDb ObjectDatabase = null;
         List<LevelObj> dummy;
+        List<String> CustomModels = new List<string>();
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -152,6 +156,11 @@ namespace The4Dimension
                 if (Properties.Settings.Default.DownloadDb) StatusLbl.Text += " and downloading database..."; else StatusLbl.Text += "...";
             }
             else if (Properties.Settings.Default.DownloadDb) StatusLbl.Text = "Downloading database...";
+            if (Directory.Exists("CustomModels"))
+            {
+                foreach (string s in Directory.EnumerateFiles("CustomModels"))
+                    if (s.EndsWith(".obj")) CustomModels.Add(Path.GetFileNameWithoutExtension(s));
+            }
         }
 
         void UnloadLevel()
@@ -219,6 +228,7 @@ namespace The4Dimension
             //elementHost1.Enabled = Lock;
             saveAsXmlToolStripMenuItem.Enabled = Lock;
             saveAsBymlToolStripMenuItem1.Enabled = Lock;
+            generate2DSectionToolStripMenuItem.Enabled = Lock;
             UndoMenu.Enabled = Lock;
             findToolStripMenuItem.Enabled = Lock;
             label3.Text = "";
@@ -471,7 +481,8 @@ namespace The4Dimension
 
         string GetModelname(string ObjName)
         {
-            if (ObjectDatabase != null && ObjectDatabase.IdToModel.ContainsKey(ObjName)) return "models\\" + ObjectDatabase.IdToModel[ObjName] + ".obj";
+            if (CustomModels.Contains(ObjName)) return "CustomModels\\" + ObjName + ".obj";
+            else if (ObjectDatabase != null && ObjectDatabase.IdToModel.ContainsKey(ObjName)) return "models\\" + ObjectDatabase.IdToModel[ObjName] + ".obj";
             else return "models\\" + ObjName + ".obj";
         }
 
@@ -1256,6 +1267,24 @@ namespace The4Dimension
             //LoadObjectDatabase();
         }
 
+        private void generate2DSectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!AllInfos.ContainsKey("ObjInfo"))
+            {
+                MessageBox.Show("This level doesn't include the type ObjInfo, add it to use this function");
+                return;
+            }
+            comboBox1.SelectedIndex = comboBox1.Items.IndexOf("ObjInfo");
+            Form f = Application.OpenForms["Frm2DSection"];
+            if (f != null)
+            {
+                f.Focus();
+                return;
+            }
+            Frm2DSection d = new Frm2DSection();
+            d.Show();
+        }
+
         private void lblDescription_Click(object sender, EventArgs e)
         {
             if (lblDescription.Tag.ToString() != "-1") new ObjectDB.ObjectDBView(ObjectDatabase.Entries[ObjectsListBox.SelectedItem.ToString()], ObjectsListBox.SelectedItem.ToString()).Show();
@@ -1639,7 +1668,7 @@ namespace The4Dimension
 
         private void BtnAddObj_Click(object sender, EventArgs e)//Add new object
         {
-            Vector3D pos = render.GetPositionInView();
+            Vector3D pos = AddObjectOrigin ? new Vector3D(0,0,0) : render.GetPositionInView();
             if (comboBox1.Text == "AllRailInfos")
             {
                 AddRail(new Rail(true, pos));
@@ -1866,7 +1895,7 @@ namespace The4Dimension
             PasteValue(ObjectsListBox.SelectedIndex, comboBox1.Text, clipboard[index]);
         }
 
-        void PasteValue(int index, string type, ClipBoardItem itm)
+        public void PasteValue(int index, string type, ClipBoardItem itm)
         {
             if (index >= 0)
             {
@@ -2396,6 +2425,8 @@ namespace The4Dimension
             Properties.Settings.Default.CheckUpdates = ChbStartupUpdate.Checked;
             Properties.Settings.Default.DownloadDb = ChbStartupDb.Checked;
             Properties.Settings.Default.DownloadDbLink = tbUrl.Text;
+            Properties.Settings.Default.AddObjectOrigin = chbAddObjectOrigin.Checked;
+            AddObjectOrigin = chbAddObjectOrigin.Checked;
             Properties.Settings.Default.Save();
         }
 
@@ -2413,6 +2444,7 @@ namespace The4Dimension
             ChbStartupUpdate.Checked = Properties.Settings.Default.CheckUpdates;
             ChbStartupDb.Checked = Properties.Settings.Default.DownloadDb;
             tbUrl.Text = Properties.Settings.Default.DownloadDbLink;
+            chbAddObjectOrigin.Checked = AddObjectOrigin;
             SettingsPanel.Focus();
         }
 

@@ -63,6 +63,8 @@
             this.oggToBcstmConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modelImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.generate2DSectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.gameROMFSPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.UndoMenu = new System.Windows.Forms.ToolStripMenuItem();
@@ -127,6 +129,7 @@
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.StartupChecks = new System.ComponentModel.BackgroundWorker();
+            this.chbAddObjectOrigin = new System.Windows.Forms.CheckBox();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -373,10 +376,12 @@
             this.oggToBcstmConverterToolStripMenuItem,
             this.modelImporterToolStripMenuItem,
             this.toolStripSeparator5,
+            this.generate2DSectionToolStripMenuItem,
+            this.toolStripSeparator9,
             this.gameROMFSPathToolStripMenuItem});
             this.otherToolStripMenuItem.Name = "otherToolStripMenuItem";
-            this.otherToolStripMenuItem.Size = new System.Drawing.Size(101, 20);
-            this.otherToolStripMenuItem.Text = "Other modding";
+            this.otherToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.otherToolStripMenuItem.Text = "Tools";
             // 
             // creatorClassNameTableEditorToolStripMenuItem
             // 
@@ -415,6 +420,18 @@
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(231, 6);
+            // 
+            // generate2DSectionToolStripMenuItem
+            // 
+            this.generate2DSectionToolStripMenuItem.Name = "generate2DSectionToolStripMenuItem";
+            this.generate2DSectionToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.generate2DSectionToolStripMenuItem.Text = "Add TransparentWalls batch";
+            this.generate2DSectionToolStripMenuItem.Click += new System.EventHandler(this.generate2DSectionToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator9
+            // 
+            this.toolStripSeparator9.Name = "toolStripSeparator9";
+            this.toolStripSeparator9.Size = new System.Drawing.Size(231, 6);
             // 
             // gameROMFSPathToolStripMenuItem
             // 
@@ -827,6 +844,7 @@
             // 
             this.SettingsPanel.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.SettingsPanel.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.SettingsPanel.Controls.Add(this.chbAddObjectOrigin);
             this.SettingsPanel.Controls.Add(this.btn_url_Default);
             this.SettingsPanel.Controls.Add(this.ChbStartupUpdate);
             this.SettingsPanel.Controls.Add(this.label11);
@@ -847,16 +865,16 @@
             this.SettingsPanel.Controls.Add(this.ChbFps);
             this.SettingsPanel.Controls.Add(this.CamInertiaUpDown);
             this.SettingsPanel.Controls.Add(this.label4);
-            this.SettingsPanel.Location = new System.Drawing.Point(316, 120);
+            this.SettingsPanel.Location = new System.Drawing.Point(316, 96);
             this.SettingsPanel.Name = "SettingsPanel";
-            this.SettingsPanel.Size = new System.Drawing.Size(399, 367);
+            this.SettingsPanel.Size = new System.Drawing.Size(399, 391);
             this.SettingsPanel.TabIndex = 11;
             this.SettingsPanel.Visible = false;
             this.SettingsPanel.Leave += new System.EventHandler(this.SettingsPanel_LostFocus);
             // 
             // btn_url_Default
             // 
-            this.btn_url_Default.Location = new System.Drawing.Point(339, 293);
+            this.btn_url_Default.Location = new System.Drawing.Point(339, 317);
             this.btn_url_Default.Name = "btn_url_Default";
             this.btn_url_Default.Size = new System.Drawing.Size(57, 23);
             this.btn_url_Default.TabIndex = 20;
@@ -867,7 +885,7 @@
             // ChbStartupUpdate
             // 
             this.ChbStartupUpdate.AutoSize = true;
-            this.ChbStartupUpdate.Location = new System.Drawing.Point(21, 256);
+            this.ChbStartupUpdate.Location = new System.Drawing.Point(21, 280);
             this.ChbStartupUpdate.Name = "ChbStartupUpdate";
             this.ChbStartupUpdate.Size = new System.Drawing.Size(163, 17);
             this.ChbStartupUpdate.TabIndex = 19;
@@ -877,7 +895,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(22, 317);
+            this.label11.Location = new System.Drawing.Point(22, 341);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(347, 39);
             this.label11.TabIndex = 18;
@@ -887,7 +905,7 @@
             // 
             // tbUrl
             // 
-            this.tbUrl.Location = new System.Drawing.Point(141, 295);
+            this.tbUrl.Location = new System.Drawing.Point(141, 319);
             this.tbUrl.Name = "tbUrl";
             this.tbUrl.Size = new System.Drawing.Size(192, 20);
             this.tbUrl.TabIndex = 17;
@@ -895,7 +913,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(11, 298);
+            this.label10.Location = new System.Drawing.Point(11, 322);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(124, 13);
             this.label10.TabIndex = 16;
@@ -904,7 +922,7 @@
             // ChbStartupDb
             // 
             this.ChbStartupDb.AutoSize = true;
-            this.ChbStartupDb.Location = new System.Drawing.Point(21, 278);
+            this.ChbStartupDb.Location = new System.Drawing.Point(21, 302);
             this.ChbStartupDb.Name = "ChbStartupDb";
             this.ChbStartupDb.Size = new System.Drawing.Size(299, 17);
             this.ChbStartupDb.TabIndex = 15;
@@ -915,7 +933,7 @@
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(3, 240);
+            this.label9.Location = new System.Drawing.Point(3, 264);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(92, 13);
             this.label9.TabIndex = 14;
@@ -1080,6 +1098,16 @@
             this.StartupChecks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.StartupChecks_DoWork);
             this.StartupChecks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.StartupChecks_Completed);
             // 
+            // chbAddObjectOrigin
+            // 
+            this.chbAddObjectOrigin.AutoSize = true;
+            this.chbAddObjectOrigin.Location = new System.Drawing.Point(22, 232);
+            this.chbAddObjectOrigin.Name = "chbAddObjectOrigin";
+            this.chbAddObjectOrigin.Size = new System.Drawing.Size(144, 17);
+            this.chbAddObjectOrigin.TabIndex = 21;
+            this.chbAddObjectOrigin.Text = "Add new objects at 0,0,0";
+            this.chbAddObjectOrigin.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1215,6 +1243,9 @@
         private System.Windows.Forms.ToolStripMenuItem StatusLbl;
         private System.ComponentModel.BackgroundWorker StartupChecks;
         private System.Windows.Forms.Button btn_url_Default;
+        private System.Windows.Forms.ToolStripMenuItem generate2DSectionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
+        private System.Windows.Forms.CheckBox chbAddObjectOrigin;
     }
 }
 
