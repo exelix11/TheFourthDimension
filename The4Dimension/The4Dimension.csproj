@@ -133,6 +133,12 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormEditors\Frm2DSection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEditors\Frm2DSection.Designer.cs">
+      <DependentUpon>Frm2DSection.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormEditors\FrmAddCameraSettings.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormEditors\Frm2DSection.resx">
+      <DependentUpon>Frm2DSection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmAddCameraSettings.resx">
       <DependentUpon>FrmAddCameraSettings.cs</DependentUpon>

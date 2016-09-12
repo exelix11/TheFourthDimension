@@ -190,5 +190,17 @@ namespace The4Dimension.Properties {
                 this["DownloadDb"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AddObjectOrigin {
+            get {
+                return ((bool)(this["AddObjectOrigin"]));
+            }
+            set {
+                this["AddObjectOrigin"] = value;
+            }
+        }
     }
 }
