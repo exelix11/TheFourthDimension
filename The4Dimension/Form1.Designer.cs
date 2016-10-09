@@ -45,6 +45,7 @@
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFromLevelNameWXXToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsSZSToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
@@ -108,6 +109,7 @@
             this.ZoomCheckWarning = new System.Windows.Forms.Timer(this.components);
             this.label3 = new System.Windows.Forms.Label();
             this.SettingsPanel = new System.Windows.Forms.Panel();
+            this.chbAddObjectOrigin = new System.Windows.Forms.CheckBox();
             this.btn_url_Default = new System.Windows.Forms.Button();
             this.ChbStartupUpdate = new System.Windows.Forms.CheckBox();
             this.label11 = new System.Windows.Forms.Label();
@@ -129,7 +131,6 @@
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.StartupChecks = new System.ComponentModel.BackgroundWorker();
-            this.chbAddObjectOrigin = new System.Windows.Forms.CheckBox();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -260,6 +261,7 @@
             this.newToolStripMenuItem,
             this.openFromLevelNameWXXToolStripMenuItem,
             this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator2,
             this.bymlConverterToolStripMenuItem1,
@@ -290,6 +292,13 @@
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -299,14 +308,14 @@
             this.saveAsXmlToolStripMenuItem});
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(236, 22);
-            this.saveAsToolStripMenuItem.Text = "Save";
+            this.saveAsToolStripMenuItem.Text = "Save as";
             // 
             // saveAsSZSToolStripMenuItem
             // 
             this.saveAsSZSToolStripMenuItem.Name = "saveAsSZSToolStripMenuItem";
             this.saveAsSZSToolStripMenuItem.Size = new System.Drawing.Size(142, 22);
             this.saveAsSZSToolStripMenuItem.Text = "Save as Szs";
-            this.saveAsSZSToolStripMenuItem.Click += new System.EventHandler(this.saveAsBymlToolStripMenuItem_Click);
+            this.saveAsSZSToolStripMenuItem.Click += new System.EventHandler(this.saveAsSZSToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
@@ -684,7 +693,7 @@
             this.btn_cameraCode.Name = "btn_cameraCode";
             this.btn_cameraCode.Size = new System.Drawing.Size(135, 26);
             this.btn_cameraCode.TabIndex = 11;
-            this.btn_cameraCode.Text = "Generate camera code";
+            this.btn_cameraCode.Text = "Edit camera code";
             this.btn_cameraCode.UseVisualStyleBackColor = true;
             this.btn_cameraCode.Visible = false;
             this.btn_cameraCode.Click += new System.EventHandler(this.CameraCode_click);
@@ -871,6 +880,16 @@
             this.SettingsPanel.TabIndex = 11;
             this.SettingsPanel.Visible = false;
             this.SettingsPanel.Leave += new System.EventHandler(this.SettingsPanel_LostFocus);
+            // 
+            // chbAddObjectOrigin
+            // 
+            this.chbAddObjectOrigin.AutoSize = true;
+            this.chbAddObjectOrigin.Location = new System.Drawing.Point(22, 232);
+            this.chbAddObjectOrigin.Name = "chbAddObjectOrigin";
+            this.chbAddObjectOrigin.Size = new System.Drawing.Size(144, 17);
+            this.chbAddObjectOrigin.TabIndex = 21;
+            this.chbAddObjectOrigin.Text = "Add new objects at 0,0,0";
+            this.chbAddObjectOrigin.UseVisualStyleBackColor = true;
             // 
             // btn_url_Default
             // 
@@ -1098,16 +1117,6 @@
             this.StartupChecks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.StartupChecks_DoWork);
             this.StartupChecks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.StartupChecks_Completed);
             // 
-            // chbAddObjectOrigin
-            // 
-            this.chbAddObjectOrigin.AutoSize = true;
-            this.chbAddObjectOrigin.Location = new System.Drawing.Point(22, 232);
-            this.chbAddObjectOrigin.Name = "chbAddObjectOrigin";
-            this.chbAddObjectOrigin.Size = new System.Drawing.Size(144, 17);
-            this.chbAddObjectOrigin.TabIndex = 21;
-            this.chbAddObjectOrigin.Text = "Add new objects at 0,0,0";
-            this.chbAddObjectOrigin.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1246,6 +1255,7 @@
         private System.Windows.Forms.ToolStripMenuItem generate2DSectionToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.CheckBox chbAddObjectOrigin;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
     }
 }
 

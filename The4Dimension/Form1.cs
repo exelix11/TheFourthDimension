@@ -36,7 +36,7 @@ namespace The4Dimension
         string LoadedFile = "";
         bool AutoMoveCam = true;
         bool AddObjectOrigin = false;
-        public static int ReleaseId = 7;
+        public static int ReleaseId = 8;
         
         public Form1(string FileLoad = "")
         {
@@ -142,7 +142,7 @@ namespace The4Dimension
             if (!Properties.Settings.Default.DownloadDb) LoadObjectDatabase();
             LoadCreatorClassNameTable();
             if (LoadedFile != "") LoadFile(LoadedFile);
-            else SetUiLock(false, false);
+            else SetUiLock(false);
             gameROMFSPathToolStripMenuItem.Text = "Game ROMFS path: " + Properties.Settings.Default.GamePath;
             if (Properties.Settings.Default.CheckUpdates || Properties.Settings.Default.DownloadDb)
             {
@@ -176,7 +176,8 @@ namespace The4Dimension
             propertyGrid1.SelectedObject = null;
             //if (MessageBox.Show("Keep clipboard ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No) clipboard = new List<ClipBoardItem>();
             LoadedFile = "";
-            SetUiLock(false, false);
+            this.Text = LoadedFile == "" ? "The Fourth Dimension - by Exelix11" : "The Fourth Dimension - " + LoadedFile;
+            SetUiLock(false);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -219,30 +220,24 @@ namespace The4Dimension
             higestID.Add("AllRailInfos", 0);
             render.AddKey("AllRailInfos");
             comboBox1.SelectedIndex = 0;
-            SetUiLock(false, true);
+            SetupSZS();
+            SetUiLock(true);
+            saveToolStripMenuItem.Enabled = false;
         }
 
-        void SetUiLock(bool SZS, bool Lock)
+        void SetUiLock(bool Lock)
         {
             splitContainer1.Enabled = Lock;
-            //elementHost1.Enabled = Lock;
             saveAsXmlToolStripMenuItem.Enabled = Lock;
             saveAsBymlToolStripMenuItem1.Enabled = Lock;
+            saveToolStripMenuItem.Enabled = Lock;
             generate2DSectionToolStripMenuItem.Enabled = Lock;
             UndoMenu.Enabled = Lock;
             findToolStripMenuItem.Enabled = Lock;
             label3.Text = "";
             if (Lock) ZoomCheckWarning.Start(); else ZoomCheckWarning.Stop();
-            if (!SZS)
-            {
-                OtherLevelDataMenu.Enabled = false;
-                saveAsSZSToolStripMenuItem.Enabled = false;
-            }
-            else
-            {
-                OtherLevelDataMenu.Enabled = Lock;
-                saveAsSZSToolStripMenuItem.Enabled = Lock;
-            }
+            OtherLevelDataMenu.Enabled = Lock;
+            saveAsSZSToolStripMenuItem.Enabled = Lock;
         }
 
         #region FileLoading
@@ -252,19 +247,21 @@ namespace The4Dimension
             if (Path.GetExtension(FilePath).ToLower() == ".xml")
             {
                 LoadedFile = FilePath;
-                SetUiLock(false, true);
+                SetUiLock(true);
                 OpenFile(File.ReadAllText(FilePath, DefEnc));
+                SetupSZS();
             }
             else if (Path.GetExtension(FilePath).ToLower() == ".byml")
             {
                 LoadedFile = FilePath;
-                SetUiLock(false, true);
+                SetUiLock(true);
                 OpenFile(BymlConverter.GetXml(FilePath));
+                SetupSZS();
             }
             else if (Path.GetExtension(FilePath).ToLower() == ".szs")
             {
                 LoadedFile = FilePath;
-                SetUiLock(true, true);
+                SetUiLock(true);
                 OtherLevelDataMenu.DropDownItems.Clear();
                 SzsFiles = new Dictionary<string, byte[]>();
                 CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
@@ -297,14 +294,16 @@ namespace The4Dimension
                 {
                     MessageBox.Show("StageData.byml not found in the file !");
                     SzsFiles = null;
-                    SetUiLock(false, false);
+                    SetUiLock(false);
                 }
             }
             else
             {
+                LoadedFile = "";
                 MessageBox.Show("File type not supported !");
-                SetUiLock(false, false);
+                SetUiLock(false);
             }
+            this.Text = LoadedFile == "" ? "The Fourth Dimension - by Exelix11" : "The Fourth Dimension - " + LoadedFile;
         }
 
         private void LoadFileList_click(object sender, EventArgs e)
@@ -1365,8 +1364,17 @@ namespace The4Dimension
                 }
                 else
                 {
-                    FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(CameraParam, cameraId, this);
-                    f.ShowDialog();
+                    if (CameraParam.Contains("<D1 Name=\"UserGroupId\" StringValue=\"" + cameraId.ToString() + "\" />"))
+                    {
+                        FormEditors.FrmXmlEditor frm = new FormEditors.FrmXmlEditor(BymlConverter.GetXml(SzsFiles["CameraParam.byml"]), "CameraParam.byml", false, CameraParam.IndexOf("<D1 Name=\"UserGroupId\" StringValue=\"" + cameraId.ToString() + "\" />"));
+                        frm.ShowDialog();
+                        if (frm.XmlRes != null) SzsFiles["CameraParam.byml"] = BymlConverter.GetByml(frm.XmlRes);
+                    }
+                    else
+                    {
+                        FormEditors.FrmAddCameraSettings f = new FormEditors.FrmAddCameraSettings(CameraParam, cameraId, this);
+                        f.ShowDialog();
+                    }
                 }
             }
         }
@@ -2104,28 +2112,68 @@ namespace The4Dimension
         #endregion
 
         #region Save
-        private void saveAsBymlToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (LoadedFile.EndsWith(".szs", StringComparison.InvariantCultureIgnoreCase) && SzsFiles != null) SzsSave(LoadedFile);
+            else XmlSave(LoadedFile, LoadedFile.EndsWith(".xml", StringComparison.InvariantCultureIgnoreCase));
+        }
+
+        void SetupSZS()
+        {
+            if (SzsFiles == null)
+            {
+                SzsFiles = new Dictionary<string, byte[]>();
+                SzsFiles.Add("CameraParam.byml", BymlConverter.GetByml(Properties.Resources.GenericCameraParam));
+                SzsFiles.Add("PreLoadFileList1.byml", BymlConverter.GetByml(Properties.Resources.GenericPreloadList));
+                SzsFiles.Add("StageInfo1.byml", BymlConverter.GetByml(Properties.Resources.GenericStageInfo));
+                for (int i = 0; i < SzsFiles.Keys.Count; i++)
+                {
+                    ToolStripMenuItem btn = new ToolStripMenuItem();
+                    btn.Name = "LoadFile" + i.ToString();
+                    btn.Text = SzsFiles.Keys.ToArray()[i];
+                    btn.Click += LoadFileList_click;
+                    OtherLevelDataMenu.DropDownItems.Add(btn);
+                }
+            }
+        }
+
+        void SzsSave(string filename)
+        {
+            CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
+            NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
+            SFSDirectory dir = new SFSDirectory("", true);
+            for (int i = 0; i < SzsFiles.Count; i++)
+            {
+                SFSFile file = new SFSFile(i, SzsFiles.Keys.ToArray()[i], dir);
+                file.Data = SzsFiles.Values.ToArray()[i];
+                dir.Files.Add(file);
+            }
+            SFSFile StgData = new SFSFile(SzsFiles.Count, "StageData.byml", dir);
+            StgData.Data = BymlConverter.GetByml(MakeXML());
+            dir.Files.Add(StgData);
+            SzsArch.FromFileSystem(dir);
+            File.WriteAllBytes(filename, y.Compress(SzsArch.Write()));
+            MessageBox.Show("Done !");
+        }
+
+        void XmlSave(string filename, bool XML)
+        {
+            if (XML) File.WriteAllBytes(filename, BymlConverter.GetByml(MakeXML()));
+            else File.WriteAllText(filename, MakeXML());
+            MessageBox.Show("Done !");
+        }
+
+        private void saveAsSZSToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SaveFileDialog sav = new SaveFileDialog();
             sav.FileName = Path.GetFileNameWithoutExtension(LoadedFile);
             sav.Filter = "Szs file|*.Szs";
             if (sav.ShowDialog() == DialogResult.OK)
             {
-                CommonCompressors.YAZ0 y = new CommonCompressors.YAZ0();
-                NDS.NitroSystem.FND.NARC SzsArch = new NDS.NitroSystem.FND.NARC();
-                SFSDirectory dir = new SFSDirectory("", true);
-                for (int i = 0; i < SzsFiles.Count; i++)
-                {
-                    SFSFile file = new SFSFile(i, SzsFiles.Keys.ToArray()[i], dir);
-                    file.Data = SzsFiles.Values.ToArray()[i];
-                    dir.Files.Add(file);
-                }
-                SFSFile StgData = new SFSFile(SzsFiles.Count, "StageData.byml", dir);
-                StgData.Data = BymlConverter.GetByml(MakeXML());
-                dir.Files.Add(StgData);
-                SzsArch.FromFileSystem(dir);
-                File.WriteAllBytes(sav.FileName, y.Compress(SzsArch.Write()));
-                MessageBox.Show("Done !");
+                SzsSave(sav.FileName);
+                LoadedFile = sav.FileName;
+                this.Text = LoadedFile == "" ? "The Fourth Dimension - by Exelix11" : "The Fourth Dimension - " + LoadedFile;
+                saveToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -2136,8 +2184,10 @@ namespace The4Dimension
             sav.Filter = "Xml file|*.xml";
             if (sav.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllText(sav.FileName, MakeXML(), DefEnc);
-                MessageBox.Show("Done !");
+                XmlSave(sav.FileName, true);
+                LoadedFile = sav.FileName;
+                this.Text = LoadedFile == "" ? "The Fourth Dimension - by Exelix11" : "The Fourth Dimension - " + LoadedFile;
+                saveToolStripMenuItem.Enabled = true;
             }
         }
 
@@ -2148,8 +2198,10 @@ namespace The4Dimension
             sav.Filter = "Byml file|*.byml";
             if (sav.ShowDialog() == DialogResult.OK)
             {
-                File.WriteAllBytes(sav.FileName, BymlConverter.GetByml(MakeXML()));
-                MessageBox.Show("Done !");
+                XmlSave(sav.FileName, false);
+                LoadedFile = sav.FileName;
+                this.Text = LoadedFile == "" ? "The Fourth Dimension - by Exelix11" : "The Fourth Dimension - " + LoadedFile;
+                saveToolStripMenuItem.Enabled = true;
             }
         }
 

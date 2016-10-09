@@ -23,13 +23,15 @@ namespace The4Dimension.FormEditors
         Style PropNameWordStyle = new TextStyle(Brushes.DarkOrange, null, FontStyle.Bold);
         Style KeyWordStyle = new TextStyle(Brushes.DarkBlue, null, FontStyle.Bold);
         Style C1Style = new TextStyle(Brushes.Silver, null, FontStyle.Bold);
+        int Pos = 0;
 
-        public FrmXmlEditor(string Xml, string Name, bool converter)
+        public FrmXmlEditor(string Xml, string Name, bool converter, int _pos = 0)
         {
             InitializeComponent();
             fastColoredTextBox1.Text = Xml;
             this.Text = "Xml editor: " + Name;
             IsConverter = converter;
+            Pos = _pos;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -119,6 +121,18 @@ namespace The4Dimension.FormEditors
                 else return;
                 e.ToolTipTitle = toolTipTitle;
                 e.ToolTipText = toolTipText;
+            }
+        }
+
+        private void FrmXmlEditor_Load(object sender, EventArgs e)
+        {
+            if (Pos != 0)
+            {
+                fastColoredTextBox1.SelectionStart = Pos + 1;
+                fastColoredTextBox1.BookmarkColor = Color.Red;
+                fastColoredTextBox1.BookmarkLine(fastColoredTextBox1.Selection.Start.iLine);
+                fastColoredTextBox1.Navigate(fastColoredTextBox1.Selection.Start.iLine);
+                fastColoredTextBox1.DoCaretVisible();
             }
         }
     }

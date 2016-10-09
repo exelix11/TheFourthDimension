@@ -295,4 +295,34 @@ del "Patch script.bat"</value>
   &lt;/C0&gt;
 &lt;/Root&gt;</value>
   </data>
+  <data name="GenericPreloadList" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
+&lt;Root&gt;
+  &lt;isBigEndian Value="False" /&gt;
+  &lt;BymlFormatVersion Value="1" /&gt;
+  &lt;C0&gt;
+    &lt;C1&gt;
+      &lt;A0 Name="Name" StringValue="SePmShootFire" /&gt;
+      &lt;A0 Name="Type" StringValue="SoundItem" /&gt;
+    &lt;/C1&gt;
+  &lt;/C0&gt;
+&lt;/Root&gt;</value>
+  </data>
+  <data name="GenericStageInfo" xml:space="preserve">
+    <value>&lt;?xml version="1.0" encoding="shift_jis"?&gt;
+&lt;Root&gt;
+  &lt;isBigEndian Value="False" /&gt;
+  &lt;BymlFormatVersion Value="1" /&gt;
+  &lt;C1&gt;
+    &lt;C0 Name="FootPrint"&gt;
+      &lt;C1&gt;
+        &lt;A0 Name="Material" StringValue="Sand" /&gt;
+        &lt;A0 Name="Model" StringValue="FootPrint" /&gt;
+      &lt;/C1&gt;
+    &lt;/C0&gt;
+    &lt;D1 Name="StageTimer" StringValue="500" /&gt;
+    &lt;D1 Name="StageTimerRestart" StringValue="300" /&gt;
+  &lt;/C1&gt;
+&lt;/Root&gt;</value>
+  </data>
 </root>

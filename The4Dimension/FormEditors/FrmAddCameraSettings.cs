@@ -39,11 +39,6 @@ namespace The4Dimension.FormEditors
                 MessageBox.Show("Failed to get CameraParams node position !");
                 this.Close();
             }
-            if (XmlFile.Contains("<D1 Name=\"UserGroupId\" StringValue=\"" + CameraId.ToString() + "\" />"))
-            {
-                MessageBox.Show("The file already contains data for this camera id, edit it from level files -> CameraParam.byml");
-                this.Close();
-            }
             TextInsertIndex += "<C0 Name=\"CameraParams\">".Length;
         }
 
