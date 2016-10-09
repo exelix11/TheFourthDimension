@@ -161,6 +161,48 @@ namespace The4Dimension.Properties {
         }
         
         /// <summary>
+        ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
+        ///&lt;Root&gt;
+        ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;BymlFormatVersion Value=&quot;1&quot; /&gt;
+        ///  &lt;C0&gt;
+        ///    &lt;C1&gt;
+        ///      &lt;A0 Name=&quot;Name&quot; StringValue=&quot;SePmShootFire&quot; /&gt;
+        ///      &lt;A0 Name=&quot;Type&quot; StringValue=&quot;SoundItem&quot; /&gt;
+        ///    &lt;/C1&gt;
+        ///  &lt;/C0&gt;
+        ///&lt;/Root&gt;.
+        /// </summary>
+        internal static string GenericPreloadList {
+            get {
+                return ResourceManager.GetString("GenericPreloadList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una stringa localizzata simile a &lt;?xml version=&quot;1.0&quot; encoding=&quot;shift_jis&quot;?&gt;
+        ///&lt;Root&gt;
+        ///  &lt;isBigEndian Value=&quot;False&quot; /&gt;
+        ///  &lt;BymlFormatVersion Value=&quot;1&quot; /&gt;
+        ///  &lt;C1&gt;
+        ///    &lt;C0 Name=&quot;FootPrint&quot;&gt;
+        ///      &lt;C1&gt;
+        ///        &lt;A0 Name=&quot;Material&quot; StringValue=&quot;Sand&quot; /&gt;
+        ///        &lt;A0 Name=&quot;Model&quot; StringValue=&quot;FootPrint&quot; /&gt;
+        ///      &lt;/C1&gt;
+        ///    &lt;/C0&gt;
+        ///    &lt;D1 Name=&quot;StageTimer&quot; StringValue=&quot;500&quot; /&gt;
+        ///    &lt;D1 Name=&quot;StageTimerRestart&quot; StringValue=&quot;300&quot; /&gt;
+        ///  &lt;/C1&gt;
+        ///&lt;/Root&gt;.
+        /// </summary>
+        internal static string GenericStageInfo {
+            get {
+                return ResourceManager.GetString("GenericStageInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Cerca una stringa localizzata simile a @echo off
         ///Title CCNT patcher
         ///cls
