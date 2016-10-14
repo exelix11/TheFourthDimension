@@ -22,11 +22,6 @@ using The4Dimension.FormEditors;
 
 namespace The4Dimension
 {
-    /*
-     TODO:
-     ObjectDbEditor.cs
-    */
-
     public partial class Form1 : Form
     {
         public static string ObjectDbLink = "https://raw.githubusercontent.com/exelix11/TheFourthDimension/master/ObjectsDb.xml";
@@ -238,6 +233,7 @@ namespace The4Dimension
             if (Lock) ZoomCheckWarning.Start(); else ZoomCheckWarning.Stop();
             OtherLevelDataMenu.Enabled = Lock;
             saveAsSZSToolStripMenuItem.Enabled = Lock;
+            generatePreloadFileListToolStripMenuItem.Enabled = Lock;
         }
 
         #region FileLoading
@@ -1321,6 +1317,46 @@ namespace The4Dimension
                     MessageBox.Show("The backup was restored");
                 }
                 return;
+            }
+        }
+
+        private void generatePreloadFileListToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SzsFiles == null)
+            {
+                MessageBox.Show("Szs not loaded ?");
+                return;
+            }
+            if (!SzsFiles.ContainsKey("PreLoadFileList1.byml"))
+            {
+                SzsFiles.Add("PreLoadFileList1.byml", new byte[] { 0x00 });
+            }
+            string PreLoadFileList = Properties.Resources.GenericPreloadList;
+            string ObjsList = "";
+            List<string> ProcessedItems = new List<string>();
+            foreach (LevelObj o in AllInfos["ObjInfo"].Objs)
+            {
+                if (ProcessedItems.Contains(o.ToString())) continue;
+                ProcessedItems.Add(o.ToString());
+                if (ObjectDatabase.Entries.ContainsKey(o.ToString()) && ObjectDatabase.Entries[o.ToString()].files != "")
+                {
+                    foreach (string s in ObjectDatabase.Entries[o.ToString()].files.Split("\r\n"[0]))
+                    {
+                        if (s.StartsWith("/ObjectData") && s.EndsWith(".szs")) 
+                        ObjsList += "<C1>\r\n<A0 Name=\"Path\" StringValue=\"" + s + "\" />\r\n<A0 Name=\"Type\" StringValue=\"Archive\" />\r\n</C1>";
+                    }
+                }
+            }
+            PreLoadFileList = PreLoadFileList.Insert(252, ObjsList);
+            if (SzsFiles.ContainsKey("PreLoadFileList2.byml"))
+            {
+                MessageBox.Show("This SZS contains more PreLoadFileList files, the result of the generation will be put in your clipboard as xml, open the file you want to replace and paste replacing everything, then click save (the layout of the text doesn't matter)");
+                Clipboard.SetText(PreLoadFileList);
+            }
+            else
+            {
+                SzsFiles["PreLoadFileList1.byml"] = BymlConverter.GetByml(PreLoadFileList);
+                MessageBox.Show("Done");
             }
         }
         #endregion

@@ -131,6 +131,7 @@
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.StartupChecks = new System.ComponentModel.BackgroundWorker();
+            this.generatePreloadFileListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -385,6 +386,7 @@
             this.oggToBcstmConverterToolStripMenuItem,
             this.modelImporterToolStripMenuItem,
             this.toolStripSeparator5,
+            this.generatePreloadFileListToolStripMenuItem,
             this.generate2DSectionToolStripMenuItem,
             this.toolStripSeparator9,
             this.gameROMFSPathToolStripMenuItem});
@@ -435,6 +437,7 @@
             this.generate2DSectionToolStripMenuItem.Name = "generate2DSectionToolStripMenuItem";
             this.generate2DSectionToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
             this.generate2DSectionToolStripMenuItem.Text = "Add TransparentWalls batch";
+            this.generate2DSectionToolStripMenuItem.Visible = false;
             this.generate2DSectionToolStripMenuItem.Click += new System.EventHandler(this.generate2DSectionToolStripMenuItem_Click);
             // 
             // toolStripSeparator9
@@ -453,7 +456,7 @@
             // changeToolStripMenuItem
             // 
             this.changeToolStripMenuItem.Name = "changeToolStripMenuItem";
-            this.changeToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.changeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.changeToolStripMenuItem.Text = "Change";
             this.changeToolStripMenuItem.Click += new System.EventHandler(this.changeToolStripMenuItem_Click_1);
             // 
@@ -1117,6 +1120,13 @@
             this.StartupChecks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.StartupChecks_DoWork);
             this.StartupChecks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.StartupChecks_Completed);
             // 
+            // generatePreloadFileListToolStripMenuItem
+            // 
+            this.generatePreloadFileListToolStripMenuItem.Name = "generatePreloadFileListToolStripMenuItem";
+            this.generatePreloadFileListToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.generatePreloadFileListToolStripMenuItem.Text = "Generate PreloadFileList (Beta)";
+            this.generatePreloadFileListToolStripMenuItem.Click += new System.EventHandler(this.generatePreloadFileListToolStripMenuItem_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1256,6 +1266,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.CheckBox chbAddObjectOrigin;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generatePreloadFileListToolStripMenuItem;
     }
 }
 
