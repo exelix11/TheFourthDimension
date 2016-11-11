@@ -1,3 +1,6 @@
+[This file is outdated, refer to the objects database]
+
+
 Note: with not set i mean the value doesn't exists or it's -1
 
 ViewCtrlArea:

@@ -71,30 +71,12 @@ namespace The4Dimension
     public class UndoAction
     {
         public string actionName;
-        public string type;
-        public int index;
-        public int[] indexes;
-        public Action<int, string> Action = null;
-        private Action<string, int, object> ObjAddAction = null;
-        private Action<string, int[], object> ObjMultiAddAction = null;
-        object objToAdd = null;
-        string propName = null;
-        private Action<string, int, string, object> PropAddAction = null;
-        private Action<string, int, Vector3D> MoveAction = null;
-        private Action<string, int, int, Vector3D> UndoChildrenMoveAction = null;
+        public Action<object[]> Action = null;
+        object[] Args;
 
         public void Undo()
         {
-            Form1 form1 = (Form1)Application.OpenForms[0]; //There is always one instance of this form
-            form1.comboBox1.Text = type;
-            if (form1.ObjectsListBox.SelectedIndex == index && PropAddAction == null) form1.ObjectsListBox.SelectedIndex = -1;
-            if (Action != null) Action.Invoke(index, type);
-            else if (ObjAddAction != null) ObjAddAction.Invoke(type, index, objToAdd);
-            else if (PropAddAction != null) PropAddAction.Invoke(type, index, propName, objToAdd);
-            else if (ObjMultiAddAction != null) ObjMultiAddAction.Invoke(type, indexes, objToAdd);
-            else if (UndoChildrenMoveAction != null) UndoChildrenMoveAction.Invoke(type, indexes[0], indexes[1], (Vector3D)objToAdd);
-            else MoveAction.Invoke(type, index, (Vector3D)objToAdd);
-            if (form1.ObjectsListBox.Items.Count > index) form1.ObjectsListBox.SelectedIndex = index;
+            Action.Invoke(Args);
         }
 
         public override string ToString()
@@ -102,59 +84,13 @@ namespace The4Dimension
             return actionName;
         }
 
-        public UndoAction(string name, string _type, int _index, Action<int, string> Act)
+        public UndoAction(string name, object[] args, Action<object[]> Act)
         {
             actionName = name;
-            type = _type;
-            index = _index;
+            Args = args;
             Action = Act;
         }
-
-        public UndoAction(string name, string _type, int _index, Vector3D vec, Action<string, int, Vector3D> Act)
-        {
-            actionName = name;
-            type = _type;
-            index = _index;
-            objToAdd = vec;
-            MoveAction = Act;
-        }
-
-        public UndoAction(string name, string _type, int _index, object rail, Action<string, int, object> action)
-        {
-            actionName = name;
-            type = _type;
-            index = _index;
-            objToAdd = rail;
-            ObjAddAction = action;
-        }
-
-        public UndoAction(string name, string _type, int[] _index, object[] rail, Action<string, int[], object> action)
-        {
-            actionName = name;
-            type = _type;
-            indexes = _index;
-            objToAdd = rail;
-            ObjMultiAddAction = action;
-        }
-
-        public UndoAction(string name, string _type, int _index, string label, object prop, Action<string, int, string, object> action)
-        {
-            actionName = name;
-            type = _type;
-            index = _index;
-            objToAdd = prop;
-            propName = label;
-            PropAddAction = action;
-        }
-
-        public UndoAction(string name, string _type, int[] _index, Vector3D vec, Action<string, int, int, Vector3D> action) //Childrenobjectmove
-        {
-            actionName = name;
-            type = _type;
-            indexes = _index;
-            objToAdd = vec;
-            UndoChildrenMoveAction = action;
-        }
+       
     }
 
     public class ClipBoardItem
@@ -228,10 +164,9 @@ namespace The4Dimension
         }
     }
 
-    public class AllInfoSection
+    public class AllInfoSection : List<LevelObj>
     {
         public bool IsHidden = false;
-        public List<LevelObj> Objs = new List<LevelObj>();
     }
 
     class DictionaryPropertyGridAdapter : ICustomTypeDescriptor
@@ -539,6 +474,30 @@ namespace The4Dimension
                     res.notes = n.Attributes["notes"].InnerText;
                     return res;
                 }
+            }
+        }
+    }
+
+    public class IndexedProperty<TIndex, TValue>
+    {
+        readonly Action<TIndex, TValue> SetAction;
+        readonly Func<TIndex, TValue> GetFunc;
+
+        public IndexedProperty(Func<TIndex, TValue> getFunc, Action<TIndex, TValue> setAction)
+        {
+            this.GetFunc = getFunc;
+            this.SetAction = setAction;
+        }
+
+        public TValue this[TIndex i]
+        {
+            get
+            {
+                return GetFunc(i);
+            }
+            set
+            {
+                SetAction(i, value);
             }
         }
     }

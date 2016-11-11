@@ -27,6 +27,11 @@ namespace The4Dimension
                     if (File.Exists(@"CreatorClassNameTable.szs") && File.Exists(@"CCNTpatch.xml")) PatchCCNT(Args);
                     else MessageBox.Show("To apply the patch you need both the CreatorClassNameTable.szs and CCNTpatch.xml in this folder !");
                 }
+                else if (File.Exists("CCNTpatch.xml") && !File.Exists("HelixToolkit.Wpf.dll"))
+                {
+                    MessageBox.Show("This executable can't be manually launched, run the batch file provided with it.");
+                    return;
+                }
                 else
                 {
                     string Cont = System.IO.File.ReadAllText(Args[0]);
@@ -40,6 +45,11 @@ namespace The4Dimension
             }
             else
             {
+                if (File.Exists("CCNTpatch.xml") && !File.Exists("HelixToolkit.Wpf.dll"))
+                {
+                    MessageBox.Show("This executable can't be manually launched, run the batch file provided with it.");
+                    return;
+                }
                 RunApp();         
             }
         }

@@ -225,21 +225,28 @@ namespace The4Dimension.FormEditors
             FolderBrowserDialog d = new FolderBrowserDialog();
             if (d.ShowDialog() == DialogResult.OK)
             {
+                if (d.SelectedPath == Directory.GetCurrentDirectory())
+                {
+                    MessageBox.Show("You can't use this program's directory, select another folder");
+                    return;
+                }
                 if (new DirectoryInfo(d.SelectedPath).GetFiles().Length != 0)
                 {
                     if (MessageBox.Show("This folder isn't empty, do you want to continue ?", "Warning", MessageBoxButtons.YesNo) == DialogResult.No) return;
                 }
-                File.Copy(System.Reflection.Assembly.GetEntryAssembly().Location, d.SelectedPath + "\\patcher.exe");
-                File.Copy("3DS.dll", d.SelectedPath + "\\3DS.dll");
-                File.Copy("CommonCompressors.dll", d.SelectedPath + "\\CommonCompressors.dll");
-                File.Copy("CommonFiles.dll", d.SelectedPath + "\\CommonFiles.dll");
-                File.Copy("LibEveryFileExplorer.dll", d.SelectedPath + "\\LibEveryFileExplorer.dll");
-                File.Copy("NDS.dll", d.SelectedPath + "\\NDS.dll");
+                File.Copy(System.Reflection.Assembly.GetEntryAssembly().Location, d.SelectedPath + "\\patcher.exe", true);
+                File.Copy("3DS.dll", d.SelectedPath + "\\3DS.dll", true);
+                File.Copy("CommonCompressors.dll", d.SelectedPath + "\\CommonCompressors.dll", true);
+                File.Copy("CommonFiles.dll", d.SelectedPath + "\\CommonFiles.dll", true);
+                File.Copy("LibEveryFileExplorer.dll", d.SelectedPath + "\\LibEveryFileExplorer.dll", true);
+                File.Copy("NDS.dll", d.SelectedPath + "\\NDS.dll", true);
                 Dictionary<string, string> NewCCNT = new Dictionary<string, string>();
                 foreach (int i in GetSelectedObjs(false)) NewCCNT.Add(listBox1.Items[i].ToString(), CCNT[listBox1.Items[i].ToString()]);
+                if (File.Exists(d.SelectedPath + "\\CCNTpatch.xml")) File.Delete(d.SelectedPath + "\\CCNTpatch.xml");
                 File.WriteAllText(d.SelectedPath + "\\CCNTpatch.xml", MakeXML(ref NewCCNT), Form1.DefEnc);
+                if (File.Exists(d.SelectedPath + "\\Patch script.bat")) File.Delete(d.SelectedPath + "\\Patch script.bat");
                 File.WriteAllText(d.SelectedPath + "\\Patch script.bat", Properties.Resources.PatchScript);
-                MessageBox.Show("Done !");
+                MessageBox.Show("Patch files for selected object(s) generated !");
             }
         }
     }

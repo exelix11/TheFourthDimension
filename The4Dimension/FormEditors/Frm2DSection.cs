@@ -64,7 +64,7 @@ namespace The4Dimension.FormEditors
             ClipBoardItem cl = new ClipBoardItem();
             cl.Type = ClipBoardItem.ClipboardType.ObjectArray;
             cl.Objs = List.ToArray();
-            f.PasteValue(-1, "ObjInfo", cl);
+            f.PasteValue(-1,f.GetListByName("ObjInfo"), "ObjInfo", cl);
             this.Close();
         }
 

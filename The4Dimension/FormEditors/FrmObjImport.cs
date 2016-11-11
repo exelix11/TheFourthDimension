@@ -98,7 +98,7 @@ namespace The4Dimension.FormEditors
         {
             if (ObjModelPath == "") return;
             render.RemoveModel("Model", 0);
-            render.Clean();
+            render.Clear();
             elementHost1.Dispose();
             try { Directory.Delete(tmpPath, true); } catch { }
         }

@@ -157,12 +157,6 @@
     <Compile Include="FormEditors\FrmAddValue.Designer.cs">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormEditors\FrmC0ListEdit.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormEditors\FrmC0ListEdit.Designer.cs">
-      <DependentUpon>FrmC0ListEdit.cs</DependentUpon>
-    </Compile>
     <Compile Include="FormEditors\FrmCCNTEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -281,9 +275,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmAddValue.resx">
       <DependentUpon>FrmAddValue.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FormEditors\FrmC0ListEdit.resx">
-      <DependentUpon>FrmC0ListEdit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormEditors\FrmCCNTEdit.resx">
       <DependentUpon>FrmCCNTEdit.cs</DependentUpon>

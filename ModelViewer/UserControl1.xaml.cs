@@ -80,7 +80,7 @@ namespace ModelViewer
             CameraTarget = new Vector3D(0, 0, 0);
         }
 
-        public void Clean()
+        public void Clear()
         {
             ImportedModels = null;
             Models = null;
@@ -102,17 +102,26 @@ namespace ModelViewer
 
         public void AddTmpObjects(List<Vector3D> positions, List<Vector3D> scale, List<Vector3D> rot, List<string> Paths,string type)
         {
-            if (Models[type].Count != 0) CleanTmpObjects();
+            if (Models[type].Count != 0) ClearTmpObjects();
             for (int i = 0; i < positions.Count; i++) addModel(Paths[i], type, positions[i], scale[i], (float)rot[i].X, (float)rot[i].Y, (float)rot[i].Z);
         }
 
-        public void CleanTmpObjects()
+        public void ClearTmpObjects()
         {
-            string type = "TmpChildrenObjs";
-            while (Models[type].Count != 0) RemoveModel(type, 0);
-            type = "TmpAreaChildrenObjs";
-            while (Models[type].Count != 0) RemoveModel(type, 0);
+            ClearType("TmpChildrenObjs");
+            ClearType("TmpAreaChildrenObjs");
             ModelView.UpdateLayout();
+        }
+
+        public void ClearC0Objects()
+        {
+            ClearType("C0EditingListObjs");
+            ModelView.UpdateLayout();
+        }
+
+        void ClearType(string type)
+        {
+            while (Models[type].Count != 0) RemoveModel(type, 0);
         }
 
         public void addRail(Point3D[] Points, int Thickness = 5, int at = -1)
@@ -139,8 +148,7 @@ namespace ModelViewer
 
         public void UnselectRail()
         {
-            string type = "SelectedRail";
-            while (Models[type].Count != 0) RemoveModel(type, 0);
+            ClearType("SelectedRail");
             ModelView.UpdateLayout();
         }
 
@@ -343,6 +351,7 @@ namespace ModelViewer
             AddKey("TmpChildrenObjs");
             AddKey("SelectedRail");
             AddKey("TmpAreaChildrenObjs");
+            AddKey("C0EditingListObjs");
             ModelView.Camera.LookAt(new Point3D(0,0,0), 50, 1000);
             CameraTarget = new Vector3D(0, 0, 0);
         }

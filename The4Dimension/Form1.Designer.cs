@@ -64,6 +64,7 @@
             this.oggToBcstmConverterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.modelImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.generatePreloadFileListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.generate2DSectionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.gameROMFSPathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,6 +92,9 @@
             this.gbatempThreadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.StatusLbl = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.C0EditingPanel = new System.Windows.Forms.Panel();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label12 = new System.Windows.Forms.Label();
             this.Btn_CopyObjs = new System.Windows.Forms.Button();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.btn_cameraCode = new System.Windows.Forms.Button();
@@ -131,13 +135,13 @@
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.StartupChecks = new System.ComponentModel.BackgroundWorker();
-            this.generatePreloadFileListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.C0EditingPanel.SuspendLayout();
             this.SettingsPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).BeginInit();
@@ -432,6 +436,13 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(231, 6);
             // 
+            // generatePreloadFileListToolStripMenuItem
+            // 
+            this.generatePreloadFileListToolStripMenuItem.Name = "generatePreloadFileListToolStripMenuItem";
+            this.generatePreloadFileListToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
+            this.generatePreloadFileListToolStripMenuItem.Text = "Generate PreloadFileList (Beta)";
+            this.generatePreloadFileListToolStripMenuItem.Click += new System.EventHandler(this.generatePreloadFileListToolStripMenuItem_Click);
+            // 
             // generate2DSectionToolStripMenuItem
             // 
             this.generate2DSectionToolStripMenuItem.Name = "generate2DSectionToolStripMenuItem";
@@ -456,7 +467,7 @@
             // changeToolStripMenuItem
             // 
             this.changeToolStripMenuItem.Name = "changeToolStripMenuItem";
-            this.changeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.changeToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.changeToolStripMenuItem.Text = "Change";
             this.changeToolStripMenuItem.Click += new System.EventHandler(this.changeToolStripMenuItem_Click_1);
             // 
@@ -639,6 +650,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.SystemColors.Control;
+            this.splitContainer1.Panel1.Controls.Add(this.C0EditingPanel);
             this.splitContainer1.Panel1.Controls.Add(this.Btn_CopyObjs);
             this.splitContainer1.Panel1.Controls.Add(this.checkBox2);
             this.splitContainer1.Panel1.Controls.Add(this.btn_cameraCode);
@@ -662,10 +674,40 @@
             this.splitContainer1.SplitterDistance = 241;
             this.splitContainer1.TabIndex = 7;
             // 
+            // C0EditingPanel
+            // 
+            this.C0EditingPanel.Controls.Add(this.linkLabel1);
+            this.C0EditingPanel.Controls.Add(this.label12);
+            this.C0EditingPanel.Location = new System.Drawing.Point(3, 3);
+            this.C0EditingPanel.Name = "C0EditingPanel";
+            this.C0EditingPanel.Size = new System.Drawing.Size(235, 21);
+            this.C0EditingPanel.TabIndex = 13;
+            this.C0EditingPanel.Visible = false;
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(124, 4);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(48, 13);
+            this.linkLabel1.TabIndex = 1;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "Go back";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(46, 4);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(79, 13);
+            this.label12.TabIndex = 0;
+            this.label12.Text = "Editing a c0List";
+            // 
             // Btn_CopyObjs
             // 
             this.Btn_CopyObjs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.Btn_CopyObjs.Location = new System.Drawing.Point(35, 215);
+            this.Btn_CopyObjs.Location = new System.Drawing.Point(35, 216);
             this.Btn_CopyObjs.Name = "Btn_CopyObjs";
             this.Btn_CopyObjs.Size = new System.Drawing.Size(96, 23);
             this.Btn_CopyObjs.TabIndex = 12;
@@ -1120,13 +1162,6 @@
             this.StartupChecks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.StartupChecks_DoWork);
             this.StartupChecks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.StartupChecks_Completed);
             // 
-            // generatePreloadFileListToolStripMenuItem
-            // 
-            this.generatePreloadFileListToolStripMenuItem.Name = "generatePreloadFileListToolStripMenuItem";
-            this.generatePreloadFileListToolStripMenuItem.Size = new System.Drawing.Size(234, 22);
-            this.generatePreloadFileListToolStripMenuItem.Text = "Generate PreloadFileList (Beta)";
-            this.generatePreloadFileListToolStripMenuItem.Click += new System.EventHandler(this.generatePreloadFileListToolStripMenuItem_Click);
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1153,6 +1188,8 @@
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.C0EditingPanel.ResumeLayout(false);
+            this.C0EditingPanel.PerformLayout();
             this.SettingsPanel.ResumeLayout(false);
             this.SettingsPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).EndInit();
@@ -1267,6 +1304,9 @@
         private System.Windows.Forms.CheckBox chbAddObjectOrigin;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem generatePreloadFileListToolStripMenuItem;
+        private System.Windows.Forms.Panel C0EditingPanel;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label12;
     }
 }
 
