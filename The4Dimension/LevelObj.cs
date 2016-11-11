@@ -118,11 +118,7 @@ namespace The4Dimension
             C0List v = value as C0List;
             if (svc != null && v != null)
             {
-                using (FormEditors.FrmC0ListEdit form = new FormEditors.FrmC0ListEdit(v))
-                {
-                    form.ShowDialog();
-                    v = form.Value;
-                }
+                ((Form1)System.Windows.Forms.Application.OpenForms["Form1"]).EditC0List(v.List);
             }
             return v;
         }
@@ -374,13 +370,14 @@ namespace The4Dimension
     class Node : ICloneable
     {
         string _StringValue;
-        public string _StringNodeType; 
-        NodeTypes _NodeType;        
+        public string _StringNodeType;
+        NodeTypes _NodeType;
 
         [Description("This is the value of this node as a string, change it respecting the type")]
         public string StringValue
         {
-            set {
+            set
+            {
                 if (_NodeType == NodeTypes.Int) Int32.Parse(value); //Crashes if the value is invalid
                 else if (_NodeType == NodeTypes.Single) Single.Parse(value);
                 _StringValue = value;
@@ -412,8 +409,8 @@ namespace The4Dimension
             String = 0xA0,
             Empty = 0xA1,
             Int = 0xD1,
-            Single = 0xD2,         
-            Other   
+            Single = 0xD2,
+            Other
         }
 
         string JapChars(string input)
@@ -461,11 +458,26 @@ namespace The4Dimension
         {
             return Clone();
         }
-    }
-    /*String = 0xA0,
-      Empty = 0xA1,
-      Int = 0xD1,
-      Single = 0xD2,
-      */
 
-}
+        public static bool operator ==(Node first, Node second)
+        {
+            return first.NodeType == second.NodeType && first.StringValue == second.StringValue;
+        }
+
+        public static bool operator !=(Node first, Node second)
+        {
+            return first.NodeType != second.NodeType || first.StringValue != second.StringValue;
+        }
+
+        public override bool Equals(object Obj)
+        {
+            return (Node)Obj == this;
+        }
+    }
+        /*String = 0xA0,
+          Empty = 0xA1,
+          Int = 0xD1,
+          Single = 0xD2,
+          */
+
+    }

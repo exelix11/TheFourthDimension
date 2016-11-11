@@ -186,7 +186,7 @@
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(262, 23);
             this.button6.TabIndex = 9;
-            this.button6.Text = "Generate CCNT patch files";
+            this.button6.Text = "Generate CCNT patch files for selected objects";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 

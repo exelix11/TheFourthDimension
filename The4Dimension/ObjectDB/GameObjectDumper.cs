@@ -104,7 +104,7 @@ namespace The4Dimension.ObjectDB
             }
             AllInfoSection currentSection = own.AllInfos[comboBox1.Text];
             List<FoundObj> inCurrentLevel = new List<FoundObj>();
-            foreach (LevelObj o in currentSection.Objs)
+            foreach (LevelObj o in currentSection)
             {
                 if (o.ToString() != textBox1.Text) continue;
                 FoundObj obj = FoundObj.Parse(o);
