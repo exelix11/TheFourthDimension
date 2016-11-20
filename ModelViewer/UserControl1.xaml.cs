@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static System.Windows.Forms.ListBox;
 
 namespace ModelViewer
 {
@@ -69,15 +70,15 @@ namespace ModelViewer
             set { ModelView.RotationSensitivity = value; }
         }
 
+        void test()
+        {
+        }
+
         public UserControl1()
         {
             InitializeComponent();
             ModelViewer.SortingFrequency = 0.5;
             ModelView.Children.Add(ModelViewer);
-            AddKey("TmpChildrenObjs");
-            AddKey("SelectedRail");
-            AddKey("TmpAreaChildrenObjs");
-            CameraTarget = new Vector3D(0, 0, 0);
         }
 
         public void Clear()
@@ -203,13 +204,14 @@ namespace ModelViewer
 
         public void RemoveModel(string Type, int index)
         {
+            ModelViewer.Children.Remove(Models[Type][index]);
             Models[Type][index].Content = null;
             if (Type == "AllRailInfos")
             {
                 RemoveRailPoints(((LinesVisual3D)Models[Type][index]));
             }
             Models[Type].RemoveAt(index);
-            Positions[Type].RemoveAt(index);
+            if (Type != "SelectionLayer") Positions[Type].RemoveAt(index);
             ModelView.UpdateLayout();
         }
 
@@ -223,7 +225,7 @@ namespace ModelViewer
         {
             for (int i = 0; i < Positions[Type].Count; i++)
             {
-                ChangeTransform(Type, i, Positions[Type][i], new Vector3D(0, 0, 0), 0, 0, 0);
+                ChangeTransform(Type, i, Positions[Type][i], new Vector3D(0, 0, 0), 0, 0, 0, false);
             }
         }
 
@@ -246,7 +248,7 @@ namespace ModelViewer
             ModelView.Camera.UpDirection = new Vector3D(x, y, z);
         }
 
-        public Vector3D Drag(object[] DragArgs, System.Windows.Input.MouseEventArgs e, bool round100)
+        public Vector3D Drag(object[] DragArgs, System.Windows.Input.MouseEventArgs e, double roundTo)
         {
             Point p = e.GetPosition(ModelView);
             Vector3D v = (Vector3D)DragArgs[2];
@@ -254,11 +256,11 @@ namespace ModelViewer
             if (pos.HasValue)
             {
                 Vector3D vec = pos.Value.ToVector3D();
-                if (round100)
+                if (roundTo != 0)
                 {
-                    vec.X = Math.Round(vec.X / 100d, 0) * 100;
-                    vec.Y = Math.Round(vec.Y / 100d, 0) * 100;
-                    vec.Z = Math.Round(vec.Z / 100d, 0) * 100;
+                    vec.X = Math.Round(vec.X / roundTo, 0) * roundTo;
+                    vec.Y = Math.Round(vec.Y / roundTo, 0) * roundTo;
+                    vec.Z = Math.Round(vec.Z / roundTo, 0) * roundTo;
                     return vec;
                 }
                 else
@@ -272,7 +274,7 @@ namespace ModelViewer
             return pos.Value.ToVector3D();
         }
 
-        public void ChangeTransform(string Type, int index, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ)
+        public void ChangeTransform(string Type, int index, Vector3D pos, Vector3D scale, Single RotX, Single RotY, Single RotZ, bool SelectedObj)
         {
             Transform3DGroup t = new Transform3DGroup();
             t.Children.Add(new RotateTransform3D(new AxisAngleRotation3D(new Vector3D(1, 0, 0), RotX)));
@@ -282,6 +284,7 @@ namespace ModelViewer
             t.Children.Add(new TranslateTransform3D(pos));
             Positions[Type][index] = pos;
             Models[Type][index].Transform = t;
+            if (SelectedObj) ((BoundingBoxVisual3D)Models["SelectionLayer"][0]).BoundingBox = Models[Type][index].FindBounds(Transform3D.Identity);
         }
 
         public void ChangeModel(string Type, int index, string path)
@@ -352,8 +355,30 @@ namespace ModelViewer
             AddKey("SelectedRail");
             AddKey("TmpAreaChildrenObjs");
             AddKey("C0EditingListObjs");
+            AddKey("SelectionLayer");
             ModelView.Camera.LookAt(new Point3D(0,0,0), 50, 1000);
             CameraTarget = new Vector3D(0, 0, 0);
+        }
+        
+        public void SelectObjs(string type, SelectedIndexCollection IDs)
+        {
+            ClearSelection();
+            int count = 0;
+            foreach (int i in IDs)
+            {
+                BoundingBoxVisual3D box = new BoundingBoxVisual3D();
+                Models["SelectionLayer"].Add(box);
+                ModelViewer.Children.Add(Models["SelectionLayer"][count++]);
+                box.BoundingBox = Models[type][i].FindBounds(Transform3D.Identity);
+                box.Diameter = 10;
+            }
+            ModelView.UpdateLayout();
+        }
+
+        public void ClearSelection()
+        {
+            ClearType("SelectionLayer");
+            ModelView.UpdateLayout();
         }
     }
 }

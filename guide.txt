@@ -44,15 +44,17 @@ Full Hotkeys list:
  C : If the selected object has a GenerateChildren property edits it
  B : If you are editing a C0List goes back
 In the 3D view:
+ Shift + Click an object : Multi selection
  Ctrl + drag : Move object
  Ctrl + Alt + drag : Move object snapping every 100 units
+ Ctrl + Shift + drag : Move object snapping every 50 units
  (With a rail selected) N : Add a new point at the end of the rail
  in the 3D view you don't need to press Ctrl for the other hotkeys
 
 Tools menu:
 CreatorClassNameTable editor: To make a custom object appear in-game you must add it in the CreatorClassNameTable (CCNT) file from this editor.
 Change stages BGM: edits the list with the BGM of every stage
-Ogg to Bcstm converter: The game uses multi channel bcstms, to inject custom BGMs you must create an ogg file with the required number of channels and use this tool
+Ogg to Bcstm converter: This tool can convert ogg files to multi channel bcstms, https://www.youtube.com/watch?v=L01TS3J7pO4
 Model import: This tool creates a szs package to put in the ObjectData folder, you can use a bcmdl made with the official tools or an obj (Note that the converter obj to bcmdl doesn't always work well with 3D land)
 Generate PreLoadFileList (beta): this will generate a PreLoadFileList file with the objects in the stage, it's not complete yet since it only includes objects files
 
