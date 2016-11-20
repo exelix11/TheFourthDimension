@@ -12,7 +12,7 @@
     <!-- Remember to add light to the scene -->
     <HelixToolkit:SunLight/>
     
-    <HelixToolkit:GridLinesVisual3D Width="8" Length="8" MinorDistance="1" MajorDistance="1" Thickness="0.01"/>
+    <HelixToolkit:GridLinesVisual3D Width="1000" Length="1000" MinorDistance="100" MajorDistance="100" Thickness="1"/>
 </HelixToolkit:HelixViewport3D>
     </Grid>
 </UserControl>

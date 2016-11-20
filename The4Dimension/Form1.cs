@@ -31,7 +31,7 @@ namespace The4Dimension
         string LoadedFile = "";
         bool AutoMoveCam = true;
         bool AddObjectOrigin = false;
-        public static int ReleaseId = 9;
+        public static int ReleaseId = 8;
 
         public Form1(string FileLoad = "")
         {
@@ -131,7 +131,15 @@ namespace The4Dimension
                     if (!Directory.Exists("models")) Application.Exit();
                     Properties.Settings.Default.Save();
                 }
-                else Application.Exit();
+                else
+                {
+                    Directory.CreateDirectory("models");
+                    File.WriteAllBytes(@"models\baseModels.zip", Properties.Resources.BaseModels);
+                    System.IO.Compression.ZipFile.ExtractToDirectory(@"models\baseModels.zip", @"models");
+                    File.Delete(@"models\baseModels.zip");
+                    Directory.CreateDirectory(@"models\Tex");
+                    MessageBox.Show("You won't be able to see any model, to do the procedure delete the models folder");
+                }
             }
             if (!Properties.Settings.Default.DownloadDb) LoadObjectDatabase();
             LoadCreatorClassNameTable();
@@ -325,7 +333,8 @@ namespace The4Dimension
                 return;
             } else
             {
-                ObjectDatabase = ObjectDb.FromXml(File.ReadAllText(@"objectdb.xml"));
+                try { ObjectDatabase = ObjectDb.FromXml(File.ReadAllText(@"objectdb.xml")); }
+                catch (Exception ex) { MessageBox.Show("Could't load the objects database: \r\n\r\n" + ex.Message); }
             }
         }
 
@@ -682,9 +691,16 @@ namespace The4Dimension
             object[] indexes = render.GetOBJ(sender, e); //indexes[0] string, [1] int
             if (indexes[0] == null) return; //this means indexes[0] = -1
             if ((string)indexes[0] == "SelectedRail" || (string)indexes[0] == "TmpChildrenObjs" || (string)indexes[0] == "TmpAreaChildrenObjs" || (IsEditingC0List && (string)indexes[0] != "C0EditingListObjs")) return;
-            if ((string)indexes[0] != "C0EditingListObjs") comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
-            ObjectsListBox.ClearSelected();
-            ObjectsListBox.SelectedIndex = (int)indexes[1];
+            if ((ModifierKeys & Keys.Shift) == Keys.Shift && (string)indexes[0] == CurrentAllInfosSectionName)
+            {
+                ObjectsListBox.SelectedIndices.Add((int)indexes[1]);
+            }
+            else
+            {
+                if ((string)indexes[0] != "C0EditingListObjs") comboBox1.SelectedIndex = comboBox1.Items.IndexOf((string)indexes[0]);
+                ObjectsListBox.ClearSelected();
+                ObjectsListBox.SelectedIndex = (int)indexes[1];
+            }
         }
 
         bool RenderIsDragging = false;
@@ -800,7 +816,8 @@ namespace The4Dimension
         private void render_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
         {
             if (Mouse.LeftButton != MouseButtonState.Pressed || (ModifierKeys & Keys.Control) != Keys.Control || !RenderIsDragging) { RenderIsDragging = false; return; }
-            Vector3D NewPos = render.Drag(DraggingArgs, e, ((ModifierKeys & Keys.Alt) == Keys.Alt) ? true : false);
+            int RoundTo = (ModifierKeys & Keys.Alt) == Keys.Alt ? 100 : ((ModifierKeys & Keys.Shift) == Keys.Shift ? 50 : 0);
+            Vector3D NewPos = render.Drag(DraggingArgs, e, RoundTo);
             if (NewPos == null) return;
             if ((string)DraggingArgs[0] == "SelectedRail")
             {
@@ -867,13 +884,17 @@ namespace The4Dimension
                 Action<object[]> act;
                 act = (object[] args) =>
                 {
+                    render.ClearSelection();
                     List<LevelObj> type = (List<LevelObj>)args[0];
                     int id = (int)args[1];
                     Vector3D pos = (Vector3D)args[2];
                     ((Node)type[id].Prop["pos_x"]).StringValue = pos.X.ToString(); //These values were stored directly
                     ((Node)type[id].Prop["pos_y"]).StringValue = pos.Y.ToString();
                     ((Node)type[id].Prop["pos_z"]).StringValue = pos.Z.ToString();
-                    if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode()) UpdateOBJPos(id, type, (string)args[3]);
+                    if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode())
+                    {
+                        UpdateOBJPos(id, type, (string)args[3],true);
+                    }
                     RefreshTmpChildrenObjects();
                     propertyGrid1.Refresh();
                 };
@@ -975,6 +996,7 @@ namespace The4Dimension
             btn_cameraCode.Visible = false;
             render.ClearTmpObjects();
             render.UnselectRail();
+            render.ClearSelection();
             lblDescription.Text = "";
             lblDescription.Tag = -1;
             if (ObjectsListBox.SelectedIndex < 0) return;
@@ -990,6 +1012,7 @@ namespace The4Dimension
                     int index = 0;
                     foreach (int i in ObjectsListBox.SelectedIndices) SelectedObjects[index++] = new DictionaryPropertyGridAdapter(CurrentAllInfosSection[i].Prop);
                     propertyGrid1.SelectedObjects = SelectedObjects;
+                    render.SelectObjs(CurrentAllInfosSectionName, ObjectsListBox.SelectedIndices);
                 }
                 else propertyGrid1.SelectedObject = null;
                 return;
@@ -1008,7 +1031,7 @@ namespace The4Dimension
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(CurrentAllInfosSection[ObjectsListBox.SelectedIndex].Prop);
                 if (((AllInfoSection)CurrentAllInfosSection).IsHidden)
                 {
-                    if (AreaObjOldSelection != -1 && AreaObjOldSelection < AllInfos["AreaObjInfo"].Count) render.ChangeTransform(comboBox1.Text, AreaObjOldSelection, render.Positions[comboBox1.Text][AreaObjOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
+                    if (AreaObjOldSelection != -1 && AreaObjOldSelection < AllInfos["AreaObjInfo"].Count) render.ChangeTransform(comboBox1.Text, AreaObjOldSelection, render.Positions[comboBox1.Text][AreaObjOldSelection], new Vector3D(0, 0, 0), 0, 0, 0, false);
                     UpdateOBJPos(ObjectsListBox.SelectedIndex, CurrentAllInfosSection, comboBox1.Text);
                 }
                 AreaObjOldSelection = ObjectsListBox.SelectedIndex;
@@ -1019,7 +1042,7 @@ namespace The4Dimension
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(CurrentAllInfosSection[ObjectsListBox.SelectedIndex].Prop);
                 if (((AllInfoSection)CurrentAllInfosSection).IsHidden)
                 {
-                    if (CameraAreaOldSelection != -1 && AreaObjOldSelection < AllInfos["CameraAreaInfo"].Count) render.ChangeTransform(comboBox1.Text, CameraAreaOldSelection, render.Positions[comboBox1.Text][CameraAreaOldSelection], new Vector3D(0, 0, 0), 0, 0, 0);
+                    if (CameraAreaOldSelection != -1 && AreaObjOldSelection < AllInfos["CameraAreaInfo"].Count) render.ChangeTransform(comboBox1.Text, CameraAreaOldSelection, render.Positions[comboBox1.Text][CameraAreaOldSelection], new Vector3D(0, 0, 0), 0, 0, 0, false);
                     UpdateOBJPos(ObjectsListBox.SelectedIndex, CurrentAllInfosSection, comboBox1.Text);
                 }
                 CameraAreaOldSelection = ObjectsListBox.SelectedIndex;
@@ -1034,6 +1057,7 @@ namespace The4Dimension
              }
             else
             {
+                render.SelectObjs(CurrentAllInfosSectionName, ObjectsListBox.SelectedIndices);
                 propertyGrid1.SelectedObject = new DictionaryPropertyGridAdapter(CurrentAllInfosSection[ObjectsListBox.SelectedIndex].Prop);
                 RefreshTmpChildrenObjects();
             }
@@ -1150,6 +1174,7 @@ namespace The4Dimension
                 "In the 3D view:\r\n" +
                 " Ctrl + drag : Move object\r\n" +
                 " Ctrl + Alt + drag : Move object snapping every 100 units\r\n" +
+                " Ctrl + Shift + drag : Move object snapping every 50 units\r\n" +
                 " (With a rail selected) N : Add a new point at the end of the rail\r\n" +
                 " -Every other combination without having to press Ctrl\r\n");
         }
@@ -1595,31 +1620,37 @@ namespace The4Dimension
                     }
                     string path = GetModelname(CurrentAllInfosSection[ObjectsListBox.SelectedIndex].ToString());
                     if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
-                    if (name == "name") render.ChangeModel(CurrentAllInfosSectionName, ObjectsListBox.SelectedIndex, path);
-                }
-                UpdateOBJPos(ObjectsListBox.SelectedIndex,  CurrentAllInfosSection, CurrentAllInfosSectionName);
-                Action<object[]> action;
-                action = (object[] args) =>
-                {
-                    List<LevelObj> type = (List<LevelObj>)args[0];
-                    string TypeName = (string)args[1];
-                    int id = (int)args[2];
-                    string propName = (string)args[3];
-                    object value = args[4];
-                    if (type[id].Prop[propName] is Node) ((Node)type[id].Prop[propName]).StringValue = value.ToString();
-                    else
-                        type[id].Prop[propName] = value;
-                    propertyGrid1.Refresh();
-                    if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode()) UpdateOBJPos(id,  type, TypeName);
-                    if (propName == "name")
-                    {
-                        string path = GetModelname(type[id].ToString());
-                        if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
-                        if (name == "name") render.ChangeModel(TypeName, id, path);
-                        ObjectsListBox.Items[id] = type[id].ToString();
+                    if (name == "name") {
+                      foreach(int i in ObjectsListBox.SelectedIndices)  render.ChangeModel(CurrentAllInfosSectionName, i, path);
                     }
-                };
-                Undo.Push(new UndoAction("Changed value: " + name + " of object: " + CurrentAllInfosSection[ObjectsListBox.SelectedIndex].ToString(),new object[] {CurrentAllInfosSection , CurrentAllInfosSectionName, ObjectsListBox.SelectedIndex, name, e.OldValue }, action));
+                }
+                UpdateOBJPos(ObjectsListBox.SelectedIndices,  CurrentAllInfosSection, CurrentAllInfosSectionName);
+                if (ObjectsListBox.SelectedItems.Count == 1)
+                {
+                    Action<object[]> action;
+                    action = (object[] args) =>
+                    {
+                        List<LevelObj> type = (List<LevelObj>)args[0];
+                        render.ClearSelection();
+                        string TypeName = (string)args[1];
+                        int id = (int)args[2];
+                        string propName = (string)args[3];
+                        object value = args[4];
+                        if (type[id].Prop[propName] is Node) ((Node)type[id].Prop[propName]).StringValue = value.ToString();
+                        else
+                            type[id].Prop[propName] = value;
+                        propertyGrid1.Refresh();
+                        if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode()) UpdateOBJPos(id, type, TypeName,true);
+                        if (propName == "name")
+                        {
+                            string path = GetModelname(type[id].ToString());
+                            if (!System.IO.File.Exists(path)) path = "models\\UnkBlue.obj";
+                            if (name == "name") render.ChangeModel(TypeName, id, path);
+                            ObjectsListBox.Items[id] = type[id].ToString();
+                        }
+                    };
+                    Undo.Push(new UndoAction("Changed value: " + name + " of object: " + CurrentAllInfosSection[ObjectsListBox.SelectedIndex].ToString(), new object[] { CurrentAllInfosSection, CurrentAllInfosSectionName, ObjectsListBox.SelectedIndex, name, e.OldValue }, action));
+                }
                 ObjectsListBox.Items[ObjectsListBox.SelectedIndex] = CurrentAllInfosSection[ObjectsListBox.SelectedIndex].ToString();
             }
         }
@@ -1649,7 +1680,12 @@ namespace The4Dimension
             else return ((C0List)CurrentAllInfosSection[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"]).List.Count;
         }
 
-        public void UpdateOBJPos(int id, List<LevelObj> Source, string Type)
+        private void UpdateOBJPos(ListBox.SelectedIndexCollection selectedIndices, List<LevelObj> Source, string Type)
+        {
+            foreach (int i in selectedIndices) UpdateOBJPos(i, Source, Type);
+        }
+
+        public void UpdateOBJPos(int id, List<LevelObj> Source, string Type, bool isUndo = false)
         {
             if (Type == "TmpChildrenObjs")
             {
@@ -1665,7 +1701,7 @@ namespace The4Dimension
             RotX = Single.Parse(((Node)Source[id].Prop["dir_x"]).StringValue);
             RotY = Single.Parse(((Node)Source[id].Prop["dir_y"]).StringValue);
             RotZ = Single.Parse(((Node)Source[id].Prop["dir_z"]).StringValue);
-            render.ChangeTransform(Type, id, new Vector3D(X, -Z, Y), new Vector3D(ScaleX, ScaleZ, ScaleY), RotX, -RotZ, RotY);
+            render.ChangeTransform(Type, id, new Vector3D(X, -Z, Y), new Vector3D(ScaleX, ScaleZ, ScaleY), RotX, -RotZ, RotY , (Type != "AreaObjInfo" && Type != "CameraAreaInfo" && !isUndo));
         }
 
         private void button5_Click(object sender, EventArgs e) //Remove values
@@ -1848,7 +1884,7 @@ namespace The4Dimension
                         render.RemoveModel(typename, index);
                         ObjectsListBox.Items.RemoveAt(index);
                     }
-                    RefreshTmpChildrenObjects();
+                    render.ClearTmpObjects();
                 };
                 Undo.Push(new UndoAction("added object: " + obj.ToString(), new object[] { CurrentAllInfosSection, ObjectsListBox.Items.Count - 1, CurrentAllInfosSectionName }, action));
             }
@@ -2734,6 +2770,5 @@ namespace The4Dimension
             downloadLatestObjectDatabaseToolStripMenuItem.Enabled = true;
             if (ObjectDatabase == null) LoadObjectDatabase();
         }
-
     }
 }
