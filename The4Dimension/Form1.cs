@@ -163,13 +163,6 @@ namespace The4Dimension
                 foreach (string s in Directory.EnumerateFiles("CustomModels"))
                     if (s.EndsWith(".obj")) CustomModels.Add(Path.GetFileNameWithoutExtension(s));
             }
-            if (Properties.Settings.Default.FirstStartup)
-            {
-                Properties.Settings.Default.FirstStartup = false;
-                Properties.Settings.Default.Save();
-                FirstStartupPanel.Visible = true;
-                FirstStartupPanel.Focus();
-            }
         }
 
         void UnloadLevel()
@@ -872,6 +865,7 @@ namespace The4Dimension
                 Action<object[]> act;
                 act = (object[] args) =>
                 {
+                    render.ClearSelection();
                     List<LevelObj> type = (List<LevelObj>)args[0];
                     int id = (int)args[1];
                     int idInList = (int)args[2];
@@ -881,7 +875,6 @@ namespace The4Dimension
                     ((Node)((C0List)type[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_x"]).StringValue = pos.X.ToString();
                     ((Node)((C0List)type[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_y"]).StringValue = pos.Y.ToString();
                     ((Node)((C0List)type[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_z"]).StringValue = pos.Z.ToString();
-                    if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode())UpdateOBJPos(idInList, type, "TmpChildrenObjs", true);
                     propertyGrid1.Refresh();
                 };
                 Undo.Push(new UndoAction("Moved children object of: " + CurrentAllInfosSection[ObjectsListBox.SelectedIndex].ToString(), new object[] { CurrentAllInfosSection, ObjectsListBox.SelectedIndex, (int)DraggingArgs[1] , StartPos }, act));
@@ -2776,11 +2769,6 @@ namespace The4Dimension
         private void guideToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start("https://github.com/exelix11/TheFourthDimension/blob/master/guide.md");
-        }
-
-        private void FirstStartupPanelMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            FirstStartupPanel.Visible = false;
         }
     }
 }

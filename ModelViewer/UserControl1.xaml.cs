@@ -284,7 +284,11 @@ namespace ModelViewer
             t.Children.Add(new TranslateTransform3D(pos));
             Positions[Type][index] = pos;
             Models[Type][index].Transform = t;
-            if (SelectedObj) ((BoundingBoxVisual3D)Models["SelectionLayer"][0]).BoundingBox = Models[Type][index].FindBounds(Transform3D.Identity);
+            if (SelectedObj)
+            {
+                if (Models["SelectionLayer"].Count == 0) return;
+                ((BoundingBoxVisual3D)Models["SelectionLayer"][0]).BoundingBox = Models[Type][index].FindBounds(Transform3D.Identity);
+            }
         }
 
         public void ChangeModel(string Type, int index, string path)
