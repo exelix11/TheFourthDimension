@@ -135,8 +135,6 @@
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.StartupChecks = new System.ComponentModel.BackgroundWorker();
-            this.FirstStartupPanel = new System.Windows.Forms.Panel();
-            this.label13 = new System.Windows.Forms.Label();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -148,7 +146,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).BeginInit();
-            this.FirstStartupPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -1164,33 +1161,11 @@
             this.StartupChecks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.StartupChecks_DoWork);
             this.StartupChecks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.StartupChecks_Completed);
             // 
-            // FirstStartupPanel
-            // 
-            this.FirstStartupPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
-            this.FirstStartupPanel.Controls.Add(this.label13);
-            this.FirstStartupPanel.Location = new System.Drawing.Point(258, 27);
-            this.FirstStartupPanel.Name = "FirstStartupPanel";
-            this.FirstStartupPanel.Size = new System.Drawing.Size(193, 63);
-            this.FirstStartupPanel.TabIndex = 12;
-            this.FirstStartupPanel.Visible = false;
-            this.FirstStartupPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FirstStartupPanelMouseMove);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(6, 8);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(145, 39);
-            this.label13.TabIndex = 14;
-            this.label13.Text = "^ \r\nHi, if you\'re new to this editor,\r\ncheck out the guide !";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 575);
-            this.Controls.Add(this.FirstStartupPanel);
             this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -1219,8 +1194,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).EndInit();
-            this.FirstStartupPanel.ResumeLayout(false);
-            this.FirstStartupPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1333,8 +1306,6 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ToolStripMenuItem guideToolStripMenuItem;
-        private System.Windows.Forms.Panel FirstStartupPanel;
-        private System.Windows.Forms.Label label13;
     }
 }
 
