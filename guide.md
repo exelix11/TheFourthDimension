@@ -35,7 +35,7 @@ To go back to the previus C0List or the main objects list press B or click the b
  Ctrl + Z : Undo<br />
  Space : Move the camera on the selected object<br />
  Ctrl + D : Duplicate selected object<br />
- + : Add a new object<br />
+ Plus : Add a new object<br />
  Del : Delete selected object<br />
  Ctrl + R : Round the selected object position to a multiple of 100 (like Ctrl + alt + drag, but without dragging)<br />
  Ctrl + F : Open the search menu<br />
