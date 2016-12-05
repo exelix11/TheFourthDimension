@@ -31,7 +31,7 @@ namespace The4Dimension
         string LoadedFile = "";
         bool AutoMoveCam = true;
         bool AddObjectOrigin = false;
-        public static int ReleaseId = 8;
+        public static int ReleaseId = 9;
 
         public Form1(string FileLoad = "")
         {
@@ -162,6 +162,13 @@ namespace The4Dimension
             {
                 foreach (string s in Directory.EnumerateFiles("CustomModels"))
                     if (s.EndsWith(".obj")) CustomModels.Add(Path.GetFileNameWithoutExtension(s));
+            }
+            if (Properties.Settings.Default.FirstStartup)
+            {
+                Properties.Settings.Default.FirstStartup = false;
+                Properties.Settings.Default.Save();
+                FirstStartupPanel.Visible = true;
+                FirstStartupPanel.Focus();
             }
         }
 
@@ -874,7 +881,7 @@ namespace The4Dimension
                     ((Node)((C0List)type[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_x"]).StringValue = pos.X.ToString();
                     ((Node)((C0List)type[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_y"]).StringValue = pos.Y.ToString();
                     ((Node)((C0List)type[id].Prop["GenerateChildren"]).List[idInList].Prop["pos_z"]).StringValue = pos.Z.ToString();
-                    if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode())UpdateOBJPos(idInList, type, "TmpChildrenObjs");
+                    if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode())UpdateOBJPos(idInList, type, "TmpChildrenObjs", true);
                     propertyGrid1.Refresh();
                 };
                 Undo.Push(new UndoAction("Moved children object of: " + CurrentAllInfosSection[ObjectsListBox.SelectedIndex].ToString(), new object[] { CurrentAllInfosSection, ObjectsListBox.SelectedIndex, (int)DraggingArgs[1] , StartPos }, act));
@@ -891,11 +898,12 @@ namespace The4Dimension
                     ((Node)type[id].Prop["pos_x"]).StringValue = pos.X.ToString(); //These values were stored directly
                     ((Node)type[id].Prop["pos_y"]).StringValue = pos.Y.ToString();
                     ((Node)type[id].Prop["pos_z"]).StringValue = pos.Z.ToString();
-                    if (type.GetHashCode() == CurrentAllInfosSection.GetHashCode())
+                    string typename = (string)args[3];
+                    if (typename != "C0EditingListObjs" || type.GetHashCode() == CurrentAllInfosSection.GetHashCode())
                     {
-                        UpdateOBJPos(id, type, (string)args[3],true);
+                        UpdateOBJPos(id, type, typename, true);
                     }
-                    RefreshTmpChildrenObjects();
+                    if (ObjectsListBox.SelectedIndex == id) RefreshTmpChildrenObjects();
                     propertyGrid1.Refresh();
                 };
                 Undo.Push(new UndoAction("Moved object : " + GetListByName((string)DraggingArgs[0])[(int)DraggingArgs[1]].ToString(), new object[] { GetListByName((string)DraggingArgs[0]), DraggingArgs[1], StartPos, DraggingArgs[0] }, act));
@@ -1066,6 +1074,7 @@ namespace The4Dimension
         private void RefreshTmpChildrenObjects()
         {
             render.ClearTmpObjects();
+            if (ObjectsListBox.SelectedIndex == -1) return;
             if (checkBox2.Checked && CurrentAllInfosSection[ObjectsListBox.SelectedIndex].Prop.ContainsKey("GenerateChildren"))
             {
                 AddChildrenModels((C0List)CurrentAllInfosSection[ObjectsListBox.SelectedIndex].Prop["GenerateChildren"], false);
@@ -1144,15 +1153,6 @@ namespace The4Dimension
         {
             FrmCredits c = new FrmCredits();
             c.ShowDialog();
-        }
-
-        private void tipsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("- To quickly add children to an object, paste other objects inside that object\r\n" +
-                "- To paste an object to the list right click on the list to delesect every object and paste the object\r\n" +
-                "- To quickly make rails, add some non-exsisting objects (like a random name) they will be showed as blue cubes, place them in the positions of the points of the rail, copy their position, you can have up to 10 items in the clipboard, add a new rail and paste the positions in the points\r\n" +
-                "- Objects with rails need a copy of the rail in the object itself, every time you edit the rail you must copy and paste it inside the object\r\n" +
-                "- To set the camera angle, add a @CameraPositionHelper and use it to get the right angle (every object starting with @ will be deleted before saving)");
         }
 
         private void hotkeysListToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1437,11 +1437,13 @@ namespace The4Dimension
         Stack<List<LevelObj>> C0ListEditingStack = new Stack<List<LevelObj>>();
         Stack<int> SelectionIndex = new Stack<int>();
         int InitialAllInfosSection = -1;
+        List<LevelObj> dummyList = new List<LevelObj>();
         private List<LevelObj> CurrentAllInfosSection
         {
             get
             {
                 if (IsEditingC0List) return C0ListEditingStack.Peek();
+                else if (comboBox1.Text == "AllRailInfos") return dummyList;
                 else return AllInfos[comboBox1.Text];
             }
         }
@@ -1790,7 +1792,7 @@ namespace The4Dimension
                 if (!NoUndo)
                 {
                     List<LevelObj> tmp = new List<LevelObj>();
-                    for (int i = 0; i < indexes.Length; i++) tmp.Add(CurrentAllInfosSection[indexes[i]].Clone());
+                    for (int i = 0; i < indexes.Length; i++) tmp.Add(CurrentAllInfosSection[indexes[i]]);
                     Action<object[]> action;
                     action = (object[] args) =>
                     {
@@ -1798,11 +1800,11 @@ namespace The4Dimension
                         int[] at = (int[])args[1];
                         LevelObj[] t = ((LevelObj[])args[2]).Reverse().ToArray();
                         int[] index = at.Reverse().ToArray();
-                        for (int i = 0; i < t.Length; i++) AddObj(t[i],  type, (string)args[3], false, index[i], type.GetHashCode());
+                        for (int i = 0; i < t.Length; i++) AddObj(t[i], type, (string)args[3], false, index[i], type.GetHashCode());
                         RefreshTmpChildrenObjects();
                     };
                     string name = (indexes.Length == 1) ? "Removed object: " + tmp[0].ToString() : "Removed " + indexes.Length.ToString() + " objects";
-                    Undo.Push(new UndoAction(name, new object[] { CurrentAllInfosSection, indexes, tmp.ToArray(), CurrentAllInfosSectionName }, action));
+                    Undo.Push(new UndoAction(name, new object[] {CurrentAllInfosSection, indexes, tmp.ToArray(), CurrentAllInfosSectionName }, action));
                 }
                 foreach (int i in indexes)
                 {
@@ -1850,7 +1852,7 @@ namespace The4Dimension
             }
         }
 
-        void AddObj(LevelObj inobj,  List<LevelObj> list, string name, bool clone = true, int at = -1, int UndoHash = -1)
+        void AddObj(LevelObj inobj, List<LevelObj> list, string name, bool clone = true, int at = -1, int UndoHash = -1)
         {
             if (!higestID.ContainsKey(name)) higestID.Add(name, 0);
             higestID[name]++;
@@ -1888,7 +1890,7 @@ namespace The4Dimension
                 };
                 Undo.Push(new UndoAction("added object: " + obj.ToString(), new object[] { CurrentAllInfosSection, ObjectsListBox.Items.Count - 1, CurrentAllInfosSectionName }, action));
             }
-        }
+        }  
 
         private void BtnAddObj_Click(object sender, EventArgs e)//Add new object
         {
@@ -2769,6 +2771,16 @@ namespace The4Dimension
             StatusLbl.Visible = false;
             downloadLatestObjectDatabaseToolStripMenuItem.Enabled = true;
             if (ObjectDatabase == null) LoadObjectDatabase();
+        }
+
+        private void guideToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/exelix11/TheFourthDimension/blob/master/guide.md");
+        }
+
+        private void FirstStartupPanelMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            FirstStartupPanel.Visible = false;
         }
     }
 }

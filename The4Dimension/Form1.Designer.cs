@@ -83,8 +83,8 @@
             this.objectByViewIdToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.objectByRailNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.guideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hotkeysListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tipsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.downloadLatestObjectDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.objectsDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -135,6 +135,8 @@
             this.CamInertiaUpDown = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.StartupChecks = new System.ComponentModel.BackgroundWorker();
+            this.FirstStartupPanel = new System.Windows.Forms.Panel();
+            this.label13 = new System.Windows.Forms.Label();
             this.ClipBoardMenu.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -146,6 +148,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).BeginInit();
+            this.FirstStartupPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -574,8 +577,8 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.guideToolStripMenuItem,
             this.hotkeysListToolStripMenuItem,
-            this.tipsToolStripMenuItem,
             this.toolStripSeparator6,
             this.downloadLatestObjectDatabaseToolStripMenuItem,
             this.objectsDatabaseToolStripMenuItem,
@@ -585,20 +588,19 @@
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
+            // guideToolStripMenuItem
+            // 
+            this.guideToolStripMenuItem.Name = "guideToolStripMenuItem";
+            this.guideToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.guideToolStripMenuItem.Text = "Guide";
+            this.guideToolStripMenuItem.Click += new System.EventHandler(this.guideToolStripMenuItem_Click);
+            // 
             // hotkeysListToolStripMenuItem
             // 
             this.hotkeysListToolStripMenuItem.Name = "hotkeysListToolStripMenuItem";
             this.hotkeysListToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.hotkeysListToolStripMenuItem.Text = "Hotkeys list";
             this.hotkeysListToolStripMenuItem.Click += new System.EventHandler(this.hotkeysListToolStripMenuItem_Click);
-            // 
-            // tipsToolStripMenuItem
-            // 
-            this.tipsToolStripMenuItem.Name = "tipsToolStripMenuItem";
-            this.tipsToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.tipsToolStripMenuItem.Text = "Tips";
-            this.tipsToolStripMenuItem.Visible = false;
-            this.tipsToolStripMenuItem.Click += new System.EventHandler(this.tipsToolStripMenuItem_Click);
             // 
             // toolStripSeparator6
             // 
@@ -1162,11 +1164,33 @@
             this.StartupChecks.DoWork += new System.ComponentModel.DoWorkEventHandler(this.StartupChecks_DoWork);
             this.StartupChecks.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.StartupChecks_Completed);
             // 
+            // FirstStartupPanel
+            // 
+            this.FirstStartupPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            this.FirstStartupPanel.Controls.Add(this.label13);
+            this.FirstStartupPanel.Location = new System.Drawing.Point(258, 27);
+            this.FirstStartupPanel.Name = "FirstStartupPanel";
+            this.FirstStartupPanel.Size = new System.Drawing.Size(193, 63);
+            this.FirstStartupPanel.TabIndex = 12;
+            this.FirstStartupPanel.Visible = false;
+            this.FirstStartupPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.FirstStartupPanelMouseMove);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(6, 8);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(145, 39);
+            this.label13.TabIndex = 14;
+            this.label13.Text = "^ \r\nHi, if you\'re new to this editor,\r\ncheck out the guide !";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(788, 575);
+            this.Controls.Add(this.FirstStartupPanel);
             this.Controls.Add(this.SettingsPanel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -1195,6 +1219,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.RotSenUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ZoomSenUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CamInertiaUpDown)).EndInit();
+            this.FirstStartupPanel.ResumeLayout(false);
+            this.FirstStartupPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1263,7 +1289,6 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.Button Btn_CopyObjs;
         private System.Windows.Forms.ToolStripMenuItem modelImporterToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem tipsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
         private System.Windows.Forms.Label lblDescription;
         private System.Windows.Forms.ToolStripMenuItem objectsDatabaseToolStripMenuItem;
@@ -1307,6 +1332,9 @@
         private System.Windows.Forms.Panel C0EditingPanel;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ToolStripMenuItem guideToolStripMenuItem;
+        private System.Windows.Forms.Panel FirstStartupPanel;
+        private System.Windows.Forms.Label label13;
     }
 }
 

@@ -107,11 +107,11 @@ namespace ModelViewer
             for (int i = 0; i < positions.Count; i++) addModel(Paths[i], type, positions[i], scale[i], (float)rot[i].X, (float)rot[i].Y, (float)rot[i].Z);
         }
 
-        public void ClearTmpObjects()
+        public void ClearTmpObjects(bool updatelayout = true)
         {
             ClearType("TmpChildrenObjs");
             ClearType("TmpAreaChildrenObjs");
-            ModelView.UpdateLayout();
+            if (updatelayout) ModelView.UpdateLayout();
         }
 
         public void ClearC0Objects()
@@ -378,6 +378,7 @@ namespace ModelViewer
         public void ClearSelection()
         {
             ClearType("SelectionLayer");
+            ClearTmpObjects(false);
             ModelView.UpdateLayout();
         }
     }
