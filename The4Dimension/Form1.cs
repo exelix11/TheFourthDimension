@@ -31,7 +31,7 @@ namespace The4Dimension
         string LoadedFile = "";
         bool AutoMoveCam = true;
         bool AddObjectOrigin = false;
-        public static int ReleaseId = 9;
+        public static int ReleaseId = 10;
 
         public Form1(string FileLoad = "")
         {

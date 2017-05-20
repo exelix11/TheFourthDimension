@@ -11,9 +11,16 @@ namespace The4Dimension
 {
     static class Program
     {
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool AttachConsole(int dwProcessId);
+        private const int ATTACH_PARENT_PROCESS = -1;
+
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool FreeConsole();
+
         /// <summary>
         /// Punto di ingresso principale dell'applicazione.
-        /// </summary>
+        /// </summary
         [STAThread]
         static void Main(string[] Args)
         {
@@ -22,7 +29,29 @@ namespace The4Dimension
             Application.SetCompatibleTextRenderingDefault(false);
             if (Args.Length != 0)
             {
-                if (Args[0].ToLower() == "ccntpatch")
+                if (Args[0].ToLower() == "batch")
+                {
+                    AttachConsole(ATTACH_PARENT_PROCESS);
+                    Console.Write("\n");
+                    foreach (string a in Args.Skip(1))
+                    {
+                        try
+                        {
+                            string Cont = System.IO.File.ReadAllText(a);
+                            if (Cont.StartsWith("<?xml")) File.WriteAllBytes(a + ".byml", BymlConverter.GetByml(Cont));
+                            else if (Cont.StartsWith("YB") || Cont.StartsWith("BY")) File.WriteAllText(a + ".xml", BymlConverter.GetXml(a));
+                            else { Console.WriteLine(a + " : filetype not supported"); continue; }
+                            Console.WriteLine(a + " : Done");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(a + " : " + ex.Message);
+                            Console.WriteLine(ex.StackTrace);
+                        }
+                    }
+                    FreeConsole();
+                }
+                else if (Args[0].ToLower() == "ccntpatch")
                 {
                     if (File.Exists(@"CreatorClassNameTable.szs") && File.Exists(@"CCNTpatch.xml")) PatchCCNT(Args);
                     else MessageBox.Show("To apply the patch you need both the CreatorClassNameTable.szs and CCNTpatch.xml in this folder !");
