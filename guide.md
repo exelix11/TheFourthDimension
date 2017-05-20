@@ -58,6 +58,7 @@ Generate PreLoadFileList (beta): this will generate a PreLoadFileList file with 
 
 # Other functions:
 You can use this also to edit byml files just by dragging them over the main exe, it's compatible with both 3ds and wii u formats, but some files from wii u games may not work (SM3DW)<br />
+Batch conversion is also supported: The4Dimension.exe batch *file 1* *file 2* etc... the converted files will be saved in the same directory of the original files<br />
 CollisionsMng.exe : this tool can create the collision data (.kcl and .pa) from an obj or convert the collision data to an obj<br />
 
 # Sharing mods:
