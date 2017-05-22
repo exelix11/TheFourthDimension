@@ -27,6 +27,7 @@ namespace The4Dimension
             System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Form1.DefEnc = Encoding.GetEncoding("Shift-JIS");
             if (Args.Length != 0)
             {
                 if (Args[0].ToLower() == "batch")
@@ -37,9 +38,9 @@ namespace The4Dimension
                     {
                         try
                         {
-                            string Cont = System.IO.File.ReadAllText(a);
+                            string Cont = System.IO.File.ReadAllText(a, Form1.DefEnc);
                             if (Cont.StartsWith("<?xml")) File.WriteAllBytes(a + ".byml", BymlConverter.GetByml(Cont));
-                            else if (Cont.StartsWith("YB") || Cont.StartsWith("BY")) File.WriteAllText(a + ".xml", BymlConverter.GetXml(a));
+                            else if (Cont.StartsWith("YB") || Cont.StartsWith("BY")) File.WriteAllText(a + ".xml", BymlConverter.GetXml(a), Form1.DefEnc);
                             else { Console.WriteLine(a + " : filetype not supported"); continue; }
                             Console.WriteLine(a + " : Done");
                         }
@@ -63,10 +64,10 @@ namespace The4Dimension
                 }
                 else
                 {
-                    string Cont = System.IO.File.ReadAllText(Args[0]);
+                    string Cont = System.IO.File.ReadAllText(Args[0],Form1.DefEnc);
                     if (Cont.StartsWith("<?xml") || Cont.StartsWith("YB") || Cont.StartsWith("BY"))
                     {
-                        if (Cont.StartsWith("<?xml")) new FormEditors.FrmXmlEditor(File.ReadAllText(Args[0]), Args[0], true).ShowDialog();
+                        if (Cont.StartsWith("<?xml")) new FormEditors.FrmXmlEditor(File.ReadAllText(Args[0], Form1.DefEnc), Args[0], true).ShowDialog();
                         else new FormEditors.FrmXmlEditor(BymlConverter.GetXml(Args[0]), Args[0], true).ShowDialog();
                     }
                     else RunApp(Args[0].Trim());

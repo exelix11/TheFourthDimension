@@ -31,7 +31,7 @@ namespace The4Dimension
         string LoadedFile = "";
         bool AutoMoveCam = true;
         bool AddObjectOrigin = false;
-        public static int ReleaseId = 10;
+        public static int ReleaseId = 11;
 
         public Form1(string FileLoad = "")
         {
@@ -2372,10 +2372,10 @@ namespace The4Dimension
             MessageBox.Show("Done !");
         }
 
-        void XmlSave(string filename, bool XML)
+        void XmlSave(string filename, bool BYML)
         {
-            if (XML) File.WriteAllBytes(filename, BymlConverter.GetByml(MakeXML()));
-            else File.WriteAllText(filename, MakeXML());
+            if (BYML) File.WriteAllBytes(filename, BymlConverter.GetByml(MakeXML()));
+            else File.WriteAllText(filename, MakeXML(), DefEnc);
             MessageBox.Show("Done !");
         }
 
@@ -2400,7 +2400,7 @@ namespace The4Dimension
             sav.Filter = "Xml file|*.xml";
             if (sav.ShowDialog() == DialogResult.OK)
             {
-                XmlSave(sav.FileName, true);
+                XmlSave(sav.FileName, false);
                 LoadedFile = sav.FileName;
                 this.Text = LoadedFile == "" ? "The Fourth Dimension - by Exelix11" : "The Fourth Dimension - " + LoadedFile;
                 saveToolStripMenuItem.Enabled = true;
@@ -2414,7 +2414,7 @@ namespace The4Dimension
             sav.Filter = "Byml file|*.byml";
             if (sav.ShowDialog() == DialogResult.OK)
             {
-                XmlSave(sav.FileName, false);
+                XmlSave(sav.FileName, true);
                 LoadedFile = sav.FileName;
                 this.Text = LoadedFile == "" ? "The Fourth Dimension - by Exelix11" : "The Fourth Dimension - " + LoadedFile;
                 saveToolStripMenuItem.Enabled = true;
